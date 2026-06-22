@@ -15,6 +15,7 @@ This repository contains comprehensive configuration and guidance for AI coding 
 |-------|---------|
 | **github-setup** | Auth, PAT, SSH, MCP connectivity — or when the user says **"Setup mcps"** |
 | **github-work** | Issues, PRs, projects, comments, labels — prefer GitHub MCP, fall back to `gh` |
+| **story-to-requirements** | Turn a GitHub issue user story into a plan file in `.ai/plan/` |
 
 ## Prompts
 
