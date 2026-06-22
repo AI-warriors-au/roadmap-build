@@ -119,6 +119,12 @@ Create the `.ai/plan/` directory if it does not exist. The `.ai/` directory is l
 - Suggested sub-tasks (numbered list)
 - Any conversation refinements captured in **Context** or **Technical notes** (e.g. monorepo paths)
 
+The plan **must** include:
+
+```markdown
+**Status:** Draft for review
+```
+
 The file is the **source of truth** for implementation; chat is a pointer to it.
 
 ### Step 7: Present summary in chat
@@ -150,7 +156,8 @@ Before finishing, verify:
 | Skill | Role |
 |-------|------|
 | **story-to-requirements** | Produces `.ai/plan/issue-*.md` (this skill) |
-| **implement-plan-task** | Executes one sub-task from a plan via a Task subagent |
+| **planner-agent** | Orchestrates this skill + approval gate; invoked by `/story {id}` |
+| **implementer** | Executes an **approved** plan; produces `.ai/implementation/story-{id}.md` |
 
 ## Examples
 
