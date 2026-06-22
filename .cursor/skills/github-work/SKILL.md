@@ -1,6 +1,6 @@
 ---
 name: github-work
-description: Manage GitHub issues, pull requests, projects, comments, and labels. Prefer GitHub MCP tools; fall back to gh CLI or GraphQL. Use when creating, listing, updating, or closing issues/PRs, moving project board items, commenting, or searching repos.
+description: Manage GitHub issues, pull requests, projects, comments, labels, branches, and commits. Prefer GitHub MCP tools; fall back to gh CLI or GraphQL. Use when creating, listing, updating, or closing issues/PRs, creating branches, writing commit messages, moving project board items, commenting, or searching repos.
 ---
 
 # GitHub Work
@@ -14,6 +14,86 @@ Use this skill for **GitHub operations** — issues, PRs, projects, comments, la
 3. **GraphQL / REST via `gh api`** (for Projects field updates or gaps in `gh`)
 
 Do not retry the same failing command more than twice without new diagnostic output. On 401/403, switch to **github-setup**.
+
+## Branch and commit conventions
+
+Apply these whenever creating a branch or commit for issue-linked work.
+
+### Branch names
+
+```
+feature/{issue-number}-{short-desc}
+```
+
+| Part | Rule | Example |
+|------|------|---------|
+| Prefix | Always `feature/` | `feature/` |
+| `{issue-number}` | Issue number, zero-padded to 4 digits | `#10` → `0010`, `#48` → `0048` |
+| `{short-desc}` | Kebab-case summary of the work (2–4 words) | `scaffold-app`, `publish-flow` |
+
+**Examples**
+
+- Issue #10 — Scaffold app → `feature/0010-scaffold-app`
+- Issue #48 — Publish flow → `feature/0048-publish-flow`
+
+```bash
+git checkout -b feature/0010-scaffold-app
+# or, if the branch already exists for the issue number only:
+git checkout feature/0010
+```
+
+Create the branch from an up-to-date `main` (or the team's default branch) before starting implementation.
+
+### Commit messages
+
+```
+[Name/Name] Description #issue-number
+```
+
+| Part | Rule | Example |
+|------|------|---------|
+| `[Name/Name]` | Assignee first names from the issue, slash-separated | `[Abhishek/Vinay]` |
+| `Description` | Imperative, concise summary of the change | `Bootstrap app with Vite and React` |
+| `#issue-number` | Issue number with `#` prefix (not zero-padded) | `#10` |
+
+**Examples**
+
+```
+[Abhishek/Vinay] Bootstrap app with Vite and React #10
+[Abhishek/Vinay] Add Tailwind CSS and shadcn/ui #10
+[Abhishek/Vinay] Create a skill for the story clarification and plan #10
+```
+
+**Rules**
+
+- Use assignee **first names** from the GitHub issue. If there is one assignee, use a single name: `[Abhishek] … #10`.
+- If assignees are unknown, fetch them with `gh issue view N --json assignees` before committing.
+- Keep the description in imperative mood (e.g. "Add", "Fix", "Update", not "Added" or "Adds").
+- Always append the issue reference `#N` at the end of the subject line.
+- Use Australian English in descriptions when writing prose; code identifiers stay American English per **AGENTS.md**.
+
+### Linking branches, commits, and PRs
+
+1. **Branch** — `feature/{issue-number}-{short-desc}` before first commit
+2. **Commits** — `[Name/Name] Description #N` on every commit for that issue
+3. **PR title** — may mirror the commit subject or summarise the full change set
+4. **PR body** — include `Fixes #N` or `Closes #N` to auto-close the issue on merge
+
+```bash
+gh issue view 10 -R owner/repo --json assignees --jq '.assignees[].login'
+git checkout -b feature/0010-scaffold-app
+git commit -m "[Abhishek/Vinay] Bootstrap app with Vite and React #10"
+gh pr create --title "[Abhishek/Vinay] Bootstrap app with Vite and React #10" --body "$(cat <<'EOF'
+Fixes #10
+
+## Summary
+- ...
+
+## Test plan
+- [ ] ...
+EOF
+)"
+```
 
 ## Quick checklist
 
@@ -96,8 +176,13 @@ query { repository(owner:"OWNER", name:"REPO") {
 
 ### Link to branches/PRs
 
+Follow **Branch and commit conventions** above when naming branches and writing commit messages.
+
 ```bash
-gh issue develop 42 --checkout
+gh issue view 42 -R owner/repo --json assignees --jq '.assignees[].login'
+git checkout -b feature/0042-short-desc
+git commit -m "[Name/Name] Description #42"
+gh issue develop 42 --checkout   # optional; rename to match convention if needed
 # PR body: "Fixes #42" or "Closes #42"
 ```
 
@@ -112,7 +197,7 @@ gh pr merge 42 --squash
 gh pr comment 42 --body "LGTM"
 ```
 
-Use `gh pr create` per user rules when opening PRs; include summary and test plan in the body.
+Use `gh pr create` per user rules when opening PRs; include summary and test plan in the body. PR titles should follow the same `[Name/Name] Description #N` commit format when the PR maps to a single issue.
 
 ## Projects (board status)
 

@@ -114,3 +114,16 @@ curl -s -X POST -H "Authorization: Bearer $(gh auth token)" \
 ```
 
 Prefer MCP or `gh` over raw API when equivalent commands exist.
+
+## Branch and commit conventions
+
+See [SKILL.md](SKILL.md#branch-and-commit-conventions) for the full rules. Quick reference:
+
+| Artifact | Format | Example |
+|----------|--------|---------|
+| Branch | `feature/{issue-number}-{short-desc}` | `feature/0010-scaffold-app` |
+| Commit | `[Name/Name] Description #issue-number` | `[Abhishek/Vinay] Bootstrap app with Vite and React #10` |
+
+- Issue number in branch names: zero-padded to 4 digits (`10` → `0010`)
+- Issue number in commits: `#` prefix, not zero-padded (`#10`)
+- Names: assignee first names from the issue, slash-separated
