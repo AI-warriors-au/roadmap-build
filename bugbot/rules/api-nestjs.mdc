@@ -1,0 +1,53 @@
+---
+description: Bugbot rule — NestJS API structure and patterns
+globs: ["api/**/*.ts"]
+alwaysApply: false
+---
+
+# NestJS standards (`api/`)
+
+## Module layout
+
+Each feature under `api/src/<feature>/`:
+
+```
+<feature>.module.ts
+<feature>.controller.ts
+<feature>.service.ts
+dto/
+<feature>.service.spec.ts
+```
+
+## Controller
+
+- **Thin controllers:** routing, guards, delegate to service.
+- Use DTOs for request bodies and query params — not raw `req.body`.
+- HTTP exceptions from service layer or re-throw `HttpException` subclasses.
+- Avoid `@Res()` unless streaming/download; prefer returning typed data.
+
+**Flag:** business logic, Prisma calls, or complex conditionals in controllers.
+
+## Service
+
+- All business logic here; inject `PrismaService` (not `PrismaClient` directly).
+- Return domain data; keep HTTP formatting in the controller when appropriate.
+- No direct `Request`/`Response` unless streaming.
+
+**Flag:** god services (>300 lines), services importing from unrelated feature modules.
+
+## Module
+
+- Register controller, service, and imports (`PrismaModule`, etc.).
+- Export service only if other modules need it.
+- Do not introduce new architectural layers (repositories, use-cases) without existing precedent.
+
+## Bootstrap
+
+- `ConfigModule` loads env from repo root (`../.env` from `api/` cwd).
+- Global `ValidationPipe` expected for DTO validation.
+- One controller per resource.
+
+## Health & infra
+
+- `GET /health` must not leak stack traces or internal errors in production responses.
+- Graceful behaviour when PostgreSQL is unavailable (503, process stays up).

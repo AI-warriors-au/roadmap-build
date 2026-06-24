@@ -2,14 +2,15 @@
 name: story
 description: >-
   Story workflow: /story NUMBER runs PlannerAgent (story-to-requirements) → manual
-  approval → ImplementerAgent. Does not commit or create PRs.
+  approval → ImplementerAgent → code review → ship (commit, PR). PR/commit only
+  after human code review approval.
 ---
 
 # Story
 
 Single entry point for the Fabric story SDLC:
 
-**Plan → Manual Approval → Implement**
+**Plan → Manual Approval → Implement → Code Review → Ship (PR)**
 
 ```
 /story 42
@@ -33,6 +34,9 @@ flowchart TD
   F -->|Cancel| H[End]
   G --> I["ImplementerAgent"]
   I --> J["Handover<br/>.ai/implementation/story-{id}.md"]
+  J --> K["⛔ STOP<br/>Code review"]
+  K -->|Approved| L["Phase 7 Ship<br/>branch · commit · PR"]
+  K -->|Revise| I
 ```
 
 ---
@@ -72,7 +76,8 @@ Follow **planner-agent** § On human approval:
 
 1. Copy draft → `.ai/plans/story-{id}.md`
 2. Set `**Status:** Approved` with approval metadata
-3. Warn if 🔴 blocking open questions remain (human overrode by approving)
+3. Post GitHub issue comment per **story-to-requirements** Step 8 (in scope, out of scope, FR, NFR)
+4. Warn if 🔴 blocking open questions remain (human overrode by approving)
 
 ---
 
@@ -94,7 +99,28 @@ Follow **implementer** (`.cursor/skills/implementer/SKILL.md`):
 5. Self-review
 6. Handover → `.ai/implementation/story-{id}.md`
 
-**Rules:** No commits, no PRs, no scope outside plan, no AC/architecture changes.
+**Rules (Phases 1–6):** No commits, no PRs, no scope outside plan, no AC/architecture changes. **STOP** after handover for code review.
+
+---
+
+## Phase 3: Ship (after code review approval)
+
+Triggered when the human approves the implementation after review (e.g. `Approved`, `Create PR`, `Ship it`).
+
+**Prerequisites:**
+
+- Handover at `.ai/implementation/story-{id}.md` with status **Ready for review**
+- Explicit human code review approval in chat
+
+Follow **implementer** Phase 7 (`.cursor/skills/implementer/SKILL.md`):
+
+1. Checkout `main` and pull (if not already on the story feature branch)
+2. Create or checkout `feature/{NNNN}-{short-desc}`
+3. Commit with **github-work** message format
+4. Push and open PR targeting `main` (summary, changes, test plan)
+5. Comment on the issue with the PR link
+
+**Rules:** Never ship without human code review approval. Use **github-work** for all GitHub operations.
 
 ---
 
@@ -120,6 +146,7 @@ Approved
 | Context | `.ai/context/story-{id}.md` |
 | Approved plan | `.ai/plans/story-{id}.md` |
 | Implementation | `.ai/implementation/story-{id}.md` |
+| PR | GitHub (after Phase 3 ship) |
 
 ## Final chat summary (after Phase 2)
 
@@ -129,3 +156,10 @@ Approved
 4. Status: Ready for review | Blocked
 5. Test results and AC coverage
 6. Reviewer focus areas
+
+## Final chat summary (after Phase 3)
+
+1. Feature branch name
+2. Commit message(s)
+3. PR URL
+4. Issue comment confirmed

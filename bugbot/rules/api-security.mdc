@@ -1,0 +1,41 @@
+---
+description: Bugbot rule — API security review
+globs: ["api/**/*.ts", "api/prisma/**", ".env.example"]
+alwaysApply: false
+---
+
+# Security standards (`api/`)
+
+## Secrets (blocking)
+
+- No API keys, passwords, JWT secrets, or `GITHUB_TOKEN` values in source code.
+- No committed `.env` files — only `.env.example` with placeholders.
+- Flag `DATABASE_URL` or tokens in logs, error messages, or health responses.
+
+## Input & injection
+
+- All external input via validated DTOs — flag raw `req.body`, `req.query`, `req.params` without validation.
+- Prisma: prefer parameterized queries; flag `$queryRaw` / `$executeRaw` with string concatenation from user input.
+- Sanitise or allowlist fields on create/update to prevent mass assignment.
+
+## Auth (when present)
+
+- Protected routes must use existing auth guards — do not invent parallel auth.
+- Flag write endpoints without guards when sibling read endpoints are guarded.
+- JWT/session cookies: `httpOnly`, `secure` in production configs when auth lands (#21+).
+
+## HTTP & errors
+
+- Do not expose stack traces or internal Prisma errors to clients in production.
+- Use appropriate status codes (401/403 for auth, 404 for missing resources, 503 for dependency down).
+- Flag catching errors and returning generic 200 with error payload in body.
+
+## Dependencies
+
+- Flag new dependencies with known critical CVEs (when detectable).
+- Flag `eval`, `Function()`, or dynamic `require()` with user-controlled input.
+
+## CORS & headers
+
+- When CORS is added, flag `origin: '*'` with credentials enabled.
+- Rate limiting consideration for public auth endpoints (note as medium when absent on login routes).

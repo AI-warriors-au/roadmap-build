@@ -1,0 +1,33 @@
+---
+description: Bugbot rule — Learnmap monorepo layout and PR hygiene
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Monorepo & PR hygiene
+
+## Layout
+
+| Spec / issue wording | Path |
+|----------------------|------|
+| `learnmap/api` | `api/` |
+| `learnmap/app` | `app/` |
+
+Do not expect a separate `learnmap/api` GitHub repository.
+
+## Package boundaries
+
+- API code belongs under `api/` — not repo root `src/`.
+- Shared env: root `.env.example`; never commit `.env`.
+- Root `package.json` uses npm **workspaces**; package scripts live in `api/package.json`.
+
+## PR scope
+
+- Flag changes under `.ai/` (gitignored local artefacts) if accidentally committed.
+- Flag large unrelated edits in `.cursor/` unless the PR title/body states agent-config work.
+- `docker-compose.yml` at repo root is for local PostgreSQL (#11); credentials must match `.env.example` (`learnmap` / `learnmap` / `learnmap`).
+
+## Documentation
+
+- User-facing setup changes require `README.md` updates.
+- New required env vars must appear in `.env.example` with comments.
