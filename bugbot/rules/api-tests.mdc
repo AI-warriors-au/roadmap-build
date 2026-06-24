@@ -1,0 +1,45 @@
+---
+description: Bugbot rule — unit tests and coverage expectations
+globs: ["api/**/*.ts", "api/**/*.spec.ts"]
+alwaysApply: false
+---
+
+# Tests & coverage (`api/`)
+
+## When tests are required (blocking)
+
+If the PR modifies **business logic** in `api/src/**/*.service.ts` or adds new service methods:
+
+- Expect a corresponding `*.spec.ts` in the same feature folder.
+- Flag if service logic changed but no test file was added or updated.
+
+## Test structure
+
+- Co-located `*.spec.ts` next to the file under test.
+- Mock at boundaries: `PrismaService`, HTTP clients — not private methods.
+- Use `@nestjs/testing` `Test.createTestingModule`.
+
+## What to verify in tests
+
+| Layer | Focus |
+|-------|-------|
+| Service | Business logic, permissions, edge cases |
+| Controller | Route wiring, guards, status codes (mock service) |
+| DTO | Invalid input rejection (when project tests DTOs) |
+
+## Coverage gaps to flag
+
+- Happy path only — no error/permission-denied cases for auth-sensitive code.
+- Deleted or weakened assertions to make tests pass.
+- Tests that mock everything and assert nothing meaningful.
+- E2E tests that require live PostgreSQL without documenting skip/CI strategy.
+
+## Commands
+
+PRs touching `api/` should pass:
+
+- `npm run lint -w api` (or `npm run lint:api`)
+- `npm run build -w api`
+- `npm run test` in `api/` when logic changed
+
+Flag PR descriptions that omit test evidence for non-trivial service changes.

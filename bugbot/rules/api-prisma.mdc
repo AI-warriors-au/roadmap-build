@@ -1,0 +1,39 @@
+---
+description: Bugbot rule — Prisma schema, migrations, and queries
+globs: ["api/prisma/**", "api/src/**/*.ts"]
+alwaysApply: false
+---
+
+# Prisma standards
+
+## Schema (`api/prisma/schema.prisma`)
+
+| Item | Convention |
+|------|------------|
+| Model | PascalCase singular (`User`, `Roadmap`) |
+| Field | camelCase |
+| Migration folder | `YYYYMMDDHHMMSS_<snake_case_description>` |
+
+## Migrations (blocking)
+
+- Every `schema.prisma` change **must** include a new migration under `api/prisma/migrations/`.
+- **Never** hand-edit migration SQL unless fixing a failed migration.
+- Flag schema changes with zero migration files in the PR.
+
+## Queries in services
+
+- Inject `PrismaService`; use typed `Prisma.*` inputs where available.
+- `select` only needed fields for list/export endpoints.
+- Paginate large datasets — flag unbounded `findMany()` without `take`/`cursor`.
+- Use `$transaction` for multi-table writes that must succeed or fail together.
+- Respect soft-delete patterns (`unenrolledAt`, etc.) when present in schema.
+- Avoid raw SQL unless the codebase already uses it for that case.
+
+## Connectivity
+
+- `DATABASE_URL` from environment — never hardcoded connection strings.
+- `$connect()` failures should not crash the app unhandled (health reports status).
+
+## Generate
+
+- `prisma generate` must succeed after schema changes (`postinstall` or documented step).

@@ -1,0 +1,28 @@
+---
+description: Bugbot rule — DTOs and class-validator
+globs: ["api/**/dto/**/*.ts", "api/src/**/*.controller.ts"]
+alwaysApply: false
+---
+
+# Validation & DTO standards
+
+## DTO rules
+
+- One DTO per use case: `CreateXDto`, `UpdateXDto`, `XQueryDto`.
+- Use `class-validator` decorators on all request DTOs.
+- Required fields: `@IsNotEmpty()` or type-specific validators (`@IsEmail()`, `@IsUUID()`).
+- Optional fields: `@IsOptional()` **before** other validators.
+- Enums: `@IsEnum(MyEnum)` with shared domain enum.
+- No validation logic in controllers — rely on DTO + global `ValidationPipe`.
+
+## Flag
+
+- Controller methods accepting `any`, untyped body, or `@Body()` without a DTO class.
+- Missing validation on write endpoints (POST, PUT, PATCH).
+- User-controlled fields written directly to Prisma without allowlisting (mass assignment).
+- Query params parsed as strings without `@Type(() => Number)` when numeric.
+
+## Response shapes
+
+- Use response DTOs when the project pattern exists; otherwise typed interfaces are acceptable.
+- Do not return raw Prisma entities with sensitive fields (passwords, tokens) if added later.

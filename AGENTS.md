@@ -22,6 +22,14 @@ This repository contains comprehensive configuration and guidance for AI coding 
 | **validation** | DTOs, class-validator — delegated by implementer |
 | **test** | Unit tests, lint/build/test — delegated by implementer |
 
+## Bugbot PR review
+
+Automated PR review uses [Cursor Bugbot](https://cursor.com/docs/bugbot). Project standards live in **`.cursor/BUGBOT.md`** (with scoped rules in `bugbot/rules/`). Bugbot does **not** read `.cursor/rules/` — keep review guidance in `BUGBOT.md`.
+
+- Enable Bugbot on `AI-warriors-au/roadmap-build` in the [Bugbot dashboard](https://cursor.com/dashboard/bugbot).
+- Manual trigger on a PR: comment `cursor review` or `bugbot run`.
+- Teach Bugbot inline: `@cursor remember [fact]` on a PR comment.
+
 ## Agents
 
 | Agent | Use for |
