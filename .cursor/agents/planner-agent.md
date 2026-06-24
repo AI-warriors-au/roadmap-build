@@ -155,6 +155,10 @@ When the human replies **`Approved`** (or equivalent):
 
 5. Leave the draft file unchanged for audit trail
 
+### Post approval comment on GitHub
+
+Follow **story-to-requirements** Step 8: comment on the source issue with in-scope, out-of-scope, functional, and non-functional requirements from the approved plan. Use **github-work**.
+
 ### Then hand off
 
 Invoke **implementer** skill.
