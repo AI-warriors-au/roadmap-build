@@ -17,5 +17,42 @@ services:
       timeout: 5s
       retries: 5
 
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile.dev
+    container_name: learnmap-api
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://learnmap:learnmap@postgres:5432/learnmap
+    volumes:
+      - .:/workspace
+      - /workspace/node_modules
+      - /workspace/api/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile.dev
+    container_name: learnmap-app
+    restart: unless-stopped
+    ports:
+      - '5173:5173'
+    environment:
+      VITE_API_PROXY_TARGET: http://api:3000
+    volumes:
+      - .:/workspace
+      - /workspace/node_modules
+      - /workspace/app/node_modules
+    depends_on:
+      - api
+
 volumes:
   learnmap_pgdata:
