@@ -2,11 +2,17 @@
   "name": "learnmap",
   "private": true,
   "workspaces": [
-    "api"
+    "api",
+    "app"
   ],
   "scripts": {
     "build:api": "npm run build -w api",
     "lint:api": "npm run lint -w api",
-    "start:api": "npm run start:dev -w api"
+    "start:api": "npm run start:dev -w api",
+
+    "start:app": "npm run start:dev -w app",
+    "lint:app": "npm run lint -w app",
+    "build:app": "npm run build -w app",
+    "test:app": "npm run test -w app"
   }
 }

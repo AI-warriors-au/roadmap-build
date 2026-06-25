@@ -63,3 +63,50 @@ export GITHUB_TOKEN=$(gh auth token)
 ```
 
 Verify in **Settings → Tools & Integrations → MCP** — `github` should be connected.
+
+## Learnmap frontend (`app/`)
+
+The React SPA lives in `app/` (monorepo mapping: `learnmap/app` → `app/`).
+
+**Prerequisites:** [Node.js](https://nodejs.org/) (LTS)
+
+From the repository root:
+
+```bash
+npm install
+npm run dev:app
+```
+
+Open the URL shown in the terminal (typically `http://localhost:5173`). The placeholder home route renders at `/`.
+
+Other commands:
+
+```bash
+npm run lint:app    # oxlint in app/
+npm run build:app   # production build
+npm run test:app    # vitest unit tests
+```
+
+During local development, Vite proxies `/api` to `http://localhost:3000` by default. Override with `VITE_API_PROXY_TARGET` (see `app/.env.example`).
+
+### Docker Compose (full stack)
+
+Run PostgreSQL, API, and app together:
+
+```bash
+docker compose up
+```
+
+| Service | URL |
+|---------|-----|
+| App | http://localhost:5173 |
+| API | http://localhost:3000/health |
+| PostgreSQL | `localhost:5432` (`learnmap` / `learnmap` / `learnmap`) |
+
+The app container proxies `/api` to the `api` service via `VITE_API_PROXY_TARGET=http://api:3000`.
+
+Postgres only:
+
+```bash
+docker compose up postgres
+```
