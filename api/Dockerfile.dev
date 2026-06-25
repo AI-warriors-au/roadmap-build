@@ -4,13 +4,16 @@ WORKDIR /workspace
 
 COPY package.json package-lock.json ./
 COPY api/package.json ./api/
+COPY api/docker-entrypoint.dev.sh /usr/local/bin/docker-entrypoint.dev.sh
 COPY api/prisma ./api/prisma
 COPY app/package.json ./app/
 
-RUN npm ci
+RUN npm ci \
+  && chmod +x /usr/local/bin/docker-entrypoint.dev.sh
 
 COPY . .
 
 EXPOSE 3000
 
+ENTRYPOINT ["docker-entrypoint.dev.sh"]
 CMD ["npm", "run", "start:api"]
