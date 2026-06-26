@@ -29,6 +29,7 @@ services:
       NODE_ENV: development
       PORT: 3000
       DATABASE_URL: postgresql://learnmap:learnmap@postgres:5432/learnmap
+      SEED_DATABASE: ${SEED_DATABASE:-false}
     volumes:
       - .:/workspace
       - /workspace/node_modules
