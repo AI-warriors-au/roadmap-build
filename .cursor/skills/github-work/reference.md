@@ -10,7 +10,7 @@
 | `gh issue edit NUMBER` | Update title, body, labels, assignees, milestone |
 | `gh issue close NUMBER` | Close issue |
 | `gh issue reopen NUMBER` | Reopen closed issue |
-| `gh issue comment NUMBER` | Add comment |
+| `gh issue comment NUMBER` | Add comment — **only when user explicitly asks**; see SKILL.md |
 | `gh issue delete NUMBER` | Delete issue (requires admin) |
 | `gh issue develop NUMBER` | Create linked branch |
 | `gh issue pin/unpin NUMBER` | Pin issue in repo |

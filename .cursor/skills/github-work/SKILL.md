@@ -1,6 +1,6 @@
 ---
 name: github-work
-description: Manage GitHub issues, pull requests, projects, comments, labels, branches, and commits. Prefer GitHub MCP tools; fall back to gh CLI or GraphQL. Use when creating, listing, updating, or closing issues/PRs, creating branches, writing commit messages, moving project board items, commenting, or searching repos.
+description: Manage GitHub issues, pull requests, projects, labels, branches, and commits. Prefer GitHub MCP tools; fall back to gh CLI or GraphQL. Do not post issue comments unless the user explicitly asks; never comment on external repos without confirmation. Use when creating, listing, updating, or closing issues/PRs, creating branches, writing commit messages, moving project board items, or searching repos.
 ---
 
 # GitHub Work
@@ -14,6 +14,33 @@ Use this skill for **GitHub operations** — issues, PRs, projects, comments, la
 3. **GraphQL / REST via `gh api`** (for Projects field updates or gaps in `gh`)
 
 Do not retry the same failing command more than twice without new diagnostic output. On 401/403, switch to **github-setup**.
+
+## Issue comments — default: do not post
+
+**Never post issue comments unless the user explicitly asks** (e.g. “comment on the issue”, “post an approval comment”, “update the GitHub issue”).
+
+| Situation | Action |
+|-----------|--------|
+| Plan approved, PR shipped, story handover | **Do not** comment on the issue unless asked |
+| User asks to comment | Post only what they requested |
+| Issue is in an **external repo** | **Do not** comment — even if asked, confirm first (see below) |
+
+### This repo vs external repos
+
+Resolve the **workspace repo** from `git remote get-url origin` (e.g. `AI-warriors-au/roadmap-build`, `bugdiver-fabric/learnmap`).
+
+| Repo type | Examples | Comment policy |
+|-----------|----------|----------------|
+| **This repo** (workspace) | Monorepo you are editing | Only when user explicitly asks |
+| **External repo** | `learnmap/specs`, other orgs | **Never** comment unless user explicitly asks **and** you warn that the issue lives outside the code repo; prefer keeping plan/handover in `.ai/` and chat |
+
+Reading, searching, and viewing issues in external repos (e.g. `learnmap/specs` for stories) is fine — **commenting** is not.
+
+### If the user asks to comment
+
+1. Confirm the target `{owner}/{repo}` and issue number.
+2. If `{owner}/{repo}` ≠ workspace repo, state that the issue is external and confirm they still want a comment there.
+3. Post only the content they requested — do not auto-post plan summaries, approval blocks, or PR links unless asked.
 
 ## Branch and commit conventions
 
@@ -148,14 +175,21 @@ gh issue create -R owner/repo \
   --assignee @me
 ```
 
-### View, update, comment, close
+### View, update, close
 
 ```bash
 gh issue view 42 -R owner/repo --comments
 gh issue edit 42 -R owner/repo --add-label "priority:high" --add-assignee USER
-gh issue comment 42 -R owner/repo --body "Update: fixed in #43"
-gh issue close 42 -R owner/repo --comment "Resolved by #43"
+gh issue close 42 -R owner/repo
 gh issue reopen 42 -R owner/repo
+```
+
+### Comment (only when user explicitly asks)
+
+See **Issue comments — default: do not post** above. Do not use `--comment` on `gh issue close` unless asked.
+
+```bash
+gh issue comment 42 -R owner/repo --body "Update: fixed in #43"
 ```
 
 ### Find child issues of an epic

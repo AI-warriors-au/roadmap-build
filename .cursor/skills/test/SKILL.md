@@ -1,66 +1,40 @@
 ---
 name: test
 description: >-
-  Unit testing and verification commands for NestJS/Prisma APIs. Use when
-  ImplementerAgent writes tests or runs lint, build, and test suites.
+  Index skill for verification and testing. Delegates to fe-test (app/) or
+  be-test (api/) based on which package changed. Use when ImplementerAgent
+  runs lint/build/test or needs to pick the right test conventions.
 ---
 
-# Test
+# Test (index)
 
-Testing conventions and verification commands. **Read existing `*.spec.ts` in the same module first.**
+This monorepo has **separate frontend and backend packages** with different test runners. Do not mix conventions — delegate to the package-specific skill.
 
-## Verification commands
+| Package | Path | Skill | Runner |
+|---------|------|-------|--------|
+| Frontend | `app/` | **fe-test** | Vitest + React Testing Library |
+| Backend | `api/` | **be-test** | Jest + NestJS TestingModule |
 
-Discover from `package.json`; typical Fabric API:
+## When to read which skill
 
-| Check | Command |
-|-------|---------|
-| Lint | `npm run lint` |
-| Build | `npm run build` |
-| Unit tests | `npm run test` |
+| Changed files | Read |
+|---------------|------|
+| `app/**` | `.cursor/skills/fe-test/SKILL.md` |
+| `api/**` | `.cursor/skills/be-test/SKILL.md` |
+| Both | Read **both**; run verification from each package directory |
 
-Run all three after implementation. Capture command, exit code, and brief output in handover.
+## Implementer requirement
 
-## Unit test structure
+**Unit tests are mandatory** for every implementation change that adds or modifies behaviour (see **implementer** Phase 3–4). Tests are not optional follow-up work.
 
-Co-located `*.spec.ts` next to the file under test.
+## Quick verification
 
-```typescript
-describe('UsersService', () => {
-  let service: UsersService;
-  let prisma: DeepMockProxy<PrismaService>;
+```bash
+# Frontend
+cd app && npm run lint && npm run build && npm run test
 
-  beforeEach(async () => {
-    prisma = mockDeep<PrismaService>();
-    const module = await Test.createTestingModule({
-      providers: [
-        UsersService,
-        { provide: PrismaService, useValue: prisma },
-      ],
-    }).compile();
-    service = module.get(UsersService);
-  });
-
-  it('exports csv with required columns', async () => {
-    prisma.user.findMany.mockResolvedValue([/* fixture */]);
-    const result = await service.exportToCsv();
-    expect(result).toContain('name,email,role,createdAt');
-  });
-});
+# Backend
+cd api && npm run lint && npm run build && npm run test
 ```
 
-## What to test
-
-| Layer | Focus |
-|-------|-------|
-| Service | Business logic, permissions, edge cases from AC |
-| Controller | Route wiring, guards, status codes (mock service) |
-| DTO | Validation rules for invalid input (if project tests DTOs) |
-
-## Rules
-
-- Every business logic change needs added or updated tests (**implementer** Rule 5)
-- Mock at boundaries (Prisma, HTTP clients) — not internal private methods
-- Cover acceptance criteria: happy path + permission denied + key error cases
-- On test failure: one focused fix attempt, re-run; else document as blocker
-- Do not delete failing tests to make CI green
+See **fe-test** and **be-test** for examples, file naming, mocking patterns, and coverage rules.

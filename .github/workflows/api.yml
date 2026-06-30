@@ -1,0 +1,238 @@
+name: API
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - '.github/workflows/api.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - '.github/workflows/api.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: api-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: api
+
+jobs:
+  verify:
+    name: Lint, test, and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: api
+          sparse-checkout-cone-mode: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --include=optional
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+  e2e:
+    name: E2E tests
+    needs: verify
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: api
+          sparse-checkout-cone-mode: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --include=optional
+
+      - name: Apply migrations
+        run: npx prisma migrate deploy
+
+      - name: E2E tests
+        run: npm run test:e2e
+
+  migrate-dev:
+    name: Migrate dev database
+    needs:
+      - verify
+      - e2e
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: api
+          sparse-checkout-cone-mode: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --include=optional
+
+      - name: Apply pending migrations
+        run: npm run db:migration:deploy
+
+  deploy-dev:
+    name: Deploy Dev
+    needs:
+      - verify
+      - e2e
+      - migrate-dev
+    if: |
+      github.event_name == 'push' &&
+      needs.verify.result == 'success' &&
+      needs.e2e.result == 'success' &&
+      needs.migrate-dev.result == 'success'
+    runs-on: ubuntu-latest
+    environment: dev
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Trigger Render dev deploy
+        run: curl --fail --silent --show-error --request POST "$RENDER_DEPLOY_HOOK"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_API }}
+
+      - name: Wait for dev API
+        run: |
+          for attempt in $(seq 1 36); do
+            if curl --fail --silent --show-error "${API_URL}/health/live" > /dev/null; then
+              echo "Dev API is live"
+              exit 0
+            fi
+            echo "Waiting for dev API... (${attempt}/36)"
+            sleep 10
+          done
+          echo "Dev API did not become healthy in time"
+          exit 1
+        env:
+          API_URL: ${{ secrets.LEARNMAP_API_URL }}
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            api
+            scripts
+
+      - name: Tag dev deployment
+        working-directory: .
+        run: bash scripts/git-tag-deployment.sh dev api
+
+  approve-production:
+    name: Approve production deploy
+    needs: deploy-dev
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - run: echo "Dev deploy succeeded — proceeding to production"
+
+  migrate-prod:
+    name: Migrate production database
+    needs: approve-production
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: api
+          sparse-checkout-cone-mode: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --include=optional
+
+      - name: Apply pending migrations
+        run: npm run db:migration:deploy
+
+  deploy-prod:
+    name: Deploy Production
+    needs:
+      - approve-production
+      - migrate-prod
+    if: |
+      github.event_name == 'push' &&
+      needs.approve-production.result == 'success' &&
+      needs.migrate-prod.result == 'success'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Trigger Render production deploy
+        run: curl --fail --silent --show-error --request POST "$RENDER_DEPLOY_HOOK"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_API }}
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            api
+            scripts
+
+      - name: Tag production deployment
+        working-directory: .
+        run: bash scripts/git-tag-deployment.sh prod api
