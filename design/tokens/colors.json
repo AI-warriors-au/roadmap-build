@@ -1,0 +1,75 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "description": "Learnmap full colour palette — raw values. Use semantic tokens (semantic/light.json or semantic/dark.json) in product code.",
+    "font": "Geist Variable",
+    "baseRadius": "10px"
+  },
+
+  "brand": {
+    "violet": {
+      "50":  { "$value": "#F5F3FF", "$type": "color", "$description": "Hero section background tint" },
+      "100": { "$value": "#EDE9FE", "$type": "color" },
+      "200": { "$value": "#DDD6FE", "$type": "color" },
+      "300": { "$value": "#C4B5FD", "$type": "color" },
+      "400": { "$value": "#A78BFA", "$type": "color", "$description": "Dark-mode primary text on brand surface" },
+      "500": { "$value": "#8B5CF6", "$type": "color" },
+      "600": { "$value": "#7C3AED", "$type": "color", "$description": "Primary brand — buttons, active nav, links" },
+      "700": { "$value": "#6D28D9", "$type": "color", "$description": "Hover state for primary actions" },
+      "800": { "$value": "#5B21B6", "$type": "color" },
+      "900": { "$value": "#4C1D95", "$type": "color" },
+      "950": { "$value": "#2E1065", "$type": "color" }
+    },
+    "teal": {
+      "50":  { "$value": "#F0FDFA", "$type": "color" },
+      "100": { "$value": "#CCFBF1", "$type": "color" },
+      "200": { "$value": "#99F6E4", "$type": "color" },
+      "300": { "$value": "#5EEAD4", "$type": "color" },
+      "400": { "$value": "#2DD4BF", "$type": "color", "$description": "Secondary accent — hero text highlight" },
+      "500": { "$value": "#14B8A6", "$type": "color" },
+      "600": { "$value": "#0D9488", "$type": "color", "$description": "Secondary CTA hover" },
+      "700": { "$value": "#0F766E", "$type": "color" },
+      "800": { "$value": "#115E59", "$type": "color" },
+      "900": { "$value": "#134E4A", "$type": "color" }
+    }
+  },
+
+  "neutral": {
+    "0":   { "$value": "#FFFFFF", "$type": "color" },
+    "50":  { "$value": "#FAFAFA", "$type": "color" },
+    "100": { "$value": "#F5F5F5", "$type": "color" },
+    "150": { "$value": "#EFEFEF", "$type": "color" },
+    "200": { "$value": "#E5E5E5", "$type": "color", "$description": "Default border / divider" },
+    "300": { "$value": "#D4D4D4", "$type": "color" },
+    "400": { "$value": "#A3A3A3", "$type": "color", "$description": "Placeholder text" },
+    "500": { "$value": "#737373", "$type": "color", "$description": "Secondary / muted text" },
+    "600": { "$value": "#525252", "$type": "color" },
+    "700": { "$value": "#404040", "$type": "color" },
+    "800": { "$value": "#262626", "$type": "color", "$description": "Dark mode card surface" },
+    "900": { "$value": "#171717", "$type": "color", "$description": "Primary body text (light mode)" },
+    "950": { "$value": "#0A0A0A", "$type": "color", "$description": "Dark mode background" }
+  },
+
+  "status": {
+    "success": {
+      "light": { "$value": "#16A34A", "$type": "color" },
+      "dark":  { "$value": "#4ADE80", "$type": "color" },
+      "surface": { "$value": "#F0FDF4", "$type": "color" }
+    },
+    "warning": {
+      "light": { "$value": "#D97706", "$type": "color" },
+      "dark":  { "$value": "#FCD34D", "$type": "color" },
+      "surface": { "$value": "#FFFBEB", "$type": "color" }
+    },
+    "destructive": {
+      "light": { "$value": "#DC2626", "$type": "color" },
+      "dark":  { "$value": "#F87171", "$type": "color" },
+      "surface": { "$value": "#FEF2F2", "$type": "color" }
+    },
+    "info": {
+      "light": { "$value": "#2563EB", "$type": "color" },
+      "dark":  { "$value": "#60A5FA", "$type": "color" },
+      "surface": { "$value": "#EFF6FF", "$type": "color" }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "description": "Learnmap spacing scale. Base unit: 4px. All tokens are multiples of 4px.",
+    "baseUnit": "4px"
+  },
+
+  "spacing": {
+    "0":    { "$value": "0px",   "$type": "dimension" },
+    "0.5":  { "$value": "2px",   "$type": "dimension", "$description": "Hairline gaps, micro adjustments" },
+    "1":    { "$value": "4px",   "$type": "dimension", "$description": "Icon gap, tight inline spacing" },
+    "1.5":  { "$value": "6px",   "$type": "dimension" },
+    "2":    { "$value": "8px",   "$type": "dimension", "$description": "Between label and input, pill padding-y" },
+    "2.5":  { "$value": "10px",  "$type": "dimension" },
+    "3":    { "$value": "12px",  "$type": "dimension", "$description": "Button padding-y (sm), form field gap" },
+    "3.5":  { "$value": "14px",  "$type": "dimension" },
+    "4":    { "$value": "16px",  "$type": "dimension", "$description": "Default padding, card inner padding" },
+    "5":    { "$value": "20px",  "$type": "dimension", "$description": "Button padding-y (md)" },
+    "6":    { "$value": "24px",  "$type": "dimension", "$description": "Section gap (sm), nav height component" },
+    "7":    { "$value": "28px",  "$type": "dimension" },
+    "8":    { "$value": "32px",  "$type": "dimension", "$description": "Card gap, section internal padding" },
+    "9":    { "$value": "36px",  "$type": "dimension" },
+    "10":   { "$value": "40px",  "$type": "dimension", "$description": "Larger section gaps" },
+    "11":   { "$value": "44px",  "$type": "dimension", "$description": "Touch target minimum" },
+    "12":   { "$value": "48px",  "$type": "dimension", "$description": "Nav bar height" },
+    "14":   { "$value": "56px",  "$type": "dimension" },
+    "16":   { "$value": "64px",  "$type": "dimension", "$description": "Section padding-y (mobile)" },
+    "20":   { "$value": "80px",  "$type": "dimension", "$description": "Section padding-y (tablet)" },
+    "24":   { "$value": "96px",  "$type": "dimension", "$description": "Section padding-y (desktop)" },
+    "32":   { "$value": "128px", "$type": "dimension", "$description": "Hero vertical padding" },
+    "40":   { "$value": "160px", "$type": "dimension" },
+    "48":   { "$value": "192px", "$type": "dimension" },
+    "64":   { "$value": "256px", "$type": "dimension" }
+  },
+
+  "layout": {
+    "containerMaxWidth": { "$value": "1280px", "$type": "dimension", "$description": "Max page content width" },
+    "containerPadding":  { "$value": "{spacing.4}",  "$type": "dimension", "$description": "Horizontal page gutter (mobile)" },
+    "containerPaddingMd":{ "$value": "{spacing.6}",  "$type": "dimension", "$description": "Horizontal page gutter (tablet)" },
+    "containerPaddingLg":{ "$value": "{spacing.8}",  "$type": "dimension", "$description": "Horizontal page gutter (desktop)" },
+    "navHeight":         { "$value": "{spacing.12}", "$type": "dimension" },
+    "gridColumns":       { "$value": "12",           "$type": "number" },
+    "gridGutter":        { "$value": "{spacing.6}",  "$type": "dimension" },
+    "sidebarWidth":      { "$value": "280px",        "$type": "dimension" }
+  }
+}
