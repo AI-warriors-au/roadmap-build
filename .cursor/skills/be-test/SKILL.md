@@ -1,13 +1,13 @@
 ---
 name: be-test
 description: >-
-  Backend unit and e2e tests for learnmap/api — Jest, NestJS TestingModule,
+  Backend unit and e2e tests for roadmap-build/api — Jest, NestJS TestingModule,
   supertest. Use when ImplementerAgent changes api/ code or writes backend tests.
 ---
 
 # Backend tests (`api/`)
 
-Testing conventions for **`learnmap/api`**. Read existing `*.spec.ts` in the same module first.
+Testing conventions for **`roadmap-build/api`**. Read existing `*.spec.ts` in the same module first.
 
 ## Verification commands
 

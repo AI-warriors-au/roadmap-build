@@ -27,14 +27,14 @@ Do not retry the same failing command more than twice without new diagnostic out
 
 ### This repo vs external repos
 
-Resolve the **workspace repo** from `git remote get-url origin` (e.g. `AI-warriors-au/roadmap-build`, `bugdiver-fabric/learnmap`).
+Resolve the **workspace repo** from `git remote get-url origin` (e.g. `AI-warriors-au/roadmap-build`, `bugdiver-fabric/roadmap-build`).
 
 | Repo type | Examples | Comment policy |
 |-----------|----------|----------------|
 | **This repo** (workspace) | Monorepo you are editing | Only when user explicitly asks |
-| **External repo** | `learnmap/specs`, other orgs | **Never** comment unless user explicitly asks **and** you warn that the issue lives outside the code repo; prefer keeping plan/handover in `.ai/` and chat |
+| **External repo** | `roadmap-build/specs`, other orgs | **Never** comment unless user explicitly asks **and** you warn that the issue lives outside the code repo; prefer keeping plan/handover in `.ai/` and chat |
 
-Reading, searching, and viewing issues in external repos (e.g. `learnmap/specs` for stories) is fine — **commenting** is not.
+Reading, searching, and viewing issues in external repos (e.g. `roadmap-build/specs` for stories) is fine — **commenting** is not.
 
 ### If the user asks to comment
 

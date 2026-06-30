@@ -38,8 +38,8 @@ If the PR modifies **business logic** in `api/src/**/*.service.ts` or adds new s
 
 PRs touching `api/` should pass:
 
-- `npm run lint -w api` (or `npm run lint:api`)
-- `npm run build -w api`
+- `cd api && npm run lint`
+- `cd api && npm run build`
 - `npm run test` in `api/` when logic changed
 
 Flag PR descriptions that omit test evidence for non-trivial service changes.

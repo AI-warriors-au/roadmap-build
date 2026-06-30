@@ -155,7 +155,7 @@ jobs:
           echo "Dev API did not become healthy in time"
           exit 1
         env:
-          API_URL: ${{ secrets.LEARNMAP_API_URL }}
+          API_URL: ${{ secrets.ROADMAP_BUILD_API_URL }}
 
       - uses: actions/checkout@v4
         with:

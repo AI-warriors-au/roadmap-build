@@ -13,9 +13,10 @@ PRs changing files under `api/` must follow the standards in the root [BUGBOT.md
 **Run locally before merge:**
 
 ```bash
-npm run lint:api
-npm run build:api
-cd api && npm run test
+cd api
+npm run lint
+npm run build
+npm run test
 docker compose up -d   # for DB-connected verification
 curl http://localhost:3000/health
 ```

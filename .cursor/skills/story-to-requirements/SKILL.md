@@ -63,7 +63,7 @@ Read as a senior developer preparing for implementation:
 
 Do not invent product decisions. Flag gaps as open questions instead.
 
-Incorporate any **local project context** from the workspace (e.g. monorepo with `app/` and `api/` packages) over generic issue wording (e.g. "create learnmap/app repo") when the user or codebase has clarified structure.
+Incorporate any **local project context** from the workspace (e.g. monorepo with `app/` and `api/` packages) over generic issue wording (e.g. "create roadmap-build/app repo") when the user or codebase has clarified structure.
 
 ### Step 3: Draft requirements
 
@@ -144,7 +144,7 @@ If the user asked for revisions, note what changed since the previous version.
 
 **Skip by default.** Follow **github-work** — do **not** post issue comments unless the user explicitly requests one (e.g. “comment on the issue with the approved plan”).
 
-**Never** comment on issues in **external repos** (e.g. `learnmap/specs`) unless the user explicitly asks **and** confirms after you warn that the issue is outside the workspace code repo. Prefer keeping approved requirements in `.ai/plans/story-{NUMBER}.md` and chat.
+**Never** comment on issues in **external repos** (e.g. `roadmap-build/specs`) unless the user explicitly asks **and** confirms after you warn that the issue is outside the workspace code repo. Prefer keeping approved requirements in `.ai/plans/story-{NUMBER}.md` and chat.
 
 When the user **does** ask for a comment **and** the target issue is in the workspace repo (or external with confirmed intent):
 
