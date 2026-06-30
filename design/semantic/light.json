@@ -1,0 +1,83 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "mode": "light",
+    "description": "Semantic colour tokens for Learnmap light mode. Reference these in product code, never raw palette values."
+  },
+
+  "background": {
+    "default":  { "$value": "{neutral.0}",          "$type": "color", "$description": "Page / app shell background" },
+    "subtle":   { "$value": "{neutral.50}",         "$type": "color", "$description": "Slightly off-white surface (sidebar, panels)" },
+    "brand":    { "$value": "{brand.violet.50}",    "$type": "color", "$description": "Light violet tint — hero sections, onboarding" },
+    "overlay":  { "$value": "rgba(0,0,0,0.4)",     "$type": "color", "$description": "Modal backdrop" }
+  },
+
+  "surface": {
+    "card":     { "$value": "{neutral.0}",          "$type": "color" },
+    "elevated": { "$value": "{neutral.0}",          "$type": "color", "$description": "Popover, dropdown, tooltip surface" },
+    "inset":    { "$value": "{neutral.100}",        "$type": "color", "$description": "Code blocks, recessed input areas" }
+  },
+
+  "text": {
+    "primary":   { "$value": "{neutral.900}",       "$type": "color", "$description": "Headings, body copy" },
+    "secondary": { "$value": "{neutral.500}",       "$type": "color", "$description": "Supporting copy, labels" },
+    "tertiary":  { "$value": "{neutral.400}",       "$type": "color", "$description": "Placeholder text, disabled" },
+    "onBrand":   { "$value": "{neutral.0}",         "$type": "color", "$description": "Text on violet brand surface" },
+    "link":      { "$value": "{brand.violet.600}",  "$type": "color" },
+    "linkHover": { "$value": "{brand.violet.700}",  "$type": "color" }
+  },
+
+  "border": {
+    "default":  { "$value": "{neutral.200}",        "$type": "color" },
+    "subtle":   { "$value": "{neutral.150}",        "$type": "color" },
+    "strong":   { "$value": "{neutral.300}",        "$type": "color" },
+    "focus":    { "$value": "{brand.violet.600}",   "$type": "color", "$description": "Keyboard focus ring" }
+  },
+
+  "action": {
+    "primary": {
+      "background":        { "$value": "{brand.violet.600}", "$type": "color" },
+      "backgroundHover":   { "$value": "{brand.violet.700}", "$type": "color" },
+      "backgroundActive":  { "$value": "{brand.violet.800}", "$type": "color" },
+      "foreground":        { "$value": "{neutral.0}",        "$type": "color" }
+    },
+    "secondary": {
+      "background":        { "$value": "{neutral.0}",        "$type": "color" },
+      "backgroundHover":   { "$value": "{neutral.50}",       "$type": "color" },
+      "border":            { "$value": "{neutral.200}",      "$type": "color" },
+      "foreground":        { "$value": "{neutral.900}",      "$type": "color" }
+    },
+    "ghost": {
+      "background":        { "$value": "transparent",        "$type": "color" },
+      "backgroundHover":   { "$value": "{neutral.100}",      "$type": "color" },
+      "foreground":        { "$value": "{neutral.900}",      "$type": "color" }
+    },
+    "destructive": {
+      "background":        { "$value": "{status.destructive.light}", "$type": "color" },
+      "foreground":        { "$value": "{neutral.0}",               "$type": "color" }
+    }
+  },
+
+  "semantic": {
+    "success": {
+      "text":    { "$value": "{status.success.light}",    "$type": "color" },
+      "surface": { "$value": "{status.success.surface}",  "$type": "color" },
+      "border":  { "$value": "#BBF7D0",                   "$type": "color" }
+    },
+    "warning": {
+      "text":    { "$value": "{status.warning.light}",    "$type": "color" },
+      "surface": { "$value": "{status.warning.surface}",  "$type": "color" },
+      "border":  { "$value": "#FDE68A",                   "$type": "color" }
+    },
+    "destructive": {
+      "text":    { "$value": "{status.destructive.light}", "$type": "color" },
+      "surface": { "$value": "{status.destructive.surface}", "$type": "color" },
+      "border":  { "$value": "#FECACA",                   "$type": "color" }
+    },
+    "info": {
+      "text":    { "$value": "{status.info.light}",       "$type": "color" },
+      "surface": { "$value": "{status.info.surface}",     "$type": "color" },
+      "border":  { "$value": "#BFDBFE",                   "$type": "color" }
+    }
+  }
+}

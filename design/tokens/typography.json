@@ -1,0 +1,137 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "description": "Learnmap typography tokens. Font: Geist Variable (sans-serif). All sizes in px; line-heights unitless."
+  },
+
+  "fontFamily": {
+    "sans":    { "$value": "'Geist Variable', ui-sans-serif, system-ui, -apple-system, sans-serif", "$type": "fontFamily" },
+    "mono":    { "$value": "'Geist Mono', ui-monospace, 'Cascadia Code', monospace",               "$type": "fontFamily" },
+    "heading": { "$value": "{fontFamily.sans}",                                                      "$type": "fontFamily" }
+  },
+
+  "fontWeight": {
+    "regular":   { "$value": 400, "$type": "fontWeight", "$description": "Body copy, descriptions" },
+    "medium":    { "$value": 500, "$type": "fontWeight", "$description": "Labels, navigation items" },
+    "semibold":  { "$value": 600, "$type": "fontWeight", "$description": "Subheadings, card titles, stat numbers" },
+    "bold":      { "$value": 700, "$type": "fontWeight", "$description": "Display headings, emphasis" },
+    "extrabold": { "$value": 800, "$type": "fontWeight", "$description": "Hero display — 'Warriors'" }
+  },
+
+  "fontSize": {
+    "xs":   { "$value": "11px",  "$type": "dimension", "$description": "Micro labels, badges" },
+    "sm":   { "$value": "12px",  "$type": "dimension", "$description": "Captions, tags, table cells" },
+    "base": { "$value": "14px",  "$type": "dimension", "$description": "Body text, inputs, buttons" },
+    "md":   { "$value": "16px",  "$type": "dimension", "$description": "Slightly elevated body" },
+    "lg":   { "$value": "18px",  "$type": "dimension", "$description": "Lead text, h4" },
+    "xl":   { "$value": "20px",  "$type": "dimension", "$description": "Section headings, card h2" },
+    "2xl":  { "$value": "24px",  "$type": "dimension", "$description": "Page headings, h2" },
+    "3xl":  { "$value": "30px",  "$type": "dimension", "$description": "Section display, h1" },
+    "4xl":  { "$value": "36px",  "$type": "dimension", "$description": "Large display" },
+    "5xl":  { "$value": "48px",  "$type": "dimension", "$description": "Hero display — desktop" },
+    "6xl":  { "$value": "60px",  "$type": "dimension", "$description": "Max display" }
+  },
+
+  "lineHeight": {
+    "none":     { "$value": 1,    "$type": "number", "$description": "Tightly stacked display text" },
+    "tight":    { "$value": 1.2,  "$type": "number", "$description": "Headings" },
+    "snug":     { "$value": 1.35, "$type": "number", "$description": "Large display text" },
+    "normal":   { "$value": 1.5,  "$type": "number", "$description": "Body copy" },
+    "relaxed":  { "$value": 1.625,"$type": "number", "$description": "Long-form reading" },
+    "loose":    { "$value": 2,    "$type": "number", "$description": "Captions with breathing room" }
+  },
+
+  "letterSpacing": {
+    "tighter": { "$value": "-0.05em", "$type": "dimension" },
+    "tight":   { "$value": "-0.025em","$type": "dimension" },
+    "normal":  { "$value": "0em",     "$type": "dimension" },
+    "wide":    { "$value": "0.025em", "$type": "dimension" },
+    "wider":   { "$value": "0.05em",  "$type": "dimension" },
+    "widest":  { "$value": "0.1em",   "$type": "dimension", "$description": "ALL CAPS labels" }
+  },
+
+  "typeScale": {
+    "display-2xl": {
+      "fontSize":      { "$value": "{fontSize.6xl}" },
+      "lineHeight":    { "$value": "{lineHeight.none}" },
+      "fontWeight":    { "$value": "{fontWeight.extrabold}" },
+      "letterSpacing": { "$value": "{letterSpacing.tighter}" },
+      "$description": "Hero — 'Warriors' headline, desktop"
+    },
+    "display-xl": {
+      "fontSize":      { "$value": "{fontSize.5xl}" },
+      "lineHeight":    { "$value": "{lineHeight.tight}" },
+      "fontWeight":    { "$value": "{fontWeight.extrabold}" },
+      "letterSpacing": { "$value": "{letterSpacing.tighter}" },
+      "$description": "Hero — tablet"
+    },
+    "display-lg": {
+      "fontSize":      { "$value": "{fontSize.4xl}" },
+      "lineHeight":    { "$value": "{lineHeight.tight}" },
+      "fontWeight":    { "$value": "{fontWeight.bold}" },
+      "letterSpacing": { "$value": "{letterSpacing.tight}" }
+    },
+    "h1": {
+      "fontSize":      { "$value": "{fontSize.3xl}" },
+      "lineHeight":    { "$value": "{lineHeight.tight}" },
+      "fontWeight":    { "$value": "{fontWeight.bold}" },
+      "letterSpacing": { "$value": "{letterSpacing.tight}" },
+      "$description": "Page-level section heading"
+    },
+    "h2": {
+      "fontSize":      { "$value": "{fontSize.2xl}" },
+      "lineHeight":    { "$value": "{lineHeight.snug}" },
+      "fontWeight":    { "$value": "{fontWeight.semibold}" },
+      "letterSpacing": { "$value": "{letterSpacing.tight}" }
+    },
+    "h3": {
+      "fontSize":      { "$value": "{fontSize.xl}" },
+      "lineHeight":    { "$value": "{lineHeight.snug}" },
+      "fontWeight":    { "$value": "{fontWeight.semibold}" },
+      "letterSpacing": { "$value": "{letterSpacing.normal}" }
+    },
+    "h4": {
+      "fontSize":      { "$value": "{fontSize.lg}" },
+      "lineHeight":    { "$value": "{lineHeight.normal}" },
+      "fontWeight":    { "$value": "{fontWeight.semibold}" },
+      "letterSpacing": { "$value": "{letterSpacing.normal}" }
+    },
+    "body-lg": {
+      "fontSize":      { "$value": "{fontSize.md}" },
+      "lineHeight":    { "$value": "{lineHeight.relaxed}" },
+      "fontWeight":    { "$value": "{fontWeight.regular}" },
+      "$description": "Lead / intro paragraph"
+    },
+    "body": {
+      "fontSize":      { "$value": "{fontSize.base}" },
+      "lineHeight":    { "$value": "{lineHeight.normal}" },
+      "fontWeight":    { "$value": "{fontWeight.regular}" },
+      "$description": "Default body text"
+    },
+    "body-sm": {
+      "fontSize":      { "$value": "{fontSize.sm}" },
+      "lineHeight":    { "$value": "{lineHeight.normal}" },
+      "fontWeight":    { "$value": "{fontWeight.regular}" },
+      "$description": "Supporting copy, captions"
+    },
+    "label": {
+      "fontSize":      { "$value": "{fontSize.sm}" },
+      "lineHeight":    { "$value": "{lineHeight.normal}" },
+      "fontWeight":    { "$value": "{fontWeight.medium}" },
+      "$description": "UI labels, form labels"
+    },
+    "label-sm": {
+      "fontSize":      { "$value": "{fontSize.xs}" },
+      "lineHeight":    { "$value": "{lineHeight.normal}" },
+      "fontWeight":    { "$value": "{fontWeight.medium}" },
+      "letterSpacing": { "$value": "{letterSpacing.wide}" },
+      "$description": "Eyebrow labels (e.g. 'BROWSE BY TOPIC')"
+    },
+    "code": {
+      "fontFamily":    { "$value": "{fontFamily.mono}" },
+      "fontSize":      { "$value": "{fontSize.sm}" },
+      "lineHeight":    { "$value": "{lineHeight.relaxed}" },
+      "fontWeight":    { "$value": "{fontWeight.regular}" }
+    }
+  }
+}

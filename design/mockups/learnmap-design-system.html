@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learnmap Design System</title>
+  <link rel="preconnect" href="https://fonts.bunny.net" />
+  <link href="https://fonts.bunny.net/css?family=geist:400,500,600,700,800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Tokens ──────────────────────────────────────────────── */
+    :root {
+      --primary:    #7C3AED;
+      --primary-h:  #6D28D9;
+      --teal:       #2DD4BF;
+      --hero-bg:    #F5F3FF;
+      --white:      #FFFFFF;
+      --n0:         #FFFFFF;
+      --n50:        #FAFAFA;
+      --n100:       #F5F5F5;
+      --n200:       #E5E5E5;
+      --n300:       #D4D4D4;
+      --n400:       #A3A3A3;
+      --n500:       #737373;
+      --n600:       #525252;
+      --n700:       #404040;
+      --n800:       #262626;
+      --n900:       #171717;
+      --n950:       #0A0A0A;
+      --font:       'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --sidebar-w:  220px;
+    }
+
+    /* ── Reset ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: var(--n50); color: var(--n900); font-size: 14px; line-height: 1.5; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
+    code { font-family: 'Geist Mono', 'Cascadia Code', ui-monospace, monospace; font-size: 0.9em; background: var(--n100); padding: 1px 5px; border-radius: 3px; }
+
+    /* ── Layout ──────────────────────────────────────────────── */
+    .shell { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: var(--white); border-right: 1px solid var(--n200);
+      position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto;
+      padding: 24px 0;
+    }
+    .sidebar-brand {
+      display: flex; align-items: center; gap: 9px;
+      padding: 0 18px 20px;
+      border-bottom: 1px solid var(--n200);
+      margin-bottom: 16px;
+    }
+    .sidebar-brand svg { flex-shrink: 0; }
+    .sidebar-brand span { font-size: 13px; font-weight: 700; color: var(--n900); }
+    .sidebar-label {
+      padding: 4px 18px;
+      font-size: 10px; font-weight: 600; color: var(--n400);
+      letter-spacing: 0.09em; text-transform: uppercase;
+      margin-top: 12px;
+    }
+    .sidebar-link {
+      display: block; padding: 7px 18px;
+      font-size: 13px; color: var(--n600);
+      border-left: 2px solid transparent;
+      text-decoration: none; transition: color .12s;
+    }
+    .sidebar-link:hover { color: var(--primary); text-decoration: none; }
+    .sidebar-link.active { color: var(--primary); font-weight: 600; border-left-color: var(--primary); background: rgba(124,58,237,.06); }
+
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1; padding: 48px 56px;
+      max-width: 1100px;
+    }
+
+    /* ── Section ─────────────────────────────────────────────── */
+    .section { margin-bottom: 72px; }
+    .section-title { font-size: 22px; font-weight: 700; color: var(--n900); margin-bottom: 4px; }
+    .section-sub { font-size: 13px; color: var(--n500); margin-bottom: 32px; }
+
+    .subsection { margin-bottom: 40px; }
+    .subsection-title { font-size: 13px; font-weight: 600; color: var(--n500); margin-bottom: 12px; letter-spacing: 0.01em; }
+
+    hr.divider { border: none; border-top: 1px solid var(--n200); margin: 48px 0; }
+
+    /* ── Color swatches ──────────────────────────────────────── */
+    .palette { display: flex; gap: 6px; flex-wrap: wrap; }
+    .swatch-col { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .swatch {
+      width: 56px; height: 56px; border-radius: 8px;
+      border: 1px solid transparent;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 4px;
+    }
+    .swatch span { font-size: 9px; font-weight: 500; }
+    .swatch-hex { font-size: 9px; color: var(--n400); font-family: monospace; }
+
+    .status-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+    .status-card {
+      padding: 16px; border-radius: 8px; border: 1px solid var(--n200);
+      background: var(--white); min-width: 140px;
+    }
+    .status-swatches { display: flex; gap: 6px; margin-bottom: 10px; }
+    .status-dot { width: 20px; height: 20px; border-radius: 4px; }
+    .status-name { font-size: 13px; font-weight: 600; color: var(--n900); margin-bottom: 6px; }
+    .status-row { font-size: 10px; color: var(--n400); font-family: monospace; }
+
+    /* ── Semantic token table ────────────────────────────────── */
+    .token-table { width: 100%; border-collapse: collapse; }
+    .token-table th {
+      text-align: left; font-size: 11px; font-weight: 600;
+      color: var(--n400); padding: 0 0 8px;
+      border-bottom: 1px solid var(--n200);
+    }
+    .token-table td { padding: 7px 0; border-bottom: 1px solid var(--n100); vertical-align: middle; }
+    .token-table td:first-child { font-family: monospace; font-size: 11px; color: var(--n600); }
+    .token-swatch-cell { display: flex; align-items: center; gap: 8px; }
+    .token-dot { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; border: 1px solid var(--n200); }
+    .token-hex { font-family: monospace; font-size: 10px; color: var(--n400); }
+    .token-usage { font-size: 12px; color: var(--n500); }
+
+    /* ── Mode toggle ─────────────────────────────────────────── */
+    .mode-toggle { display: inline-flex; border: 1px solid var(--n200); border-radius: 7px; overflow: hidden; margin-bottom: 16px; }
+    .mode-btn {
+      padding: 5px 16px; font-size: 12px; font-weight: 500;
+      font-family: var(--font); cursor: pointer; border: none;
+      background: transparent; color: var(--n500);
+    }
+    .mode-btn.active { background: var(--primary); color: var(--white); }
+
+    /* ── Typography ──────────────────────────────────────────── */
+    .type-scale { display: flex; flex-direction: column; gap: 0; }
+    .type-row {
+      display: grid; grid-template-columns: 180px 1fr;
+      align-items: baseline; gap: 20px;
+      padding: 14px 0; border-bottom: 1px solid var(--n100);
+    }
+    .type-meta { font-size: 11px; color: var(--n400); font-family: monospace; }
+    .type-meta-name { font-size: 11px; font-weight: 500; color: var(--n600); }
+
+    .weight-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+    .weight-card {
+      padding: 16px 20px; border: 1px solid var(--n200); border-radius: 8px;
+      background: var(--white); flex: 1 1 140px;
+    }
+    .weight-specimen { font-size: 28px; line-height: 1.1; color: var(--n900); margin-bottom: 8px; }
+    .weight-name { font-size: 13px; font-weight: 600; color: var(--n900); }
+    .weight-value { font-size: 11px; color: var(--n400); }
+    .weight-usage { font-size: 11px; color: var(--n500); margin-top: 2px; }
+
+    /* ── Spacing ─────────────────────────────────────────────── */
+    .spacing-list { display: flex; flex-direction: column; gap: 0; }
+    .spacing-row {
+      display: grid; grid-template-columns: 130px 50px 1fr;
+      align-items: center; gap: 16px;
+      padding: 8px 0; border-bottom: 1px solid var(--n100);
+    }
+    .spacing-token { font-family: monospace; font-size: 11px; color: var(--n600); }
+    .spacing-px { font-size: 12px; color: var(--n400); }
+    .spacing-bar-wrap { display: flex; align-items: center; gap: 12px; }
+    .spacing-bar { height: 12px; background: var(--primary); border-radius: 2px; opacity: 0.75; }
+    .spacing-usage { font-size: 12px; color: var(--n500); }
+
+    /* ── Border radius ───────────────────────────────────────── */
+    .radius-grid { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+    .radius-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .radius-box { width: 56px; height: 56px; background: var(--primary); opacity: 0.85; }
+    .radius-label { font-size: 10px; color: var(--n500); font-family: monospace; text-align: center; }
+    .radius-name { font-size: 10px; color: var(--n400); text-align: center; }
+
+    /* ── Shadows ─────────────────────────────────────────────── */
+    .shadow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .shadow-card {
+      padding: 20px; border-radius: 10px;
+      background: var(--white); border: 1px solid var(--n200);
+    }
+    .shadow-name { font-size: 13px; font-weight: 600; color: var(--n900); margin-bottom: 4px; }
+    .shadow-usage { font-size: 11px; color: var(--n500); }
+
+    /* ── Components ──────────────────────────────────────────── */
+    .comp-section { margin-bottom: 36px; }
+    .comp-label { font-size: 13px; font-weight: 600; color: var(--n500); margin-bottom: 14px; }
+    .comp-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+
+    /* Buttons */
+    .btn {
+      border: none; cursor: default; font-family: var(--font);
+      font-weight: 500; border-radius: 9999px; letter-spacing: -0.01em;
+    }
+    .btn-xs  { padding: 5px 12px;  font-size: 11px; }
+    .btn-sm  { padding: 6px 14px;  font-size: 12px; }
+    .btn-md  { padding: 8px 18px;  font-size: 14px; }
+    .btn-lg  { padding: 10px 22px; font-size: 16px; }
+    .btn-xl  { padding: 13px 26px; font-size: 18px; }
+    .btn-primary    { background: var(--primary); color: var(--white); }
+    .btn-secondary  { background: var(--white); color: var(--n900); border: 1px solid var(--n200); border-radius: 9999px; }
+    .btn-ghost      { background: transparent; color: var(--n900); border: 1px solid transparent; }
+    .btn-destructive{ background: #DC2626; color: var(--white); }
+
+    /* Pills */
+    .pill {
+      display: inline-flex; align-items: center; padding: 5px 14px;
+      border-radius: 9999px; font-size: 13px; font-weight: 500;
+      font-family: var(--font); cursor: default;
+    }
+    .pill-active   { background: var(--primary); color: var(--white); border: none; }
+    .pill-inactive { background: var(--white); color: var(--n600); border: 1px solid var(--n200); }
+
+    /* Inputs */
+    .input-demo {
+      display: flex; flex-direction: column; gap: 4px; max-width: 280px;
+    }
+    .input-label { font-size: 12px; font-weight: 500; color: var(--n700); }
+    .input-field {
+      padding: 10px 14px; border: 1px solid var(--n200); border-radius: 8px;
+      font-size: 14px; color: var(--n400); font-family: var(--font);
+      background: var(--white); outline: none;
+    }
+    .input-helper { font-size: 11px; color: var(--n400); }
+
+    /* Cards */
+    .card-demo {
+      border: 1px solid var(--n200); border-radius: 10px;
+      background: var(--white); overflow: hidden; max-width: 260px;
+    }
+    .card-accent-strip { height: 4px; background: var(--primary); }
+    .card-body { padding: 16px; }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--n900); margin-bottom: 6px; }
+    .card-desc  { font-size: 12px; color: var(--n500); line-height: 1.5; margin-bottom: 14px; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .card-meta   { font-size: 11px; color: var(--n400); }
+
+    /* Category card */
+    .cat-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px; border: 1px solid var(--n200); border-radius: 10px;
+      background: var(--white); max-width: 320px;
+    }
+    .cat-icon { width: 40px; height: 40px; border-radius: 8px; background: var(--hero-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cat-title { font-size: 14px; font-weight: 600; color: var(--n900); }
+    .cat-sub   { font-size: 12px; color: var(--n500); }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── Sidebar ──────────────────────────────────────────── -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="7" fill="#7C3AED"/>
+        <path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/>
+      </svg>
+      <span>Design System</span>
+    </div>
+
+    <div class="sidebar-label">Brand</div>
+    <a class="sidebar-link active" href="#brand">Brand &amp; Icons</a>
+
+    <div class="sidebar-label">Colors</div>
+    <a class="sidebar-link" href="#palette">Brand Palette</a>
+    <a class="sidebar-link" href="#neutral">Neutral Scale</a>
+    <a class="sidebar-link" href="#semantic">Semantic Tokens</a>
+
+    <div class="sidebar-label">Type</div>
+    <a class="sidebar-link" href="#display">Display &amp; Headings</a>
+    <a class="sidebar-link" href="#typescale">Type Scale</a>
+    <a class="sidebar-link" href="#weights">Font Weights</a>
+
+    <div class="sidebar-label">Components</div>
+    <a class="sidebar-link" href="#spacing">Spacing Scale</a>
+    <a class="sidebar-link" href="#radius">Border Radius</a>
+    <a class="sidebar-link" href="#shadows">Shadows</a>
+    <a class="sidebar-link" href="#components">Core Components</a>
+  </nav>
+
+  <!-- ── Main content ─────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Brand -->
+    <section class="section" id="brand">
+      <h2 class="section-title">Brand &amp; Icons</h2>
+      <p class="section-sub">Learnmap mark, logo lockups, and icon usage rules.</p>
+
+      <div class="subsection">
+        <p class="subsection-title">Logo lockups</p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <!-- Light bg -->
+          <div style="flex:1;min-width:200px;padding:24px;background:var(--white);border:1px solid var(--n200);border-radius:10px;display:flex;align-items:center;gap:10px;">
+            <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#7C3AED"/><path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/></svg>
+            <span style="font-size:17px;font-weight:700;color:var(--n900);letter-spacing:-0.02em;">Learnmap</span>
+          </div>
+          <!-- Dark bg -->
+          <div style="flex:1;min-width:200px;padding:24px;background:var(--n950);border-radius:10px;display:flex;align-items:center;gap:10px;">
+            <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#8B5CF6"/><path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/></svg>
+            <span style="font-size:17px;font-weight:700;color:#FAFAFA;letter-spacing:-0.02em;">Learnmap</span>
+          </div>
+          <!-- Brand bg -->
+          <div style="flex:1;min-width:200px;padding:24px;background:var(--primary);border-radius:10px;display:flex;align-items:center;gap:10px;">
+            <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="rgba(255,255,255,.2)"/><path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/></svg>
+            <span style="font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.02em;">Learnmap</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <p class="subsection-title">Icon sizes</p>
+        <div style="display:flex;align-items:flex-end;gap:20px;padding:24px;background:var(--white);border:1px solid var(--n200);border-radius:10px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <svg width="48" height="48" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#7C3AED"/><path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/></svg>
+            <span style="font-size:10px;color:var(--n400);">48px — Feature</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#7C3AED"/><path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/></svg>
+            <span style="font-size:10px;color:var(--n400);">32px — Navigation</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <svg width="24" height="24" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#7C3AED"/><path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/></svg>
+            <span style="font-size:10px;color:var(--n400);">24px — Default</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <svg width="20" height="20" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#7C3AED"/><path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/></svg>
+            <span style="font-size:10px;color:var(--n400);">20px — Inline</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#7C3AED"/><path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/></svg>
+            <span style="font-size:10px;color:var(--n400);">16px — Compact</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Brand Palette -->
+    <section class="section" id="palette">
+      <h2 class="section-title">Brand Palette</h2>
+      <p class="section-sub">Raw colour tokens. Always use semantic tokens in product code.</p>
+
+      <div class="subsection">
+        <p class="subsection-title">Brand Violet — primary</p>
+        <div class="palette">
+          <div class="swatch-col"><div class="swatch" style="background:#F5F3FF;border-color:var(--n200);"><span style="color:var(--n500);">50</span></div><span class="swatch-hex">#F5F3FF</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#EDE9FE;"><span style="color:var(--n600);">100</span></div><span class="swatch-hex">#EDE9FE</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#DDD6FE;"><span style="color:var(--n600);">200</span></div><span class="swatch-hex">#DDD6FE</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#C4B5FD;"><span style="color:var(--n700);">300</span></div><span class="swatch-hex">#C4B5FD</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#A78BFA;"><span style="color:white;">400</span></div><span class="swatch-hex">#A78BFA</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#8B5CF6;"><span style="color:white;">500</span></div><span class="swatch-hex">#8B5CF6</span></div>
+          <div class="swatch-col" style="position:relative;">
+            <div class="swatch" style="background:#7C3AED;outline:2px solid #7C3AED;outline-offset:2px;"><span style="color:white;">600</span></div>
+            <span class="swatch-hex" style="color:var(--primary);font-weight:600;">#7C3AED ★</span>
+          </div>
+          <div class="swatch-col"><div class="swatch" style="background:#6D28D9;"><span style="color:white;">700</span></div><span class="swatch-hex">#6D28D9</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#5B21B6;"><span style="color:white;">800</span></div><span class="swatch-hex">#5B21B6</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#4C1D95;"><span style="color:white;">900</span></div><span class="swatch-hex">#4C1D95</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#2E1065;"><span style="color:white;">950</span></div><span class="swatch-hex">#2E1065</span></div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <p class="subsection-title">Brand Teal — secondary accent</p>
+        <div class="palette">
+          <div class="swatch-col"><div class="swatch" style="background:#F0FDFA;border-color:var(--n200);"><span style="color:var(--n500);">50</span></div><span class="swatch-hex">#F0FDFA</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#CCFBF1;"><span style="color:var(--n600);">100</span></div><span class="swatch-hex">#CCFBF1</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#99F6E4;"><span style="color:var(--n600);">200</span></div><span class="swatch-hex">#99F6E4</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#5EEAD4;"><span style="color:var(--n700);">300</span></div><span class="swatch-hex">#5EEAD4</span></div>
+          <div class="swatch-col" style="position:relative;">
+            <div class="swatch" style="background:#2DD4BF;outline:2px solid #2DD4BF;outline-offset:2px;"><span style="color:white;">400</span></div>
+            <span class="swatch-hex" style="color:#0D9488;font-weight:600;">#2DD4BF ★</span>
+          </div>
+          <div class="swatch-col"><div class="swatch" style="background:#14B8A6;"><span style="color:white;">500</span></div><span class="swatch-hex">#14B8A6</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#0D9488;"><span style="color:white;">600</span></div><span class="swatch-hex">#0D9488</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#0F766E;"><span style="color:white;">700</span></div><span class="swatch-hex">#0F766E</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#115E59;"><span style="color:white;">800</span></div><span class="swatch-hex">#115E59</span></div>
+          <div class="swatch-col"><div class="swatch" style="background:#134E4A;"><span style="color:white;">900</span></div><span class="swatch-hex">#134E4A</span></div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <p class="subsection-title">Status colours</p>
+        <div class="status-grid">
+          <div class="status-card">
+            <div class="status-swatches"><div class="status-dot" style="background:#16A34A;"></div><div class="status-dot" style="background:#4ADE80;"></div><div class="status-dot" style="background:#F0FDF4;border:1px solid var(--n200);"></div></div>
+            <div class="status-name">Success</div>
+            <div class="status-row">light #16A34A</div><div class="status-row">dark  #4ADE80</div><div class="status-row">surf  #F0FDF4</div>
+          </div>
+          <div class="status-card">
+            <div class="status-swatches"><div class="status-dot" style="background:#D97706;"></div><div class="status-dot" style="background:#FCD34D;"></div><div class="status-dot" style="background:#FFFBEB;border:1px solid var(--n200);"></div></div>
+            <div class="status-name">Warning</div>
+            <div class="status-row">light #D97706</div><div class="status-row">dark  #FCD34D</div><div class="status-row">surf  #FFFBEB</div>
+          </div>
+          <div class="status-card">
+            <div class="status-swatches"><div class="status-dot" style="background:#DC2626;"></div><div class="status-dot" style="background:#F87171;"></div><div class="status-dot" style="background:#FEF2F2;border:1px solid var(--n200);"></div></div>
+            <div class="status-name">Destructive</div>
+            <div class="status-row">light #DC2626</div><div class="status-row">dark  #F87171</div><div class="status-row">surf  #FEF2F2</div>
+          </div>
+          <div class="status-card">
+            <div class="status-swatches"><div class="status-dot" style="background:#2563EB;"></div><div class="status-dot" style="background:#60A5FA;"></div><div class="status-dot" style="background:#EFF6FF;border:1px solid var(--n200);"></div></div>
+            <div class="status-name">Info</div>
+            <div class="status-row">light #2563EB</div><div class="status-row">dark  #60A5FA</div><div class="status-row">surf  #EFF6FF</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Neutral Scale -->
+    <section class="section" id="neutral">
+      <h2 class="section-title">Neutral Scale</h2>
+      <p class="section-sub">12-step grey ramp from white to near-black.</p>
+      <div class="palette">
+        <div class="swatch-col"><div class="swatch" style="background:#FFFFFF;border-color:var(--n200);"><span style="color:var(--n500);">0</span></div><span class="swatch-hex">#FFFFFF</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#FAFAFA;border-color:var(--n200);"><span style="color:var(--n500);">50</span></div><span class="swatch-hex">#FAFAFA</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#F5F5F5;border-color:var(--n200);"><span style="color:var(--n500);">100</span></div><span class="swatch-hex">#F5F5F5</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#E5E5E5;"><span style="color:var(--n600);">200</span></div><span class="swatch-hex">#E5E5E5</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#D4D4D4;"><span style="color:var(--n700);">300</span></div><span class="swatch-hex">#D4D4D4</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#A3A3A3;"><span style="color:white;">400</span></div><span class="swatch-hex">#A3A3A3</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#737373;"><span style="color:white;">500</span></div><span class="swatch-hex">#737373</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#525252;"><span style="color:white;">600</span></div><span class="swatch-hex">#525252</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#404040;"><span style="color:white;">700</span></div><span class="swatch-hex">#404040</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#262626;"><span style="color:white;">800</span></div><span class="swatch-hex">#262626</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#171717;"><span style="color:white;">900</span></div><span class="swatch-hex">#171717</span></div>
+        <div class="swatch-col"><div class="swatch" style="background:#0A0A0A;"><span style="color:white;">950</span></div><span class="swatch-hex">#0A0A0A</span></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Semantic Tokens -->
+    <section class="section" id="semantic">
+      <h2 class="section-title">Semantic Tokens</h2>
+      <p class="section-sub">Use these in product code — never raw palette values.</p>
+
+      <div class="mode-toggle" id="modeToggle">
+        <button class="mode-btn active" onclick="setMode('light')">Light</button>
+        <button class="mode-btn" onclick="setMode('dark')">Dark</button>
+      </div>
+
+      <table class="token-table" id="semanticTable">
+        <thead><tr><th style="width:210px;">Token</th><th style="width:200px;">Value</th><th>Usage</th></tr></thead>
+        <tbody id="semanticBody"></tbody>
+      </table>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Display & Headings -->
+    <section class="section" id="display">
+      <h2 class="section-title">Display &amp; Headings</h2>
+      <p class="section-sub">Geist Variable — 800 weight for display, 700 for headings.</p>
+      <div class="type-scale">
+        <div class="type-row">
+          <div><div class="type-meta-name">Display 2XL</div><div class="type-meta">60px · 800 · 1.0lh</div></div>
+          <span style="font-size:60px;font-weight:800;line-height:1;letter-spacing:-0.035em;color:var(--n900);">Warriors</span>
+        </div>
+        <div class="type-row">
+          <div><div class="type-meta-name">Display XL</div><div class="type-meta">48px · 800 · 1.1lh</div></div>
+          <span style="font-size:48px;font-weight:800;line-height:1.1;letter-spacing:-0.03em;color:var(--n900);">Learning paths</span>
+        </div>
+        <div class="type-row">
+          <div><div class="type-meta-name">Display LG</div><div class="type-meta">36px · 700 · 1.2lh</div></div>
+          <span style="font-size:36px;font-weight:700;line-height:1.2;letter-spacing:-0.025em;color:var(--n900);">Pick your path</span>
+        </div>
+        <div class="type-row">
+          <div><div class="type-meta-name">H1</div><div class="type-meta">30px · 700 · 1.25lh</div></div>
+          <span style="font-size:30px;font-weight:700;line-height:1.25;letter-spacing:-0.02em;color:var(--n900);">Popular roadmaps</span>
+        </div>
+        <div class="type-row">
+          <div><div class="type-meta-name">H2</div><div class="type-meta">24px · 600 · 1.35lh</div></div>
+          <span style="font-size:24px;font-weight:600;line-height:1.35;letter-spacing:-0.02em;color:var(--n900);">Frontend Developer</span>
+        </div>
+        <div class="type-row">
+          <div><div class="type-meta-name">H3</div><div class="type-meta">20px · 600 · 1.35lh</div></div>
+          <span style="font-size:20px;font-weight:600;line-height:1.35;color:var(--n900);">Section heading</span>
+        </div>
+        <div class="type-row">
+          <div><div class="type-meta-name">H4</div><div class="type-meta">18px · 600 · 1.5lh</div></div>
+          <span style="font-size:18px;font-weight:600;line-height:1.5;color:var(--n900);">Card or sub-heading</span>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Type Scale -->
+    <section class="section" id="typescale">
+      <h2 class="section-title">Type Scale — Body &amp; UI</h2>
+      <p class="section-sub">Base body text is 14px. UI labels drop to 12–11px.</p>
+      <div class="type-scale">
+        <div class="type-row" style="align-items:center;">
+          <div><div class="type-meta-name">Body LG</div><div class="type-meta">16px · 400 · 1.625lh</div></div>
+          <span style="font-size:16px;font-weight:400;line-height:1.625;color:var(--n900);">Intro paragraph — lead text for page descriptions.</span>
+        </div>
+        <div class="type-row" style="align-items:center;">
+          <div><div class="type-meta-name">Body</div><div class="type-meta">14px · 400 · 1.5lh</div></div>
+          <span style="font-size:14px;font-weight:400;line-height:1.5;color:var(--n900);">Default body text used across the product interface.</span>
+        </div>
+        <div class="type-row" style="align-items:center;">
+          <div><div class="type-meta-name">Body SM</div><div class="type-meta">12px · 400 · 1.5lh</div></div>
+          <span style="font-size:12px;font-weight:400;line-height:1.5;color:var(--n600);">Supporting copy, captions, card subtitles, and tags.</span>
+        </div>
+        <div class="type-row" style="align-items:center;">
+          <div><div class="type-meta-name">Label</div><div class="type-meta">12px · 500 · 1.5lh</div></div>
+          <span style="font-size:12px;font-weight:500;line-height:1.5;color:var(--n900);">UI labels — form labels, nav items, table headers.</span>
+        </div>
+        <div class="type-row" style="align-items:center;">
+          <div><div class="type-meta-name">Label SM</div><div class="type-meta">11px · 600 · 1.5lh · 0.1em</div></div>
+          <span style="font-size:11px;font-weight:600;line-height:1.5;letter-spacing:0.1em;text-transform:uppercase;color:var(--primary);">Browse by Topic</span>
+        </div>
+        <div class="type-row" style="align-items:center;">
+          <div><div class="type-meta-name">Code</div><div class="type-meta">12px mono · 400 · 1.625lh</div></div>
+          <code>npm install @learnmap/ui</code>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Font Weights -->
+    <section class="section" id="weights">
+      <h2 class="section-title">Font Weights</h2>
+      <p class="section-sub">Five weights from the Geist Variable font.</p>
+      <div class="weight-grid">
+        <div class="weight-card"><div class="weight-specimen" style="font-weight:400;">Aa</div><div class="weight-name">Regular</div><div class="weight-value">400</div><div class="weight-usage">Body copy, descriptions</div></div>
+        <div class="weight-card"><div class="weight-specimen" style="font-weight:500;">Aa</div><div class="weight-name">Medium</div><div class="weight-value">500</div><div class="weight-usage">Labels, nav items</div></div>
+        <div class="weight-card"><div class="weight-specimen" style="font-weight:600;">Aa</div><div class="weight-name">Semibold</div><div class="weight-value">600</div><div class="weight-usage">Subheadings, card titles, stats</div></div>
+        <div class="weight-card"><div class="weight-specimen" style="font-weight:700;">Aa</div><div class="weight-name">Bold</div><div class="weight-value">700</div><div class="weight-usage">Display headings, emphasis</div></div>
+        <div class="weight-card"><div class="weight-specimen" style="font-weight:800;">Aa</div><div class="weight-name">Extrabold</div><div class="weight-value">800</div><div class="weight-usage">Hero display — "Warriors"</div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Spacing -->
+    <section class="section" id="spacing">
+      <h2 class="section-title">Spacing Scale</h2>
+      <p class="section-sub">4px base unit — all tokens are multiples of 4px.</p>
+      <div class="spacing-list">
+        <div class="spacing-row"><span class="spacing-token">spacing.1</span><span class="spacing-px">4px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:4px;"></div><span class="spacing-usage">Icon gap, tight inline</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.2</span><span class="spacing-px">8px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:8px;"></div><span class="spacing-usage">Pill padding-y, label gap</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.3</span><span class="spacing-px">12px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:12px;"></div><span class="spacing-usage">Button padding-y (sm)</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.4</span><span class="spacing-px">16px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:16px;"></div><span class="spacing-usage">Default padding, card inner</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.6</span><span class="spacing-px">24px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:24px;"></div><span class="spacing-usage">Card gap, section internal</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.8</span><span class="spacing-px">32px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:32px;"></div><span class="spacing-usage">Section internal padding</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.10</span><span class="spacing-px">40px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:40px;"></div><span class="spacing-usage">Larger section gaps</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.12</span><span class="spacing-px">48px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:48px;"></div><span class="spacing-usage">Nav bar height</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.16</span><span class="spacing-px">64px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:64px;"></div><span class="spacing-usage">Section padding-y (mobile)</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.20</span><span class="spacing-px">80px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:80px;"></div><span class="spacing-usage">Section padding-y (tablet)</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.24</span><span class="spacing-px">96px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:96px;"></div><span class="spacing-usage">Section padding-y (desktop)</span></div></div>
+        <div class="spacing-row"><span class="spacing-token">spacing.32</span><span class="spacing-px">128px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:128px;"></div><span class="spacing-usage">Hero vertical padding</span></div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Border Radius -->
+    <section class="section" id="radius">
+      <h2 class="section-title">Border Radius</h2>
+      <p class="section-sub">Base radius is 10px. Buttons and pills use <code>radius.full</code>.</p>
+      <div class="radius-grid">
+        <div class="radius-item"><div class="radius-box" style="border-radius:0;"></div><div class="radius-label">0px</div><div class="radius-name">none</div></div>
+        <div class="radius-item"><div class="radius-box" style="border-radius:4px;"></div><div class="radius-label">4px</div><div class="radius-name">xs</div></div>
+        <div class="radius-item"><div class="radius-box" style="border-radius:6px;"></div><div class="radius-label">6px</div><div class="radius-name">sm</div></div>
+        <div class="radius-item"><div class="radius-box" style="border-radius:8px;"></div><div class="radius-label">8px</div><div class="radius-name">md</div></div>
+        <div class="radius-item" style="position:relative;"><div class="radius-box" style="border-radius:10px;outline:2px solid var(--primary);outline-offset:3px;"></div><div class="radius-label" style="color:var(--primary);font-weight:600;">10px ★</div><div class="radius-name">lg — base</div></div>
+        <div class="radius-item"><div class="radius-box" style="border-radius:14px;"></div><div class="radius-label">14px</div><div class="radius-name">xl</div></div>
+        <div class="radius-item"><div class="radius-box" style="border-radius:18px;"></div><div class="radius-label">18px</div><div class="radius-name">2xl</div></div>
+        <div class="radius-item"><div class="radius-box" style="border-radius:22px;"></div><div class="radius-label">22px</div><div class="radius-name">3xl</div></div>
+        <div class="radius-item"><div class="radius-box" style="border-radius:26px;"></div><div class="radius-label">26px</div><div class="radius-name">4xl</div></div>
+        <div class="radius-item"><div class="radius-box" style="border-radius:9999px;"></div><div class="radius-label">9999px</div><div class="radius-name">full</div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Shadows -->
+    <section class="section" id="shadows">
+      <h2 class="section-title">Shadows</h2>
+      <p class="section-sub">Elevation through shadow — used sparingly in a flat-first aesthetic.</p>
+      <div class="shadow-grid">
+        <div class="shadow-card" style="box-shadow:none;"><div class="shadow-name">none</div><div class="shadow-usage">Flat — no elevation</div></div>
+        <div class="shadow-card" style="box-shadow:0 1px 2px 0 rgba(0,0,0,.05);"><div class="shadow-name">xs</div><div class="shadow-usage">Inputs, hair-thin lift</div></div>
+        <div class="shadow-card" style="box-shadow:0 1px 3px 0 rgba(0,0,0,.10),0 1px 2px -1px rgba(0,0,0,.08);"><div class="shadow-name">sm</div><div class="shadow-usage">Default card</div></div>
+        <div class="shadow-card" style="box-shadow:0 4px 6px -1px rgba(0,0,0,.10),0 2px 4px -2px rgba(0,0,0,.08);"><div class="shadow-name">md</div><div class="shadow-usage">Hover cards, dropdowns</div></div>
+        <div class="shadow-card" style="box-shadow:0 10px 15px -3px rgba(0,0,0,.10),0 4px 6px -4px rgba(0,0,0,.08);"><div class="shadow-name">lg</div><div class="shadow-usage">Modals, drawers</div></div>
+        <div class="shadow-card" style="box-shadow:0 0 0 3px rgba(124,58,237,.25);"><div class="shadow-name">brand-glow</div><div class="shadow-usage">Focus ring on primary actions</div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Core Components -->
+    <section class="section" id="components">
+      <h2 class="section-title">Core Components</h2>
+      <p class="section-sub">Built on shadcn/ui with Tailwind CSS v4 and Learnmap brand tokens.</p>
+
+      <div class="comp-section">
+        <p class="comp-label">Buttons — primary</p>
+        <div class="comp-row">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><button class="btn btn-primary btn-xs">Button</button><span style="font-size:10px;color:var(--n400);">xs — 28px</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><button class="btn btn-primary btn-sm">Button</button><span style="font-size:10px;color:var(--n400);">sm — 32px</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><button class="btn btn-primary btn-md">Button</button><span style="font-size:10px;color:var(--n400);">md — 36px</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><button class="btn btn-primary btn-lg">Button</button><span style="font-size:10px;color:var(--n400);">lg — 44px</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><button class="btn btn-primary btn-xl">Button</button><span style="font-size:10px;color:var(--n400);">xl — 52px</span></div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <p class="comp-label">Buttons — variants (md)</p>
+        <div class="comp-row" style="align-items:center;">
+          <button class="btn btn-primary btn-md">Primary</button>
+          <button class="btn btn-secondary btn-md">Secondary</button>
+          <button class="btn btn-ghost btn-md">Ghost</button>
+          <button class="btn btn-destructive btn-md">Destructive</button>
+          <button class="btn btn-primary btn-md" style="opacity:0.4;cursor:not-allowed;">Disabled</button>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <p class="comp-label">Category filter pills</p>
+        <div class="comp-row" style="flex-wrap:wrap;">
+          <span class="pill pill-active">All</span>
+          <span class="pill pill-inactive">Frontend</span>
+          <span class="pill pill-inactive">Backend</span>
+          <span class="pill pill-inactive">DevOps</span>
+          <span class="pill pill-inactive">AI / ML</span>
+          <span class="pill pill-inactive">Mobile</span>
+          <span class="pill pill-inactive">Data Science</span>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <p class="comp-label">Input field</p>
+        <div class="comp-row">
+          <div class="input-demo">
+            <label class="input-label">Search roadmaps</label>
+            <input class="input-field" type="text" placeholder="e.g. React, Python..." readonly />
+            <span class="input-helper">Press Enter to search across 80+ roadmaps.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <p class="comp-label">Roadmap card</p>
+        <div class="comp-row">
+          <!-- Featured -->
+          <div style="border-radius:10px;background:var(--primary);padding:20px;max-width:240px;">
+            <div style="font-size:15px;font-weight:600;color:white;margin-bottom:8px;">Frontend Developer</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.55;margin-bottom:14px;">From HTML basics to production-ready React applications.</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:11px;color:rgba(255,255,255,.55);">102 topics</span>
+              <button class="btn btn-md" style="background:white;color:var(--primary);padding:6px 16px;font-size:13px;">Start →</button>
+            </div>
+          </div>
+          <!-- Standard -->
+          <div class="card-demo">
+            <div class="card-accent-strip"></div>
+            <div class="card-body">
+              <div class="card-title">Backend Engineer</div>
+              <div class="card-desc">From REST APIs to database design and server architecture.</div>
+              <div class="card-footer">
+                <span class="card-meta">89 topics</span>
+                <button class="btn btn-md" style="background:var(--n900);color:white;padding:6px 16px;font-size:13px;">Start →</button>
+              </div>
+            </div>
+          </div>
+          <!-- Category card -->
+          <div class="cat-card">
+            <div class="cat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="16,18 22,12 16,6" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="8,6 2,12 8,18" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="cat-title">Frontend Development</div>
+              <div class="cat-sub">12 roadmaps · HTML, CSS, React & more</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // ── Semantic token data ────────────────────────────────────
+  const LIGHT = [
+    { token: 'background.default',  value: '#FFFFFF', usage: 'Page background' },
+    { token: 'background.subtle',   value: '#FAFAFA', usage: 'Sidebar, panels' },
+    { token: 'background.brand',    value: '#F5F3FF', usage: 'Hero section tint' },
+    { token: 'text.primary',        value: '#171717', usage: 'Headings, body copy' },
+    { token: 'text.secondary',      value: '#737373', usage: 'Supporting copy' },
+    { token: 'text.tertiary',       value: '#A3A3A3', usage: 'Placeholder, disabled' },
+    { token: 'text.link',           value: '#7C3AED', usage: 'Interactive links' },
+    { token: 'border.default',      value: '#E5E5E5', usage: 'Dividers, card borders' },
+    { token: 'border.focus',        value: '#7C3AED', usage: 'Keyboard focus ring' },
+    { token: 'action.primary.bg',   value: '#7C3AED', usage: 'Primary button background' },
+    { token: 'action.primary.bgH',  value: '#6D28D9', usage: 'Primary button hover' },
+    { token: 'semantic.success',    value: '#16A34A', usage: 'Success text / icon' },
+    { token: 'semantic.warning',    value: '#D97706', usage: 'Warning text / icon' },
+    { token: 'semantic.destructive',value: '#DC2626', usage: 'Error text / icon' },
+  ];
+  const DARK = [
+    { token: 'background.default',  value: '#0A0A0A', usage: 'Page background' },
+    { token: 'background.subtle',   value: '#111111', usage: 'Sidebar, panels' },
+    { token: 'background.brand',    value: '#1A1030', usage: 'Hero section tint' },
+    { token: 'text.primary',        value: '#FAFAFA', usage: 'Headings, body copy' },
+    { token: 'text.secondary',      value: '#A3A3A3', usage: 'Supporting copy' },
+    { token: 'text.tertiary',       value: '#525252', usage: 'Placeholder, disabled' },
+    { token: 'text.link',           value: '#A78BFA', usage: 'Interactive links' },
+    { token: 'border.default',      value: '#404040', usage: 'Dividers, card borders' },
+    { token: 'border.focus',        value: '#A78BFA', usage: 'Keyboard focus ring' },
+    { token: 'action.primary.bg',   value: '#7C3AED', usage: 'Primary button background' },
+    { token: 'action.primary.bgH',  value: '#8B5CF6', usage: 'Primary button hover' },
+    { token: 'semantic.success',    value: '#4ADE80', usage: 'Success text / icon' },
+    { token: 'semantic.warning',    value: '#FCD34D', usage: 'Warning text / icon' },
+    { token: 'semantic.destructive',value: '#F87171', usage: 'Error text / icon' },
+  ];
+
+  let currentMode = 'light';
+
+  function renderSemanticTable(rows) {
+    const tbody = document.getElementById('semanticBody');
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td><code>${r.token}</code></td>
+        <td>
+          <div class="token-swatch-cell">
+            <div class="token-dot" style="background:${r.value};${r.value==='#FFFFFF'||r.value==='#FAFAFA'?'border-color:#ccc;':''}"></div>
+            <span class="token-hex">${r.value}</span>
+          </div>
+        </td>
+        <td class="token-usage">${r.usage}</td>
+      </tr>
+    `).join('');
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    renderSemanticTable(mode === 'light' ? LIGHT : DARK);
+    document.querySelectorAll('.mode-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent.toLowerCase() === mode);
+    });
+  }
+
+  renderSemanticTable(LIGHT);
+
+  // ── Active sidebar link ────────────────────────────────────
+  const links = document.querySelectorAll('.sidebar-link');
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      links.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
