@@ -5,6 +5,12 @@
       "headers": {
         "Authorization": "Bearer ${env:GITHUB_TOKEN}"
       }
+    },
+    "render": {
+      "url": "https://api.render.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${env:RENDER_TOKEN}"
+      }
     }
   }
 }
