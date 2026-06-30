@@ -1,10 +1,11 @@
 ---
 name: implementer
 description: >-
-  Orchestrates approved plan implementation. Delegates to nestjs, prisma, test,
-  validation skills. Writes .ai/implementation/story-{id}.md. After human code
-  review approval, ships via feature branch, commit, PR, and issue comment using
-  github-work. Never creates requirements or self-approves.
+  Orchestrates approved plan implementation. Delegates to nestjs, prisma, fe-test,
+  be-test, validation skills. Writes .ai/implementation/story-{id}.md. After human code
+  review approval, ships via feature branch, commit, and PR using github-work. Never
+  creates requirements or self-approves. Does not post issue comments unless the user asks.
+  Always adds unit tests for behaviour changes before handover.
 ---
 
 # Implementer
@@ -24,8 +25,10 @@ Act as a **senior full stack developer**. Read the codebase first; delegate stac
 | **nestjs** | Modules, controllers, services, guards, pipes |
 | **prisma** | Schema, migrations, queries |
 | **validation** | DTOs, class-validator |
-| **test** | Unit tests, lint/build/test commands |
-| **github-work** | Branch, commit, push, PR, issue comment (Phase 7 only) |
+| **fe-test** | `app/` unit/component tests, Vitest, RTL |
+| **be-test** | `api/` unit/e2e tests, Jest, NestJS TestingModule |
+| **test** | Index — pick fe-test vs be-test; run lint/build/test |
+| **github-work** | Branch, commit, push, PR (Phase 7 only; no issue comments unless user asks) |
 
 Read each skill from `.cursor/skills/<name>/SKILL.md` when that layer is touched.
 
@@ -56,14 +59,15 @@ Implementer progress:
 
 ### 2 — Impact analysis
 
-Map plan steps to files by layer (use **nestjs** / **prisma** / **test** skills for layer conventions):
+Map plan steps to files by layer (use **nestjs** / **prisma** / **fe-test** / **be-test** for layer conventions):
 
 | Layer | Patterns |
 |-------|----------|
-| Controller / Service / Module | **nestjs** |
-| Schema / migrations | **prisma** |
-| DTOs | **validation** |
-| Tests | **test** |
+| Controller / Service / Module | **nestjs** + **be-test** |
+| Schema / migrations | **prisma** + **be-test** |
+| DTOs | **validation** + **be-test** (if behaviour tested) |
+| React pages / components / hooks | **fe-test** |
+| API client / lib (`app/src/lib`) | **fe-test** |
 
 Output: affected-files list (path, layer, modify/add, plan step). **STOP** if a path is missing and not authorised in the plan.
 
@@ -72,21 +76,30 @@ Output: affected-files list (path, layer, modify/add, plan step). **STOP** if a 
 Execute plan steps in order. For each step log: description, files changed, reason.
 
 - Delegate to the relevant tech skill for patterns
+- **Write unit tests in the same step** as the production code — not deferred to Phase 4 alone
+- Every added or changed behaviour (service method, component, hook, guard, route, lib helper) **must** have co-located tests before handover
+- Delegate test authoring to **fe-test** (`app/`) or **be-test** (`api/`) — read the matching skill first
+- Map tests to acceptance criteria; skip tests only for pure config/CSS with no testable logic (note in handover)
 - No unrelated refactors; no steps outside the plan
 - **STOP** on plan/architecture conflict
 
 ### 4 — Testing
 
-Follow **test** skill: lint, build, unit tests. Fix once per failure class; document unresolved failures as blockers.
+Follow **test** → **fe-test** / **be-test**:
+
+1. Run lint, build, and `npm run test` from each affected package (`app/`, `api/`)
+2. Confirm **new/changed files have corresponding tests** — handover is **Blocked** if behaviour changed without tests
+3. Fix once per failure class; document unresolved failures as blockers
 
 ### 5 — Self-review
 
 | Check | |
 |-------|---|
 | Every AC has evidence | |
-| Business logic has tests | |
+| Every behaviour change has unit tests (**fe-test** / **be-test**) | |
+| Test file list matches changed production files | |
 | Schema changes have migrations | |
-| Lint / build / tests pass (or blockers documented) | |
+| Lint / build / tests pass in each affected package (or blockers documented) | |
 | No unrelated file changes | |
 
 ### 6 — Handover
@@ -175,8 +188,8 @@ Fixes #9
 - [...]
 
 ## Test plan
-- [ ] `npm run lint:api` passes
-- [ ] `npm run build:api` passes
+- [ ] `cd api && npm run lint` passes
+- [ ] `cd api && npm run build` passes
 - [ ] [Story-specific verification steps from handover / AC]
 
 EOF
@@ -192,23 +205,13 @@ EOF
 
 Capture the PR URL and number from `gh pr create` output.
 
-#### Step 7.5 — Comment on the story
+#### Step 7.5 — Notify (chat only by default)
 
-Post a single comment on the source issue using **github-work**:
+Share the PR URL in chat. **Do not** post an issue comment unless the user explicitly asks — follow **github-work** (no comments on external repos unless confirmed).
 
-```bash
-gh issue comment {id} -R {owner}/{repo} --body "$(cat <<'EOF'
-Implementation shipped for review.
+Update `.ai/implementation/story-{id}.md` with PR link and set status to **Shipped — PR open**.
 
-**PR:** #{pr-number} — {pr-url}
-
-EOF
-)"
-```
-
-Confirm the comment was posted. Update `.ai/implementation/story-{id}.md` with PR link and set status to **Shipped — PR open**.
-
-**Chat summary:** PR URL, branch name, commit SHA(s), issue comment confirmed.
+**Chat summary:** PR URL, branch name, commit SHA(s).
 
 ---
 
@@ -218,7 +221,7 @@ Confirm the comment was posted. Update `.ai/implementation/story-{id}.md` with P
 2. Never change architecture without approval
 3. Never commit or create PRs before Phase 7 human code review approval
 4. Never modify unrelated files
-5. Business logic → tests (**test** skill)
+5. Behaviour changes → unit tests (**fe-test** / **be-test**) in the same implementation step — mandatory before handover
 6. Schema changes → migrations (**prisma** skill)
 7. Plan conflict → STOP
 8. Phase 7 → follow **github-work**; never commit secrets or `.ai/` artefacts
@@ -238,4 +241,4 @@ Confirm the comment was posted. Update `.ai/implementation/story-{id}.md` with P
 | **planner-agent** | Upstream — approved plan |
 | **implementer-agent** | Subagent — `.cursor/agents/implementer-agent.md` |
 | **story** | Command — `/story {id}` |
-| **github-work** | Phase 7 — branch, commit, PR, issue comment |
+| **github-work** | Phase 7 — branch, commit, PR (no issue comments unless user asks) |
