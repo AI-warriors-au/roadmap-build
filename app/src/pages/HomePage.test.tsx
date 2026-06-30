@@ -26,7 +26,7 @@ describe('HomePage', () => {
     renderWithProviders(<HomePage />)
 
     expect(
-      screen.getByRole('heading', { name: 'Learnmap' }),
+      screen.getByRole('heading', { name: 'roadmap-build' }),
     ).toBeInTheDocument()
     expect(screen.getByText('Checking API health…')).toBeInTheDocument()
   })

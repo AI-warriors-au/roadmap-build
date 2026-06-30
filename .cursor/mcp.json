@@ -7,7 +7,7 @@
       }
     },
     "render": {
-      "url": "https://api.render.com/mcp/",
+      "url": "https://mcp.render.com/mcp",
       "headers": {
         "Authorization": "Bearer ${env:RENDER_TOKEN}"
       }

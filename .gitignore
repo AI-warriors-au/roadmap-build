@@ -1,6 +1,8 @@
 .env
 .ai/
 node_modules/
+/package.json
+/package-lock.json
 dist/
 coverage/
 *.tsbuildinfo

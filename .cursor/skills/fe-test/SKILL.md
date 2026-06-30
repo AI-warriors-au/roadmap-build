@@ -1,14 +1,14 @@
 ---
 name: fe-test
 description: >-
-  Frontend unit and component tests for learnmap/app — Vitest, React Testing
+  Frontend unit and component tests for roadmap-build/app — Vitest, React Testing
   Library, renderWithProviders. Use when ImplementerAgent changes app/ code or
   writes frontend tests.
 ---
 
 # Frontend tests (`app/`)
 
-Testing conventions for **`learnmap/app`**. Read existing tests in the same area first (`*.test.tsx`, `*.test.ts`).
+Testing conventions for **`roadmap-build/app`**. Read existing tests in the same area first (`*.test.tsx`, `*.test.ts`).
 
 ## Verification commands
 

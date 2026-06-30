@@ -1,11 +1,11 @@
-# Learnmap — Bugbot Review Standards
+# roadmap-build — Bugbot Review Standards
 
 Bugbot reviews every PR for **bugs**, **security**, **code quality**, **test coverage**, and **project standards**. Apply these rules to the **full PR diff** (not only the latest commit).
 
 ## Repository context
 
-- **Monorepo:** `learnmap/api` → `api/`, `learnmap/app` → `app/` (future).
-- **Stack:** NestJS, Prisma, PostgreSQL, npm workspaces, TypeScript.
+- **Monorepo:** `roadmap-build/api` → `api/`, `roadmap-build/app` → `app/` (future).
+- **Stack:** NestJS, Prisma, PostgreSQL, independent npm packages (`api/`, `app/`), TypeScript.
 - **Agent skills** (implementation reference): `.cursor/skills/nestjs`, `prisma`, `validation`, `test`.
 
 When reviewing files under a path, also apply the linked rule files below.
@@ -43,8 +43,8 @@ Prefer **actionable** comments: what is wrong, why it matters, and a concrete fi
 
 If the PR touches `api/`, expect evidence that these pass (PR description or CI):
 
-- `npm run lint:api`
-- `npm run build:api`
+- `cd api && npm run lint`
+- `cd api && npm run build`
 - `npm run test` (in `api/`) when business logic changed
 
 Flag if backend logic changed with **no test file changes** unless the PR explicitly documents why tests are N/A.

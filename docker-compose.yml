@@ -1,59 +1,57 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: learnmap-postgres
+    container_name: roadmap-build-postgres
     restart: unless-stopped
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_USER: learnmap
-      POSTGRES_PASSWORD: learnmap
-      POSTGRES_DB: learnmap
+      POSTGRES_USER: roadmap-build
+      POSTGRES_PASSWORD: roadmap-build
+      POSTGRES_DB: roadmap-build
     volumes:
-      - learnmap_pgdata:/var/lib/postgresql/data
+      - roadmap-build_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U learnmap -d learnmap']
+      test: ['CMD-SHELL', 'pg_isready -U roadmap-build -d roadmap-build']
       interval: 5s
       timeout: 5s
       retries: 5
 
   api:
     build:
-      context: .
-      dockerfile: api/Dockerfile.dev
-    container_name: learnmap-api
+      context: ./api
+      dockerfile: Dockerfile.dev
+    container_name: roadmap-build-api
     restart: unless-stopped
     ports:
       - '3000:3000'
     environment:
       NODE_ENV: development
       PORT: 3000
-      DATABASE_URL: postgresql://learnmap:learnmap@postgres:5432/learnmap
+      DATABASE_URL: postgresql://roadmap-build:roadmap-build@postgres:5432/roadmap-build
       SEED_DATABASE: ${SEED_DATABASE:-false}
     volumes:
-      - .:/workspace
+      - ./api:/workspace
       - /workspace/node_modules
-      - /workspace/api/node_modules
     depends_on:
       postgres:
         condition: service_healthy
 
   app:
     build:
-      context: .
-      dockerfile: app/Dockerfile.dev
-    container_name: learnmap-app
+      context: ./app
+      dockerfile: Dockerfile.dev
+    container_name: roadmap-build-app
     restart: unless-stopped
     ports:
       - '5173:5173'
     environment:
       VITE_API_PROXY_TARGET: http://api:3000
     volumes:
-      - .:/workspace
+      - ./app:/workspace
       - /workspace/node_modules
-      - /workspace/app/node_modules
     depends_on:
       - api
 
 volumes:
-  learnmap_pgdata:
+  roadmap-build_pgdata:

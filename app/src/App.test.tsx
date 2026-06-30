@@ -28,7 +28,7 @@ describe('App', () => {
     renderWithProviders(<App />, { route: '/' })
 
     expect(
-      screen.getByRole('heading', { name: 'Learnmap' }),
+      screen.getByRole('heading', { name: 'roadmap-build' }),
     ).toBeInTheDocument()
 
     await waitFor(() => {

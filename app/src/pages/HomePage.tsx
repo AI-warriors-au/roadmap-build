@@ -17,7 +17,7 @@ export function HomePage() {
 
   return (
     <main className="flex min-h-svh flex-col items-center justify-center gap-4 p-8">
-      <h1 className="text-3xl font-semibold tracking-tight">Learnmap</h1>
+      <h1 className="text-3xl font-semibold tracking-tight">roadmap-build</h1>
 
       {isPending && (
         <p className="text-muted-foreground">Checking API health…</p>

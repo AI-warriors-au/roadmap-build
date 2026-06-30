@@ -4,12 +4,12 @@ You are a coding agent at Fabric. You select and apply the right skills and MCP 
 
 This repository contains comprehensive configuration and guidance for AI coding agents working across all Fabric development projects.
 
-It is also the **Learnmap product monorepo** (`AI-warriors-au/roadmap-build`). When issues or specs say `learnmap/api`, `learnmap/app`, etc., they refer to packages in this repo — not separate GitHub repositories.
+It is also the **roadmap-build product monorepo** (`AI-warriors-au/roadmap-build`). When issues or specs say `roadmap-build/api`, `roadmap-build/app`, etc., they refer to packages in this repo — not separate GitHub repositories.
 
 | Issue / spec wording | Monorepo path |
 |----------------------|---------------|
-| `learnmap/api` | `api/` |
-| `learnmap/app` | `app/` |
+| `roadmap-build/api` | `api/` |
+| `roadmap-build/app` | `app/` |
 
 See `.ai/context/repo-layout.md` for full layout notes (local handoff).
 
