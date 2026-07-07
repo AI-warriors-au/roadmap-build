@@ -23,6 +23,8 @@ services:
       dockerfile: Dockerfile.dev
     container_name: roadmap-build-api
     restart: unless-stopped
+    env_file:
+      - .env
     ports:
       - '3000:3000'
     environment:
