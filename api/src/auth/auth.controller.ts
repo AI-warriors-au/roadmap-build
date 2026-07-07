@@ -6,20 +6,21 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('google')
-  google(@Res() res: Response): void {
-    this.authService.startGoogleAuth(res);
-  }
-
-  @Get('google/callback')
-  async googleCallback(
-    @Query('code') code: string | undefined,
-    @Query('state') state: string | undefined,
-    @Req() req: Request,
-    @Res() res: Response,
-  ): Promise<void> {
-    await this.authService.handleGoogleCallback(code, state, req, res);
-  }
+  // Google OAuth disabled until a Google Cloud OAuth app is available.
+  // @Get('google')
+  // google(@Res() res: Response): void {
+  //   this.authService.startGoogleAuth(res);
+  // }
+  //
+  // @Get('google/callback')
+  // async googleCallback(
+  //   @Query('code') code: string | undefined,
+  //   @Query('state') state: string | undefined,
+  //   @Req() req: Request,
+  //   @Res() res: Response,
+  // ): Promise<void> {
+  //   await this.authService.handleGoogleCallback(code, state, req, res);
+  // }
 
   @Get('github')
   github(@Res() res: Response): void {
