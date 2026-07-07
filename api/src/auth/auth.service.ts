@@ -1,13 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { OAuthProvider } from '@prisma/client';
-import {
-  generateCodeVerifier,
-  generateState,
-  type GitHub,
-  type Google,
-  OAuth2RequestError,
-} from 'arctic';
+import { OAuthProvider, Prisma } from '@prisma/client';
+import { generateState, type GitHub } from 'arctic';
 import type { CookieOptions, Request, Response } from 'express';
 import { PrismaService } from '../prisma/prisma.service';
 import {
@@ -16,67 +10,27 @@ import {
   OAUTH_STATE_COOKIE,
   type ProviderProfile,
 } from './auth.types';
-import { GITHUB_OAUTH, GOOGLE_OAUTH } from './oauth-providers';
+import { GITHUB_OAUTH } from './oauth-providers';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly config: ConfigService,
     private readonly prisma: PrismaService,
-    @Inject(GOOGLE_OAUTH) private readonly google: Google,
-    @Inject(GITHUB_OAUTH) private readonly github: GitHub,
+    @Inject(GITHUB_OAUTH) private readonly github: GitHub | null,
   ) {}
 
-  startGoogleAuth(res: Response): void {
-    const state = generateState();
-    const codeVerifier = generateCodeVerifier();
-    const url = this.google.createAuthorizationURL(state, codeVerifier, [
-      'openid',
-      'profile',
-      'email',
-    ]);
+  // Google OAuth disabled until a Google Cloud OAuth app is available.
+  // startGoogleAuth(res: Response): void { ... }
+  // async handleGoogleCallback(...): Promise<void> { ... }
+  // private async fetchGoogleProfile(accessToken: string): Promise<ProviderProfile> { ... }
 
-    this.setOAuthCookies(res, state, codeVerifier);
-    res.redirect(url.toString());
-  }
-
-  async handleGoogleCallback(
-    code: string | undefined,
-    state: string | undefined,
-    req: Request,
-    res: Response,
-  ): Promise<void> {
-    const storedState = req.cookies[OAUTH_STATE_COOKIE] as string | undefined;
-    const codeVerifier = req.cookies[OAUTH_CODE_VERIFIER_COOKIE] as
-      | string
-      | undefined;
-
-    if (!this.isValidState(state, storedState) || !code || !codeVerifier) {
-      this.clearOAuthCookies(res);
+  startGithubAuth(res: Response): void {
+    if (!this.github) {
       this.redirectToError(res);
       return;
     }
 
-    try {
-      const tokens = await this.google.validateAuthorizationCode(
-        code,
-        codeVerifier,
-      );
-      const profile = await this.fetchGoogleProfile(tokens.accessToken());
-      const { isNewUser } = await this.upsertUserFromOAuth(profile);
-      this.clearOAuthCookies(res);
-      this.redirectToCallback(res, isNewUser);
-    } catch (error) {
-      if (error instanceof OAuth2RequestError) {
-        this.clearOAuthCookies(res);
-        this.redirectToError(res);
-        return;
-      }
-      throw error;
-    }
-  }
-
-  startGithubAuth(res: Response): void {
     const state = generateState();
     const url = this.github.createAuthorizationURL(state, ['user:email']);
 
@@ -90,6 +44,11 @@ export class AuthService {
     req: Request,
     res: Response,
   ): Promise<void> {
+    if (!this.github) {
+      this.redirectToError(res);
+      return;
+    }
+
     const storedState = req.cookies[OAUTH_STATE_COOKIE] as string | undefined;
 
     if (!this.isValidState(state, storedState) || !code) {
@@ -104,13 +63,9 @@ export class AuthService {
       const { isNewUser } = await this.upsertUserFromOAuth(profile);
       this.clearOAuthCookies(res);
       this.redirectToCallback(res, isNewUser);
-    } catch (error) {
-      if (error instanceof OAuth2RequestError) {
-        this.clearOAuthCookies(res);
-        this.redirectToError(res);
-        return;
-      }
-      throw error;
+    } catch {
+      this.clearOAuthCookies(res);
+      this.redirectToError(res);
     }
   }
 
@@ -135,32 +90,46 @@ export class AuthService {
     });
 
     if (existingUser) {
-      await this.prisma.oAuthAccount.create({
-        data: {
-          userId: existingUser.id,
-          provider: profile.provider,
-          providerId: profile.providerId,
-          providerEmail: profile.email,
-        },
-      });
-      return { isNewUser: false };
-    }
-    await this.prisma.user.create({
-      data: {
-        email: profile.email,
-        displayName: profile.displayName,
-        avatarUrl: profile.avatarUrl,
-        oauthAccounts: {
-          create: {
+      try {
+        await this.prisma.oAuthAccount.create({
+          data: {
+            userId: existingUser.id,
             provider: profile.provider,
             providerId: profile.providerId,
             providerEmail: profile.email,
           },
-        },
-      },
-    });
+        });
+      } catch (error) {
+        if (this.isUniqueConstraintError(error)) {
+          return { isNewUser: false };
+        }
+        throw error;
+      }
+      return { isNewUser: false };
+    }
 
-    return { isNewUser: true };
+    try {
+      await this.prisma.user.create({
+        data: {
+          email: profile.email,
+          displayName: profile.displayName,
+          avatarUrl: profile.avatarUrl,
+          oauthAccounts: {
+            create: {
+              provider: profile.provider,
+              providerId: profile.providerId,
+              providerEmail: profile.email,
+            },
+          },
+        },
+      });
+      return { isNewUser: true };
+    } catch (error) {
+      if (this.isUniqueConstraintError(error)) {
+        return { isNewUser: false };
+      }
+      throw error;
+    }
   }
 
   buildCallbackRedirectUrl(isNewUser: boolean): string {
@@ -182,40 +151,6 @@ export class AuthService {
     return Boolean(queryState && cookieState && queryState === cookieState);
   }
 
-  private async fetchGoogleProfile(
-    accessToken: string,
-  ): Promise<ProviderProfile> {
-    const response = await fetch(
-      'https://openidconnect.googleapis.com/v1/userinfo',
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch Google user profile');
-    }
-
-    const user = (await response.json()) as {
-      sub?: string;
-      email?: string;
-      name?: string;
-      picture?: string;
-    };
-
-    if (!user.sub || !user.email) {
-      throw new Error('Google profile is missing required fields');
-    }
-
-    return {
-      provider: OAuthProvider.GOOGLE,
-      providerId: user.sub,
-      email: user.email,
-      displayName: user.name ?? user.email,
-      avatarUrl: user.picture ?? null,
-    };
-  }
-
   private async fetchGithubProfile(
     accessToken: string,
   ): Promise<ProviderProfile> {
@@ -234,7 +169,6 @@ export class AuthService {
       id?: number;
       login?: string;
       name?: string | null;
-      email?: string | null;
       avatar_url?: string | null;
     };
 
@@ -242,11 +176,7 @@ export class AuthService {
       throw new Error('GitHub profile is missing required fields');
     }
 
-    let email = user.email;
-    if (!email) {
-      email = await this.fetchGithubPrimaryEmail(accessToken);
-    }
-
+    const email = await this.fetchGithubVerifiedEmail(accessToken);
     if (!email) {
       throw new Error('No verified GitHub email available');
     }
@@ -260,7 +190,7 @@ export class AuthService {
     };
   }
 
-  private async fetchGithubPrimaryEmail(
+  private async fetchGithubVerifiedEmail(
     accessToken: string,
   ): Promise<string | null> {
     const response = await fetch('https://api.github.com/user/emails', {
@@ -289,6 +219,13 @@ export class AuthService {
 
     const verified = emails.find((entry) => entry.verified);
     return verified?.email ?? null;
+  }
+
+  private isUniqueConstraintError(error: unknown): boolean {
+    return (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    );
   }
 
   private getAppOrigin(): string {
