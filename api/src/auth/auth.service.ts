@@ -90,22 +90,7 @@ export class AuthService {
     });
 
     if (existingUser) {
-      try {
-        await this.prisma.oAuthAccount.create({
-          data: {
-            userId: existingUser.id,
-            provider: profile.provider,
-            providerId: profile.providerId,
-            providerEmail: profile.email,
-          },
-        });
-      } catch (error) {
-        if (this.isUniqueConstraintError(error)) {
-          return { isNewUser: false };
-        }
-        throw error;
-      }
-      return { isNewUser: false };
+      return this.ensureOAuthAccountLinked(existingUser.id, profile);
     }
 
     try {
@@ -125,21 +110,51 @@ export class AuthService {
       });
       return { isNewUser: true };
     } catch (error) {
-      if (this.isUniqueConstraintError(error)) {
+      if (!this.isUniqueConstraintError(error)) {
+        throw error;
+      }
+
+      const racedUser = await this.prisma.user.findUnique({
+        where: { email: profile.email },
+      });
+      if (racedUser) {
+        return this.ensureOAuthAccountLinked(racedUser.id, profile);
+      }
+
+      const racedAccount = await this.prisma.oAuthAccount.findUnique({
+        where: {
+          provider_providerId: {
+            provider: profile.provider,
+            providerId: profile.providerId,
+          },
+        },
+      });
+      if (racedAccount) {
         return { isNewUser: false };
       }
+
       throw error;
     }
   }
 
-  buildCallbackRedirectUrl(isNewUser: boolean): string {
-    const url = new URL('/auth/callback', this.getAppOrigin());
+  buildCallbackRedirectUrl(isNewUser: boolean): string | null {
+    const origin = this.getAppOrigin();
+    if (!origin) {
+      return null;
+    }
+
+    const url = new URL('/auth/callback', origin);
     url.searchParams.set('new', String(isNewUser));
     return url.toString();
   }
 
-  buildErrorRedirectUrl(): string {
-    const url = new URL('/auth/callback', this.getAppOrigin());
+  buildErrorRedirectUrl(): string | null {
+    const origin = this.getAppOrigin();
+    if (!origin) {
+      return null;
+    }
+
+    const url = new URL('/auth/callback', origin);
     url.searchParams.set('error', 'oauth_failed');
     return url.toString();
   }
@@ -228,12 +243,31 @@ export class AuthService {
     );
   }
 
-  private getAppOrigin(): string {
-    const origin = this.config.get<string>('APP_ORIGIN');
-    if (!origin) {
-      throw new Error('APP_ORIGIN is not configured');
+  private async ensureOAuthAccountLinked(
+    userId: string,
+    profile: ProviderProfile,
+  ): Promise<{ isNewUser: boolean }> {
+    try {
+      await this.prisma.oAuthAccount.create({
+        data: {
+          userId,
+          provider: profile.provider,
+          providerId: profile.providerId,
+          providerEmail: profile.email,
+        },
+      });
+    } catch (error) {
+      if (this.isUniqueConstraintError(error)) {
+        return { isNewUser: false };
+      }
+      throw error;
     }
-    return origin;
+
+    return { isNewUser: false };
+  }
+
+  private getAppOrigin(): string | null {
+    return this.config.get<string>('APP_ORIGIN') ?? null;
   }
 
   private getCookieOptions(): CookieOptions {
@@ -265,10 +299,24 @@ export class AuthService {
   }
 
   private redirectToCallback(res: Response, isNewUser: boolean): void {
-    res.redirect(this.buildCallbackRedirectUrl(isNewUser));
+    const url = this.buildCallbackRedirectUrl(isNewUser);
+    if (!url) {
+      res
+        .status(500)
+        .send('Authentication succeeded but APP_ORIGIN is not configured');
+      return;
+    }
+
+    res.redirect(url);
   }
 
   private redirectToError(res: Response): void {
-    res.redirect(this.buildErrorRedirectUrl());
+    const url = this.buildErrorRedirectUrl();
+    if (!url) {
+      res.status(500).send('OAuth failed');
+      return;
+    }
+
+    res.redirect(url);
   }
 }
