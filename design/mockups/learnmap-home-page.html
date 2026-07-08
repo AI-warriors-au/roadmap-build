@@ -70,17 +70,20 @@
     .nav-link svg { flex-shrink: 0; }
 
     .nav-spacer { flex: 1; }
+
+    /* Auth actions (public landing) */
     .nav-auth { display: flex; align-items: center; gap: 8px; }
-    .btn-ghost-nav {
-      padding: 7px 16px; border: none; background: transparent;
-      font-size: 14px; color: var(--n600);
+    .btn-login {
+      padding: 8px 16px; border: none; background: transparent;
+      font-size: 14px; font-weight: 500; color: var(--n600); border-radius: 9999px;
     }
-    .btn-cta {
+    .btn-login:hover { color: var(--n900); background: var(--n100); }
+    .btn-signup {
       padding: 8px 20px; border-radius: 9999px;
       background: var(--primary); color: var(--white); border: none;
       font-size: 14px; font-weight: 600; letter-spacing: -0.01em;
     }
-    .btn-cta:hover { background: var(--primary-h); }
+    .btn-signup:hover { background: var(--primary-h); }
 
     /* ── Hero ─────────────────────────────────────────────── */
     .hero { background: var(--hero-bg); padding: 72px 32px 60px; }
@@ -233,29 +236,24 @@
     <!-- ── Navbar ──────────────────────────────────────────── -->
     <header class="navbar">
       <div class="nav-inner">
-        <div class="brand">
-          <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+        <a class="brand" href="#" title="Go to dashboard">
+          <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
             <rect width="28" height="28" rx="7" fill="#7C3AED"/>
             <path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/>
           </svg>
           <span class="brand-name">Learnmap</span>
-        </div>
+        </a>
 
-        <nav class="nav-links" id="navLinks">
-          <button class="nav-link" data-id="explore" onclick="setNav('explore')">
-            Explore
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 4L5.5 7.5L9 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button class="nav-link active" data-id="roadmaps" onclick="setNav('roadmaps')">Roadmaps</button>
-          <button class="nav-link" data-id="resources" onclick="setNav('resources')">Resources</button>
-          <button class="nav-link" data-id="community" onclick="setNav('community')">Community</button>
+        <nav class="nav-links" id="navLinks" aria-label="Primary">
+          <button class="nav-link" data-id="dashboard" onclick="setNav('dashboard')">Dashboard</button>
+          <button class="nav-link active" data-id="browse" onclick="setNav('browse')">Browse Roadmaps</button>
         </nav>
 
         <div class="nav-spacer"></div>
 
         <div class="nav-auth">
-          <button class="btn-ghost-nav">Sign in</button>
-          <button class="btn-cta">Get started</button>
+          <button class="btn-login">Log in</button>
+          <button class="btn-signup">Sign up</button>
         </div>
       </div>
     </header>
