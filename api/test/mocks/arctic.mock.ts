@@ -7,17 +7,18 @@ export function generateCodeVerifier(): string {
 }
 
 export class GitHub {
-  createAuthorizationURL(
-    _state: string,
-    _scopes: string[],
-  ): URL {
-    return new URL('https://github.com/login/oauth/authorize');
+  createAuthorizationURL(state: string, scopes: string[]): URL {
+    const url = new URL('https://github.com/login/oauth/authorize');
+    url.searchParams.set('state', state);
+    url.searchParams.set('scope', scopes.join(' '));
+    return url;
   }
 
-  async validateAuthorizationCode(
-    _code: string,
+  validateAuthorizationCode(
+    code: string,
   ): Promise<{ accessToken: () => string }> {
-    return { accessToken: () => 'e2e-test-token' };
+    void code;
+    return Promise.resolve({ accessToken: () => 'e2e-test-token' });
   }
 }
 
