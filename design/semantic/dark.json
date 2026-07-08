@@ -1,0 +1,83 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "mode": "dark",
+    "description": "Semantic colour tokens for Learnmap dark mode."
+  },
+
+  "background": {
+    "default":  { "$value": "{neutral.950}",         "$type": "color", "$description": "#0A0A0A — deepest background" },
+    "subtle":   { "$value": "#111111",               "$type": "color", "$description": "Sidebar, panel surface" },
+    "brand":    { "$value": "#1A1030",               "$type": "color", "$description": "Dark violet tint for hero sections" },
+    "overlay":  { "$value": "rgba(0,0,0,0.65)",     "$type": "color" }
+  },
+
+  "surface": {
+    "card":     { "$value": "{neutral.800}",         "$type": "color", "$description": "#262626" },
+    "elevated": { "$value": "#2D2D2D",               "$type": "color", "$description": "Popover, dropdown" },
+    "inset":    { "$value": "#1A1A1A",               "$type": "color", "$description": "Code blocks, recessed inputs" }
+  },
+
+  "text": {
+    "primary":   { "$value": "{neutral.50}",         "$type": "color", "$description": "#FAFAFA" },
+    "secondary": { "$value": "{neutral.400}",        "$type": "color", "$description": "#A3A3A3" },
+    "tertiary":  { "$value": "{neutral.600}",        "$type": "color", "$description": "#525252 — disabled" },
+    "onBrand":   { "$value": "{neutral.0}",          "$type": "color" },
+    "link":      { "$value": "{brand.violet.400}",   "$type": "color", "$description": "#A78BFA — more legible on dark" },
+    "linkHover": { "$value": "{brand.violet.300}",   "$type": "color" }
+  },
+
+  "border": {
+    "default":  { "$value": "{neutral.700}",         "$type": "color", "$description": "#404040" },
+    "subtle":   { "$value": "{neutral.800}",         "$type": "color" },
+    "strong":   { "$value": "{neutral.600}",         "$type": "color" },
+    "focus":    { "$value": "{brand.violet.400}",    "$type": "color" }
+  },
+
+  "action": {
+    "primary": {
+      "background":        { "$value": "{brand.violet.600}", "$type": "color" },
+      "backgroundHover":   { "$value": "{brand.violet.500}", "$type": "color" },
+      "backgroundActive":  { "$value": "{brand.violet.700}", "$type": "color" },
+      "foreground":        { "$value": "{neutral.0}",        "$type": "color" }
+    },
+    "secondary": {
+      "background":        { "$value": "{neutral.800}",      "$type": "color" },
+      "backgroundHover":   { "$value": "{neutral.700}",      "$type": "color" },
+      "border":            { "$value": "{neutral.600}",      "$type": "color" },
+      "foreground":        { "$value": "{neutral.50}",       "$type": "color" }
+    },
+    "ghost": {
+      "background":        { "$value": "transparent",        "$type": "color" },
+      "backgroundHover":   { "$value": "{neutral.800}",      "$type": "color" },
+      "foreground":        { "$value": "{neutral.50}",       "$type": "color" }
+    },
+    "destructive": {
+      "background":        { "$value": "{status.destructive.dark}", "$type": "color" },
+      "foreground":        { "$value": "{neutral.950}",             "$type": "color" }
+    }
+  },
+
+  "semantic": {
+    "success": {
+      "text":    { "$value": "{status.success.dark}",     "$type": "color" },
+      "surface": { "$value": "#052E16",                    "$type": "color" },
+      "border":  { "$value": "#166534",                    "$type": "color" }
+    },
+    "warning": {
+      "text":    { "$value": "{status.warning.dark}",     "$type": "color" },
+      "surface": { "$value": "#1C1507",                    "$type": "color" },
+      "border":  { "$value": "#92400E",                    "$type": "color" }
+    },
+    "destructive": {
+      "text":    { "$value": "{status.destructive.dark}",  "$type": "color" },
+      "surface": { "$value": "#1C0A0A",                    "$type": "color" },
+      "border":  { "$value": "#7F1D1D",                    "$type": "color" }
+    },
+    "info": {
+      "text":    { "$value": "{status.info.dark}",        "$type": "color" },
+      "surface": { "$value": "#0C1930",                    "$type": "color" },
+      "border":  { "$value": "#1E3A5F",                    "$type": "color" }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "description": "Learnmap border-radius tokens. Base radius is 10px (--radius CSS var).",
+    "baseRadius": "10px",
+    "cssVar": "--radius"
+  },
+
+  "radius": {
+    "none": { "$value": "0px",    "$type": "dimension", "$description": "Sharp edges, flush rule lines" },
+    "xs":   { "$value": "4px",    "$type": "dimension", "$description": "Tags, chips, tight UI elements (0.4 × base)" },
+    "sm":   { "$value": "6px",    "$type": "dimension", "$description": "Buttons (sm), inputs (0.6 × base)" },
+    "md":   { "$value": "8px",    "$type": "dimension", "$description": "Default inputs, dropdowns (0.8 × base)" },
+    "lg":   { "$value": "10px",   "$type": "dimension", "$description": "Base radius — cards, modals, panels" },
+    "xl":   { "$value": "14px",   "$type": "dimension", "$description": "Large cards, sheets (1.4 × base)" },
+    "2xl":  { "$value": "18px",   "$type": "dimension", "$description": "Feature cards (1.8 × base)" },
+    "3xl":  { "$value": "22px",   "$type": "dimension", "$description": "Popovers with soft look (2.2 × base)" },
+    "4xl":  { "$value": "26px",   "$type": "dimension", "$description": "Hero search bar, extra-large pills" },
+    "full": { "$value": "9999px", "$type": "dimension", "$description": "Pills, badges, circular avatars" }
+  },
+
+  "componentDefaults": {
+    "button-sm":  { "$value": "{radius.full}", "$type": "dimension", "$description": "Small buttons are fully rounded" },
+    "button-md":  { "$value": "{radius.full}", "$type": "dimension" },
+    "button-lg":  { "$value": "{radius.full}", "$type": "dimension" },
+    "input":      { "$value": "{radius.md}",  "$type": "dimension" },
+    "card":       { "$value": "{radius.lg}",  "$type": "dimension" },
+    "card-lg":    { "$value": "{radius.xl}",  "$type": "dimension" },
+    "modal":      { "$value": "{radius.2xl}", "$type": "dimension" },
+    "pill":       { "$value": "{radius.full}","$type": "dimension" },
+    "badge":      { "$value": "{radius.xs}",  "$type": "dimension" },
+    "tooltip":    { "$value": "{radius.sm}",  "$type": "dimension" },
+    "avatar":     { "$value": "{radius.full}","$type": "dimension" },
+    "searchBar":  { "$value": "{radius.4xl}", "$type": "dimension", "$description": "Hero search — matches the screenshot" }
+  }
+}

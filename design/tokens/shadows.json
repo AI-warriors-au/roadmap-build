@@ -1,0 +1,62 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "description": "Learnmap elevation / shadow system. Shadows are used sparingly — mostly border-based elevation is preferred to match the flat, minimal aesthetic."
+  },
+
+  "shadow": {
+    "none": {
+      "$value": "none",
+      "$type": "shadow",
+      "$description": "No elevation. Use for flat elements."
+    },
+    "xs": {
+      "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "$type": "shadow",
+      "$description": "Hair-thin lift. Inputs, subtle card borders."
+    },
+    "sm": {
+      "$value": "0 1px 3px 0 rgba(0, 0, 0, 0.10), 0 1px 2px -1px rgba(0, 0, 0, 0.08)",
+      "$type": "shadow",
+      "$description": "Default card elevation. Category cards, roadmap cards."
+    },
+    "md": {
+      "$value": "0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.08)",
+      "$type": "shadow",
+      "$description": "Hover state cards, dropdowns."
+    },
+    "lg": {
+      "$value": "0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.08)",
+      "$type": "shadow",
+      "$description": "Modals, drawers, floating panels."
+    },
+    "xl": {
+      "$value": "0 20px 25px -5px rgba(0, 0, 0, 0.10), 0 8px 10px -6px rgba(0, 0, 0, 0.08)",
+      "$type": "shadow",
+      "$description": "Large dialogs, command palette."
+    },
+    "brand-glow": {
+      "$value": "0 0 0 3px rgba(124, 58, 237, 0.25)",
+      "$type": "shadow",
+      "$description": "Focus ring on interactive brand elements. Replaces browser default outline."
+    },
+    "brand-glow-lg": {
+      "$value": "0 0 20px 0 rgba(124, 58, 237, 0.20)",
+      "$type": "shadow",
+      "$description": "Decorative glow on hero illustration / brand visuals only."
+    }
+  },
+
+  "elevation": {
+    "flat":     { "$value": "{shadow.none}", "$description": "Default surface — no lift" },
+    "raised":   { "$value": "{shadow.sm}",   "$description": "Card, chip, pill" },
+    "floating": { "$value": "{shadow.md}",   "$description": "Dropdown, tooltip, popover" },
+    "overlay":  { "$value": "{shadow.lg}",   "$description": "Modal, sheet, command palette" },
+    "sticky":   { "$value": "{shadow.xs}",   "$description": "Sticky nav bar when scrolled" }
+  },
+
+  "ring": {
+    "focus-brand":   { "$value": "{shadow.brand-glow}", "$description": "Keyboard focus on primary actions" },
+    "focus-default": { "$value": "0 0 0 2px rgba(0, 0, 0, 0.15)", "$description": "Keyboard focus on neutral elements" }
+  }
+}

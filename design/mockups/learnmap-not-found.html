@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learnmap — 404 Not Found Mockup</title>
+  <link rel="preconnect" href="https://fonts.bunny.net" />
+  <link href="https://fonts.bunny.net/css?family=geist:400,500,600,700,800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary:   #7C3AED;   /* action.primary.background / brand.violet.600 */
+      --primary-h: #6D28D9;   /* action.primary.backgroundHover / brand.violet.700 */
+      --violet100: #EDE9FE;   /* brand.violet.100 */
+      --white:     #FFFFFF;   /* background.default */
+      --n50:  #FAFAFA;  --n100: #F5F5F5;  --n200: #E5E5E5;  --n300: #D4D4D4;
+      --n400: #A3A3A3;  --n500: #737373;  --n600: #525252;  --n900: #171717;
+      --danger: #DC2626;      /* semantic.destructive.text */
+      --font: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: var(--n200); color: var(--n900); }
+    button { font-family: var(--font); cursor: pointer; }
+    a { color: var(--primary); text-decoration: none; }
+
+    .hint-bar {
+      background: var(--n900); color: var(--n400);
+      font-size: 12px; text-align: center; padding: 6px 16px;
+    }
+    .hint-bar span { color: var(--n200); font-weight: 500; }
+
+    .page { background: var(--white); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── Navbar (shared shell) ────────────────────────────── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white); border-bottom: 1px solid var(--n200);
+      height: 56px; display: flex; align-items: center; flex-shrink: 0;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      padding: 0 32px; display: flex; align-items: center; height: 100%;
+    }
+    .brand { display: flex; align-items: center; gap: 9px; margin-right: 36px; flex-shrink: 0; }
+    .brand-name { font-size: 16px; font-weight: 700; color: var(--n900); letter-spacing: -0.02em; }
+    .nav-links { display: flex; align-items: stretch; height: 100%; }
+    .nav-link {
+      display: flex; align-items: center; padding: 0 14px;
+      border: none; background: transparent; font-size: 14px; font-weight: 400; color: var(--n600);
+      border-bottom: 2px solid transparent; border-top: 2px solid transparent;
+      transition: color .12s, border-color .12s; white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--n900); }
+    .nav-link.active { color: var(--primary); font-weight: 600; border-bottom-color: var(--primary); }
+    .nav-spacer { flex: 1; }
+
+    .avatar-wrap { position: relative; }
+    .avatar-btn { display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 4px; border-radius: 9999px; }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 9999px; background: var(--violet100);
+      color: var(--primary); font-size: 12px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .avatar-chev { color: var(--n500); }
+    .menu {
+      position: absolute; right: 0; top: 44px; width: 220px;
+      background: var(--white); border: 1px solid var(--n200); border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,.10), 0 2px 4px -2px rgba(0,0,0,.08);
+      padding: 6px; display: none; z-index: 200;
+    }
+    .menu.open { display: block; }
+    .menu-head { padding: 8px 10px 10px; }
+    .menu-name { font-size: 14px; font-weight: 600; color: var(--n900); }
+    .menu-mail { font-size: 12px; color: var(--n500); margin-top: 2px; }
+    .menu-sep { height: 1px; background: var(--n200); margin: 4px 0; }
+    .menu-item {
+      display: flex; align-items: center; gap: 10px; width: 100%;
+      padding: 8px 10px; border: none; background: transparent; border-radius: 6px;
+      font-size: 14px; color: var(--n900); text-align: left;
+    }
+    .menu-item:hover { background: var(--n100); }
+    .menu-item.danger { color: var(--danger); }
+    .menu-item.danger:hover { background: #FEF2F2; }
+
+    /* ── 404 content ──────────────────────────────────────── */
+    .notfound {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 96px 24px; max-width: 520px; margin: 0 auto;
+    }
+    .nf-glyph { color: var(--n300); margin-bottom: 8px; }
+    .nf-code {
+      font-size: 60px; font-weight: 800; letter-spacing: -0.05em; color: var(--primary);
+      line-height: 1; margin-bottom: 20px;
+    }
+    .nf-title { font-size: 30px; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 12px; }
+    .nf-body { font-size: 16px; line-height: 1.625; color: var(--n500); max-width: 380px; margin-bottom: 28px; }
+    .nf-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn { border: none; border-radius: 9999px; font-size: 16px; font-weight: 600; padding: 12px 24px; }
+    .btn-primary { background: var(--primary); color: var(--white); }
+    .btn-primary:hover { background: var(--primary-h); }
+    .btn-secondary { background: var(--white); color: var(--n900); border: 1px solid var(--n200); }
+    .btn-secondary:hover { background: var(--n50); }
+
+    @media (max-width: 600px) {
+      .nf-actions { flex-direction: column; align-self: stretch; }
+      .nf-actions .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hint-bar">
+    Learnmap · 404 Not Found Mockup &nbsp;·&nbsp;
+    <span>Click nav items</span> to switch active state &nbsp;·&nbsp;
+    <span>Click the avatar</span> for the user menu &nbsp;·&nbsp; FR-SHELL-007
+  </div>
+
+  <div class="page">
+
+    <!-- ── Navbar ──────────────────────────────────────────── -->
+    <header class="navbar">
+      <div class="nav-inner">
+        <a class="brand" href="#" title="Go to dashboard">
+          <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect width="28" height="28" rx="7" fill="#7C3AED"/>
+            <path d="M16 5L9 16h7l-4 7 12-13h-7l3-5z" fill="white"/>
+          </svg>
+          <span class="brand-name">Learnmap</span>
+        </a>
+        <nav class="nav-links" id="navLinks" aria-label="Primary">
+          <button class="nav-link" data-id="dashboard" onclick="setNav('dashboard')">Dashboard</button>
+          <button class="nav-link" data-id="browse" onclick="setNav('browse')">Browse Roadmaps</button>
+        </nav>
+        <div class="nav-spacer"></div>
+        <div class="avatar-wrap">
+          <button class="avatar-btn" onclick="toggleMenu(event)" aria-haspopup="true">
+            <span class="avatar">SR</span>
+            <svg class="avatar-chev" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="menu" id="userMenu" role="menu">
+            <div class="menu-head">
+              <div class="menu-name">Sam Rivers</div>
+              <div class="menu-mail">sam.rivers@example.com</div>
+            </div>
+            <div class="menu-sep"></div>
+            <button class="menu-item" role="menuitem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke="#525252" stroke-width="1.5"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.5-2.4 1a7 7 0 0 0-1.7-1l-.3-2.5h-4l-.3 2.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7 7 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a7 7 0 0 0 1.7 1l.3 2.5h4l.3-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.5-2-1.5c.07-.33.1-.66.1-1Z" stroke="#525252" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              Profile &amp; Settings
+            </button>
+            <button class="menu-item danger" role="menuitem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── 404 content ─────────────────────────────────────── -->
+    <main class="notfound">
+      <svg class="nf-glyph" width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M9 3 3 5.5v15L9 18l6 3 6-2.5v-15L15 6 9 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M9 3v15M15 6v15" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="m10.5 10.5 3 3M13.5 10.5l-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="nf-code">404</div>
+      <h1 class="nf-title">This path doesn't exist</h1>
+      <p class="nf-body">The page you're looking for may have moved or never existed. Let's get you back on track.</p>
+      <div class="nf-actions">
+        <a class="btn btn-primary" href="#">Back to dashboard</a>
+        <a class="btn btn-secondary" href="#">Browse roadmaps</a>
+      </div>
+    </main>
+
+  </div><!-- /page -->
+
+  <script>
+    function setNav(id) {
+      document.querySelectorAll('#navLinks .nav-link').forEach(el => {
+        el.classList.toggle('active', el.dataset.id === id);
+      });
+    }
+    function toggleMenu(e) {
+      e.stopPropagation();
+      document.getElementById('userMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', () => document.getElementById('userMenu').classList.remove('open'));
+  </script>
+
+</body>
+</html>
