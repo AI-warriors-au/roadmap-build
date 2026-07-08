@@ -15,21 +15,25 @@ The Learnmap home page serves as the primary discovery surface — search, brows
 - Sticky: `position: sticky; top: 0; z-index: 100`
 - Content centred at max-width **1200px** with **24px** horizontal padding
 
-### Left region — Logo lockup
+The home page is the **public / logged-out landing**, so it uses the shared shell chrome (same logo lockup and nav-link styling as `roadmap-catalog.md` and `not-found.md`) but shows **Log in / Sign up** actions on the right instead of the authenticated avatar menu.
+
+### Left region — Logo lockup → dashboard (`FR-SHELL-002`)
 - Icon: 24×24px lightning-bolt SVG on `brand-violet-600` rounded-rect
 - Wordmark: "Learnmap", `fontSize.md` (16px), `fontWeight.bold` (700), `neutral-900`
+- Whole lockup links to the dashboard
 
-### Centre region — Nav links
-- Items: Explore (with dropdown chevron), Roadmaps, Resources, Community
+### Centre region — Nav links (`FR-SHELL-002/003`)
+- Items: **Dashboard**, **Browse Roadmaps** (Browse Roadmaps active on this page)
 - Font: `fontSize.base` (14px), `fontWeight.regular` (400)
 - Inactive colour: `text.secondary` (`neutral-500`)
 - **Active state**: `fontWeight.semibold` (600), colour `brand-violet-600`, 2px underline in `brand-violet-600`
-- Hover state: `fontWeight.medium` (500), colour `neutral-700`
-- Padding per item: `6px 12px`
+- Hover state: colour `text.primary`
+- Padding per item: `0 14px`
 
-### Right region — Auth actions
-- "Sign in": ghost button, `text.secondary`, `fontSize.base`
-- "Get started": filled pill button, `action.primary.background` (`brand-violet-600`), white text, `radius.full`, `padding: 8px 18px`
+### Right region — Auth actions (logged-out)
+- **Log in**: ghost button, `text.secondary`, `fontSize.base`, `radius.full`; hover → `text.primary` on `neutral-100`
+- **Sign up**: filled pill button, `action.primary.background` (`brand-violet-600`), white text, `radius.full`, `padding: 8px 20px`; hover → `action.primary.backgroundHover` (`brand-violet-700`)
+- On authenticated pages this region is replaced by the user avatar menu (`FR-SHELL-004`) — see `roadmap-catalog.md`
 
 ---
 
@@ -169,7 +173,8 @@ The Learnmap home page serves as the primary discovery surface — search, brows
 
 ---
 
-## Interactive states shown in canvas
+## Interactive states shown
 
-- Click any nav item → active underline + bold weight moves to that item
+- Click a nav item (Dashboard ↔ Browse Roadmaps) → active underline + bold weight moves to it
+- **Log in** / **Sign up** buttons top-right (public landing; avatar menu appears on authenticated pages)
 - Click any filter pill → active (filled violet) state moves to that pill
