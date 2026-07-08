@@ -1,4 +1,5 @@
 import { screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { getHealth } from '@/lib/api'
@@ -19,7 +20,7 @@ describe('App', () => {
     vi.mocked(getHealth).mockReset()
   })
 
-  it('renders the home page with API health at /', async () => {
+  it('renders the home page with API health at / outside the shell', async () => {
     vi.mocked(getHealth).mockResolvedValue({
       status: 'ok',
       database: 'connected',
@@ -30,10 +31,54 @@ describe('App', () => {
     expect(
       screen.getByRole('heading', { name: 'roadmap-build' }),
     ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('navigation', { name: 'Main' }),
+    ).not.toBeInTheDocument()
 
     await waitFor(() => {
       expect(screen.getByText('Ok')).toBeInTheDocument()
     })
     expect(screen.getByText('Connected')).toBeInTheDocument()
+  })
+
+  it('renders dashboard inside AppShell with active nav state', () => {
+    renderWithProviders(<App />, { route: '/dashboard' })
+
+    expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
+    expect(screen.getByRole('navigation', { name: 'Main' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    )
+  })
+
+  it('renders browse inside AppShell with active nav state', () => {
+    renderWithProviders(<App />, { route: '/browse' })
+
+    expect(
+      screen.getByRole('heading', { name: 'Browse Roadmaps' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Browse Roadmaps' }),
+    ).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('does not unmount the shell when navigating between shell routes', async () => {
+    const user = userEvent.setup()
+
+    renderWithProviders(<App />, { route: '/dashboard' })
+
+    const nav = screen.getByRole('navigation', { name: 'Main' })
+    expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('link', { name: 'Browse Roadmaps' }))
+
+    expect(screen.getByRole('navigation', { name: 'Main' })).toBe(nav)
+    expect(
+      screen.getByRole('heading', { name: 'Browse Roadmaps' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { name: 'Dashboard' }),
+    ).not.toBeInTheDocument()
   })
 })
