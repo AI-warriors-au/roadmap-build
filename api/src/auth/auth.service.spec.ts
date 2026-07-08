@@ -147,6 +147,13 @@ describe('AuthService', () => {
         'http://localhost:5173/auth/callback?error=oauth_failed',
       );
     });
+
+    it('returns null when APP_ORIGIN is not configured', () => {
+      config.get.mockReturnValue(undefined);
+
+      expect(service.buildErrorRedirectUrl()).toBeNull();
+      expect(service.buildCallbackRedirectUrl(true)).toBeNull();
+    });
   });
 
   describe('upsertUserFromOAuth', () => {
@@ -207,21 +214,34 @@ describe('AuthService', () => {
       });
     });
 
-    it('returns isNewUser false when concurrent signup hits unique constraint', async () => {
-      prisma.oAuthAccount.findUnique.mockResolvedValue(null);
-      prisma.user.findUnique.mockResolvedValue(null);
+    it('links OAuth account after concurrent user creation race', async () => {
+      prisma.oAuthAccount.findUnique
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(null);
+      prisma.user.findUnique
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({ id: 'user-1' });
       prisma.user.create.mockRejectedValue(
         new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
           code: 'P2002',
           clientVersion: '6.19.0',
         }),
       );
+      prisma.oAuthAccount.create.mockResolvedValue({ id: 'oauth-2' });
 
       await expect(service.upsertUserFromOAuth(githubProfile)).resolves.toEqual(
         {
           isNewUser: false,
         },
       );
+      expect(prisma.oAuthAccount.create).toHaveBeenCalledWith({
+        data: {
+          userId: 'user-1',
+          provider: OAuthProvider.GITHUB,
+          providerId: '42',
+          providerEmail: 'octocat@github.com',
+        },
+      });
     });
   });
 
@@ -387,6 +407,36 @@ describe('AuthService', () => {
       expect(redirect).toHaveBeenCalledWith(
         'http://localhost:5173/auth/callback?error=oauth_failed',
       );
+    });
+    it('responds with 500 when APP_ORIGIN is missing during callback failure', async () => {
+      config.get.mockReturnValue(undefined);
+      const unconfiguredOriginService = new AuthService(
+        config as unknown as ConfigService,
+        prisma as unknown as PrismaService,
+        github as never,
+      );
+      const send = jest.fn();
+      const status = jest.fn().mockReturnValue({ send });
+      const redirect = jest.fn();
+      const res = {
+        cookie: jest.fn(),
+        clearCookie: jest.fn(),
+        redirect,
+        status,
+        send,
+      } as unknown as Response;
+      const req = createRequestMock({ [OAUTH_STATE_COOKIE]: 'stored-state' });
+
+      await unconfiguredOriginService.handleGithubCallback(
+        'code',
+        'other-state',
+        req,
+        res,
+      );
+
+      expect(status).toHaveBeenCalledWith(500);
+      expect(send).toHaveBeenCalledWith('OAuth failed');
+      expect(redirect).not.toHaveBeenCalled();
     });
   });
 });
