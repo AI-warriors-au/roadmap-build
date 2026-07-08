@@ -32,7 +32,7 @@ describe('App', () => {
       screen.getByRole('heading', { name: 'roadmap-build' }),
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole('navigation', { name: 'Main' }),
+      screen.queryByRole('navigation', { name: 'Primary' }),
     ).not.toBeInTheDocument()
 
     await waitFor(() => {
@@ -45,7 +45,9 @@ describe('App', () => {
     renderWithProviders(<App />, { route: '/dashboard' })
 
     expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
-    expect(screen.getByRole('navigation', { name: 'Main' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('navigation', { name: 'Primary' }),
+    ).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute(
       'aria-current',
       'page',
@@ -68,12 +70,12 @@ describe('App', () => {
 
     renderWithProviders(<App />, { route: '/dashboard' })
 
-    const nav = screen.getByRole('navigation', { name: 'Main' })
+    const nav = screen.getByRole('navigation', { name: 'Primary' })
     expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('link', { name: 'Browse Roadmaps' }))
 
-    expect(screen.getByRole('navigation', { name: 'Main' })).toBe(nav)
+    expect(screen.getByRole('navigation', { name: 'Primary' })).toBe(nav)
     expect(
       screen.getByRole('heading', { name: 'Browse Roadmaps' }),
     ).toBeInTheDocument()

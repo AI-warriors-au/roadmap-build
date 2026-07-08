@@ -14,7 +14,7 @@ export function LearnmapLogo({ className }: LearnmapLogoProps) {
       to="/dashboard"
       aria-label="Learnmap, go to dashboard"
       className={cn(
-        'inline-flex min-h-11 min-w-[120px] shrink-0 items-center gap-2 rounded-sm',
+        'inline-flex min-h-11 min-w-[120px] items-center gap-[9px] rounded-sm',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         className,
       )}
