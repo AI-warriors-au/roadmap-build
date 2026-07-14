@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { api, getGithubAuthUrl, getHealth, getMe } from './api'
+import { api, getGithubAuthUrl, getHealth, getMe, onboardUser, postLogout } from './api'
 
 describe('api', () => {
   it('points to /api with credentials enabled', () => {
@@ -46,10 +46,52 @@ describe('api', () => {
     })
 
     await expect(getMe()).resolves.toEqual(me)
-    expect(get).toHaveBeenCalledWith('/user/profile')
+    expect(get).toHaveBeenCalledWith('/user/profile', {
+      headers: {
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+      },
+    })
   })
 
   it('builds the GitHub OAuth start URL from the API base', () => {
     expect(getGithubAuthUrl()).toBe('/api/auth/github')
+  })
+
+  it('posts onboarding data to /user/onboard', async () => {
+    const me = {
+      id: 'user-1',
+      email: 'ada@example.com',
+      displayName: 'Ada Lovelace',
+      avatarUrl: null,
+      onboardedAt: '2026-01-15T00:00:00.000Z',
+    }
+    const post = vi.spyOn(api, 'post').mockResolvedValue({
+      data: me,
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: { headers: {} },
+    })
+
+    await expect(onboardUser({ displayName: 'Ada Lovelace' })).resolves.toEqual(
+      me,
+    )
+    expect(post).toHaveBeenCalledWith('/user/onboard', {
+      displayName: 'Ada Lovelace',
+    })
+  })
+
+  it('posts logout to /auth/logout', async () => {
+    const post = vi.spyOn(api, 'post').mockResolvedValue({
+      data: undefined,
+      status: 204,
+      statusText: 'No Content',
+      headers: {},
+      config: { headers: {} },
+    })
+
+    await expect(postLogout()).resolves.toBeUndefined()
+    expect(post).toHaveBeenCalledWith('/auth/logout')
   })
 })

@@ -69,6 +69,19 @@ describe('LoginPage', () => {
     ).toHaveAttribute('href', '#privacy')
   })
 
+  it('shows a session expired message when redirected after expiry', async () => {
+    vi.mocked(getMe).mockRejectedValue(unauthorizedError())
+
+    renderWithProviders(<LoginPage />, {
+      route: '/login',
+      routeState: { sessionExpired: true },
+    })
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent('Your session has expired. Please sign in again.')
+  })
+
   it('navigates to the GitHub OAuth endpoint and shows a loading state', async () => {
     vi.mocked(getMe).mockRejectedValue(unauthorizedError())
     const assign = vi.fn()
@@ -109,13 +122,43 @@ describe('LoginPage', () => {
     vi.unstubAllGlobals()
   })
 
-  it('redirects authenticated users to the dashboard', async () => {
+  it('redirects authenticated users who have not onboarded to onboarding', async () => {
     vi.mocked(getMe).mockResolvedValue({
       id: 'user-1',
       email: 'ada@example.com',
       displayName: 'Ada',
       avatarUrl: null,
       onboardedAt: null,
+    })
+
+    renderWithProviders(<LoginPage />, {
+      route: '/login',
+      authUser: {
+        id: 'user-1',
+        email: 'ada@example.com',
+        displayName: 'Ada',
+        avatarUrl: null,
+        onboardedAt: null,
+      },
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('heading', { name: 'Welcome to Learnmap' }),
+      ).not.toBeInTheDocument()
+    })
+    expect(
+      screen.queryByRole('button', { name: 'Continue with GitHub' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('redirects onboarded authenticated users to the dashboard', async () => {
+    vi.mocked(getMe).mockResolvedValue({
+      id: 'user-1',
+      email: 'ada@example.com',
+      displayName: 'Ada',
+      avatarUrl: null,
+      onboardedAt: '2026-01-01T00:00:00.000Z',
     })
 
     renderWithProviders(<LoginPage />, { route: '/login' })

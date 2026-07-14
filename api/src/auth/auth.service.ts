@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OAuthProvider, Prisma } from '@prisma/client';
 import { generateState, type GitHub } from 'arctic';
@@ -44,6 +49,36 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
+
+    return {
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+      avatarUrl: user.avatarUrl,
+      onboardedAt: user.onboardedAt?.toISOString() ?? null,
+    };
+  }
+
+  async onboardUser(userId: string, displayName: string): Promise<MeResponse> {
+    const trimmedDisplayName = displayName.trim();
+    if (!trimmedDisplayName || trimmedDisplayName.length > 100) {
+      throw new BadRequestException('Display name is required');
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        displayName: trimmedDisplayName,
+        onboardedAt: new Date(),
+      },
+      select: {
+        id: true,
+        email: true,
+        displayName: true,
+        avatarUrl: true,
+        onboardedAt: true,
+      },
+    });
 
     return {
       id: user.id,

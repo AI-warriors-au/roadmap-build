@@ -324,4 +324,35 @@ describe('Auth (e2e)', () => {
       );
     },
   );
+
+  itWithDatabase(
+    'POST /user/onboard updates display name and marks the user onboarded',
+    async () => {
+      mockGithubProfileFetch();
+
+      const agent = request.agent(app.getHttpServer());
+      await completeGithubCallback(agent);
+
+      const response = await agent
+        .post('/user/onboard')
+        .send({ displayName: 'E2E Onboarded' })
+        .expect(201);
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          displayName: 'E2E Onboarded',
+          onboardedAt: expect.any(String) as string,
+        }),
+      );
+
+      const profile = await agent.get('/user/profile').expect(200);
+
+      expect(profile.body).toEqual(
+        expect.objectContaining({
+          onboardedAt: expect.any(String) as string,
+          displayName: 'E2E Onboarded',
+        }),
+      );
+    },
+  );
 });
