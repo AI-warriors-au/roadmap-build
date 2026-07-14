@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { createMockUser } from '@/contexts/AuthContext'
+import * as apiModule from '@/lib/api'
 import { getHealth, getMe } from '@/lib/api'
 import { renderWithProviders } from '@/test/test-utils'
 
@@ -210,5 +211,59 @@ describe('App', () => {
     expect(
       screen.queryByRole('heading', { name: 'Dashboard' }),
     ).not.toBeInTheDocument()
+  })
+
+  it('renders the settings page for onboarded users', async () => {
+    vi.mocked(getMe).mockResolvedValue(onboardedUser)
+
+    renderWithProviders(<App />, {
+      route: '/settings',
+      authUser: onboardedUser,
+    })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Profile & Settings' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('navigation', { name: 'Primary' }),
+    ).toBeInTheDocument()
+  })
+
+  it('redirects onboarded users away from onboarding to the dashboard', async () => {
+    vi.mocked(getMe).mockResolvedValue(onboardedUser)
+
+    renderWithProviders(<App />, {
+      route: '/onboarding',
+      authUser: onboardedUser,
+    })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Dashboard' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
+  })
+
+  it('redirects unauthenticated visitors from onboarding to login', async () => {
+    renderWithProviders(<App />, { route: '/onboarding' })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Welcome to Learnmap' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
+  })
+
+  it('registers a session expiry redirect handler on mount', () => {
+    const setHandlerSpy = vi.spyOn(apiModule, 'setSessionExpiredHandler')
+
+    renderWithProviders(<App />, { route: '/login' })
+
+    expect(
+      setHandlerSpy.mock.calls.some(
+        ([handler]) => typeof handler === 'function',
+      ),
+    ).toBe(true)
+
+    setHandlerSpy.mockRestore()
+    apiModule.setSessionExpiredHandler(null)
   })
 })
