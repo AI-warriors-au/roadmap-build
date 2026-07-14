@@ -72,4 +72,17 @@ describe('AuthCallbackPage', () => {
       await screen.findByRole('alert'),
     ).toHaveTextContent(/sign-in with GitHub failed/i)
   })
+
+  it('shows OAuth failures when an existing session is still valid', async () => {
+    renderWithProviders(<App />, {
+      route: '/auth/callback?error=oauth_failed',
+    })
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /sign-in with GitHub failed/i,
+    )
+    expect(
+      screen.queryByRole('heading', { name: 'Dashboard' }),
+    ).not.toBeInTheDocument()
+  })
 })

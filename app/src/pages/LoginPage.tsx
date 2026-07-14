@@ -31,7 +31,7 @@ export function LoginPage() {
     )
   }
 
-  if (user) {
+  if (user && !oauthError) {
     return <Navigate to="/dashboard" replace />
   }
 
