@@ -18,27 +18,42 @@ vi.mock('@/lib/api', async (importOriginal) => {
 describe('App', () => {
   beforeEach(() => {
     vi.mocked(getHealth).mockReset()
-  })
-
-  it('renders the home page with API health at / outside the shell', async () => {
     vi.mocked(getHealth).mockResolvedValue({
       status: 'ok',
       database: 'connected',
     })
+  })
 
+  it('opens the dashboard by default and redirects / into the shell', async () => {
     renderWithProviders(<App />, { route: '/' })
 
     expect(
-      screen.getByRole('heading', { name: 'roadmap-build' }),
+      screen.getByRole('heading', { name: 'Dashboard' }),
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole('navigation', { name: 'Primary' }),
-    ).not.toBeInTheDocument()
+      screen.getByRole('navigation', { name: 'Primary' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    )
 
     await waitFor(() => {
       expect(screen.getByText('Ok')).toBeInTheDocument()
     })
     expect(screen.getByText('Connected')).toBeInTheDocument()
+  })
+
+  it('shows the health widget on the dashboard', async () => {
+    renderWithProviders(<App />, { route: '/dashboard' })
+
+    expect(
+      screen.getByRole('region', { name: 'API health' }),
+    ).toBeInTheDocument()
+
+    await waitFor(() => {
+      expect(screen.getByText('Ok')).toBeInTheDocument()
+    })
   })
 
   it('renders dashboard inside AppShell with active nav state', () => {

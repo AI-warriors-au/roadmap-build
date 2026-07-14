@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getHealth } from '@/lib/api'
 import { renderWithProviders } from '@/test/test-utils'
 
-import { HomePage } from './HomePage'
+import { HealthWidget } from './HealthWidget'
 
 vi.mock('@/lib/api', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/api')>()
@@ -15,7 +15,7 @@ vi.mock('@/lib/api', async (importOriginal) => {
   }
 })
 
-describe('HomePage', () => {
+describe('HealthWidget', () => {
   beforeEach(() => {
     vi.mocked(getHealth).mockReset()
   })
@@ -23,11 +23,8 @@ describe('HomePage', () => {
   it('shows a loading state while fetching health', () => {
     vi.mocked(getHealth).mockReturnValue(new Promise(() => {}))
 
-    renderWithProviders(<HomePage />)
+    renderWithProviders(<HealthWidget />)
 
-    expect(
-      screen.getByRole('heading', { name: 'roadmap-build' }),
-    ).toBeInTheDocument()
     expect(screen.getByText('Checking API health…')).toBeInTheDocument()
   })
 
@@ -37,7 +34,7 @@ describe('HomePage', () => {
       database: 'connected',
     })
 
-    renderWithProviders(<HomePage />)
+    renderWithProviders(<HealthWidget />)
 
     await waitFor(() => {
       expect(screen.getByText('Ok')).toBeInTheDocument()
@@ -51,7 +48,7 @@ describe('HomePage', () => {
       database: 'disconnected',
     })
 
-    renderWithProviders(<HomePage />)
+    renderWithProviders(<HealthWidget />)
 
     await waitFor(() => {
       expect(screen.getByText('Unhealthy')).toBeInTheDocument()
@@ -62,7 +59,7 @@ describe('HomePage', () => {
   it('shows an error when the API is unreachable', async () => {
     vi.mocked(getHealth).mockRejectedValue(new Error('Network Error'))
 
-    renderWithProviders(<HomePage />)
+    renderWithProviders(<HealthWidget />)
 
     await waitFor(() => {
       expect(
@@ -78,7 +75,7 @@ describe('HomePage', () => {
       database: 'connected',
     })
 
-    renderWithProviders(<HomePage />)
+    renderWithProviders(<HealthWidget />)
 
     await waitFor(() => {
       expect(screen.getByText('Ok')).toBeInTheDocument()
