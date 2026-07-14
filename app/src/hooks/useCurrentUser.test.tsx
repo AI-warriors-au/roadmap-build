@@ -5,7 +5,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { getMe } from '@/lib/api'
 
-import { useCurrentUser } from './useCurrentUser'
+import {
+  CURRENT_USER_QUERY_KEY,
+  useCurrentUser,
+} from './useCurrentUser'
 
 vi.mock('@/lib/api', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/api')>()
@@ -64,5 +67,53 @@ describe('useCurrentUser', () => {
     expect(result.current.isUnauthorized).toBe(true)
     expect(result.current.user).toBeUndefined()
     expect(result.current.error).toBeNull()
+  })
+
+  it('does not authenticate with cached profile data after a 401 refetch', async () => {
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+    client.setQueryData(
+      CURRENT_USER_QUERY_KEY,
+      {
+        id: 'user-1',
+        email: 'ada@example.com',
+        displayName: 'Ada',
+        avatarUrl: null,
+        onboardedAt: null,
+      },
+      { updatedAt: 1 },
+    )
+    let rejectRequest!: (reason?: unknown) => void
+    vi.mocked(getMe).mockImplementation(
+      () =>
+        new Promise((_, reject) => {
+          rejectRequest = reject
+        }),
+    )
+
+    const { result } = renderHook(() => useCurrentUser(), {
+      wrapper: ({ children }) => (
+        <QueryClientProvider client={client}>
+          {children}
+        </QueryClientProvider>
+      ),
+    })
+
+    expect(result.current.isLoading).toBe(true)
+
+    rejectRequest(
+      Object.assign(new Error('Unauthorized'), {
+        isAxiosError: true,
+        response: { status: 401 },
+      }),
+    )
+
+    await waitFor(() => {
+      expect(result.current.isUnauthorized).toBe(true)
+    })
+
+    expect(result.current.isAuthenticated).toBe(false)
+    expect(result.current.user).toBeUndefined()
   })
 })

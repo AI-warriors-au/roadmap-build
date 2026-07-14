@@ -38,6 +38,7 @@ describe('AuthCallbackPage', () => {
         screen.getByRole('heading', { name: 'Dashboard' }),
       ).toBeInTheDocument()
     })
+    expect(getMe).toHaveBeenCalledOnce()
   })
 
   it('redirects new-user OAuth callbacks to the dashboard', async () => {
