@@ -36,10 +36,15 @@ export class SessionService {
   }
 
   private getBaseCookieOptions(): CookieOptions {
+    const isProduction = this.config.get<string>('NODE_ENV') === 'production';
+
+    // Production hosts the app and API on different origins (e.g. separate
+    // *.onrender.com subdomains). SameSite=Lax blocks the session cookie on
+    // credentialed XHR from the SPA back to the API.
     return {
       httpOnly: true,
-      sameSite: 'lax',
-      secure: this.config.get<string>('NODE_ENV') === 'production',
+      sameSite: isProduction ? 'none' : 'lax',
+      secure: isProduction,
       path: '/',
     };
   }

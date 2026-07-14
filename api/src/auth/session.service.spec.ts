@@ -49,7 +49,7 @@ describe('SessionService', () => {
     );
   });
 
-  it('sets secure cookies in production', () => {
+  it('sets secure SameSite=None cookies in production for cross-origin SPA auth', () => {
     config.get.mockImplementation((key: string) => {
       if (key === 'NODE_ENV') return 'production';
       if (key === 'JWT_EXPIRES_IN') return '7d';
@@ -64,7 +64,10 @@ describe('SessionService', () => {
     expect(cookie).toHaveBeenCalledWith(
       SESSION_COOKIE,
       'signed-jwt',
-      expect.objectContaining({ secure: true }),
+      expect.objectContaining({
+        secure: true,
+        sameSite: 'none',
+      }),
     );
   });
 
