@@ -99,6 +99,24 @@ describe('App', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('renders the 404 page inside the shell for unknown routes', () => {
+    renderWithProviders(<App />, { route: '/does-not-exist' })
+
+    expect(
+      screen.getByRole('heading', { name: "This path doesn't exist" }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('navigation', { name: 'Primary' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Back to dashboard' }),
+    ).toHaveAttribute('href', '/dashboard')
+    expect(screen.getByRole('link', { name: 'Dashboard' })).not.toHaveAttribute(
+      'aria-current',
+      'page',
+    )
+  })
+
   it('renders the login page when using an auth action', async () => {
     const user = userEvent.setup()
 
