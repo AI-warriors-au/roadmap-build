@@ -32,6 +32,22 @@ export async function getMe(): Promise<MeResponse> {
   return data
 }
 
+export type UpdateProfileInput = {
+  displayName: string
+}
+
+export async function updateProfile(
+  input: UpdateProfileInput,
+): Promise<MeResponse> {
+  const { data } = await api.patch<MeResponse>('/user/profile', input)
+  return data
+}
+
+/** Clears the httpOnly session cookie server-side. */
+export async function logout(): Promise<void> {
+  await api.post('/auth/logout')
+}
+
 /** Full-page OAuth start URL (not for axios — browser must follow redirects). */
 export function getGithubAuthUrl(): string {
   const base = (import.meta.env.VITE_API_BASE_URL ?? '/api').replace(/\/$/, '')

@@ -303,6 +303,61 @@ describe('Auth (e2e)', () => {
     await request(app.getHttpServer()).get('/user/profile').expect(401);
   });
 
+  it('PATCH /user/profile returns 401 without a session cookie', async () => {
+    await request(app.getHttpServer())
+      .patch('/user/profile')
+      .send({ displayName: 'New Name' })
+      .expect(401);
+  });
+
+  it('PATCH /user/profile rejects a blank display name with 400', async () => {
+    const token = app.get(JwtService).sign({ sub: 'validation-user' });
+
+    await request(app.getHttpServer())
+      .patch('/user/profile')
+      .set('Cookie', `${SESSION_COOKIE}=${token}`)
+      .send({ displayName: '   ' })
+      .expect(400);
+  });
+
+  it('PATCH /user/profile rejects unknown/read-only fields with 400', async () => {
+    const token = app.get(JwtService).sign({ sub: 'validation-user' });
+
+    await request(app.getHttpServer())
+      .patch('/user/profile')
+      .set('Cookie', `${SESSION_COOKIE}=${token}`)
+      .send({ displayName: 'Valid Name', email: 'hacker@example.com' })
+      .expect(400);
+  });
+
+  itWithDatabase(
+    'PATCH /user/profile updates the caller display name and returns the profile',
+    async () => {
+      mockGithubProfileFetch();
+
+      const agent = request.agent(app.getHttpServer());
+      await completeGithubCallback(agent);
+
+      const response = await agent
+        .patch('/user/profile')
+        .send({ displayName: '  Renamed User  ' })
+        .expect(200);
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          email: E2E_GITHUB_EMAIL,
+          displayName: 'Renamed User',
+        }),
+      );
+
+      const prisma = app.get(PrismaService);
+      const user = await prisma.user.findUnique({
+        where: { email: E2E_GITHUB_EMAIL },
+      });
+      expect(user?.displayName).toBe('Renamed User');
+    },
+  );
+
   itWithDatabase(
     'GET /user/profile returns the current user when authenticated',
     async () => {

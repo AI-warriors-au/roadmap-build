@@ -20,6 +20,7 @@ describe('AuthService', () => {
     user: {
       findUnique: jest.Mock;
       create: jest.Mock;
+      update: jest.Mock;
     };
   };
   let github: {
@@ -46,6 +47,7 @@ describe('AuthService', () => {
       user: {
         findUnique: jest.fn(),
         create: jest.fn(),
+        update: jest.fn(),
       },
     };
 
@@ -635,6 +637,68 @@ describe('AuthService', () => {
       await expect(service.getCurrentUser('missing')).rejects.toBeInstanceOf(
         UnauthorizedException,
       );
+    });
+  });
+
+  describe('updateProfile', () => {
+    it('updates only the caller display name and returns the MeResponse', async () => {
+      prisma.user.update.mockResolvedValue({
+        id: 'user-1',
+        email: 'ada@example.com',
+        displayName: 'Ada Lovelace',
+        avatarUrl: null,
+        onboardedAt: null,
+      });
+
+      await expect(
+        service.updateProfile('user-1', { displayName: 'Ada Lovelace' }),
+      ).resolves.toEqual({
+        id: 'user-1',
+        email: 'ada@example.com',
+        displayName: 'Ada Lovelace',
+        avatarUrl: null,
+        onboardedAt: null,
+      });
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { displayName: 'Ada Lovelace' },
+        select: {
+          id: true,
+          email: true,
+          displayName: true,
+          avatarUrl: true,
+          onboardedAt: true,
+        },
+      });
+    });
+
+    it('scopes the update to the caller id, never a body-supplied id', async () => {
+      prisma.user.update.mockResolvedValue({
+        id: 'caller-id',
+        email: 'ada@example.com',
+        displayName: 'Renamed',
+        avatarUrl: null,
+        onboardedAt: null,
+      });
+
+      await service.updateProfile('caller-id', { displayName: 'Renamed' });
+
+      expect(prisma.user.update).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: 'caller-id' } }),
+      );
+    });
+
+    it('throws UnauthorizedException when the record no longer exists', async () => {
+      prisma.user.update.mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('Record not found', {
+          code: 'P2025',
+          clientVersion: '6.19.0',
+        }),
+      );
+
+      await expect(
+        service.updateProfile('missing', { displayName: 'Ghost' }),
+      ).rejects.toBeInstanceOf(UnauthorizedException);
     });
   });
 });

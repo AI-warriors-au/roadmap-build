@@ -1,8 +1,10 @@
 import { Link, NavLink } from 'react-router-dom'
 
+import { useCurrentUser } from '@/hooks/useCurrentUser'
 import { cn } from '@/lib/utils'
 
 import { LearnmapLogo } from './LearnmapLogo'
+import { UserMenu } from './UserMenu'
 
 const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
   cn(
@@ -14,7 +16,28 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
       : 'text-muted-foreground hover:text-foreground border-transparent font-normal',
   )
 
+function AuthActions() {
+  return (
+    <div className="flex items-center gap-2">
+      <Link
+        to="/login"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+      >
+        Log in
+      </Link>
+      <Link
+        to="/login"
+        className="bg-primary text-primary-foreground hover:bg-[#6d28d9] inline-flex items-center rounded-full px-5 py-2 text-sm font-semibold tracking-tight transition-colors"
+      >
+        Sign up
+      </Link>
+    </div>
+  )
+}
+
 export function TopNav() {
+  const { user, isAuthenticated, isLoading } = useCurrentUser()
+
   return (
     <header className="bg-background sticky top-0 z-[100] border-b">
       <div className="mx-auto flex h-14 w-full max-w-[1200px] items-center px-8">
@@ -31,20 +54,16 @@ export function TopNav() {
           </NavLink>
         </nav>
         <div className="flex-1" aria-hidden="true" />
-        <div className="flex items-center gap-2">
-          <Link
-            to="/login"
-            className="text-muted-foreground hover:text-foreground inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            Log in
-          </Link>
-          <Link
-            to="/login"
-            className="bg-primary text-primary-foreground hover:bg-[#6d28d9] inline-flex items-center rounded-full px-5 py-2 text-sm font-semibold tracking-tight transition-colors"
-          >
-            Sign up
-          </Link>
-        </div>
+        {isAuthenticated && user ? (
+          <UserMenu user={user} />
+        ) : isLoading ? (
+          <div
+            className="size-8 rounded-full bg-muted"
+            aria-hidden="true"
+          />
+        ) : (
+          <AuthActions />
+        )}
       </div>
     </header>
   )
