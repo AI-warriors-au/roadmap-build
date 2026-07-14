@@ -108,6 +108,10 @@ npm run start:dev
 | Build | `npm run build` |
 | Test | `npm run test` |
 
+App routes use hash-based URLs, such as `http://localhost:5173/#/dashboard`
+and `http://localhost:5173/#/browse`. Bare paths such as `/dashboard` are not
+served directly on static hosting.
+
 ## Agent / GitHub MCP
 
 ```bash

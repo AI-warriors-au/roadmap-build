@@ -83,4 +83,19 @@ describe('App', () => {
       screen.queryByRole('heading', { name: 'Dashboard' }),
     ).not.toBeInTheDocument()
   })
+
+  it('renders the login page when using an auth action', async () => {
+    const user = userEvent.setup()
+
+    renderWithProviders(<App />, { route: '/dashboard' })
+
+    await user.click(screen.getByRole('link', { name: 'Log in' }))
+
+    expect(
+      screen.getByRole('heading', { name: 'Log in or sign up' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('navigation', { name: 'Primary' }),
+    ).toBeInTheDocument()
+  })
 })
