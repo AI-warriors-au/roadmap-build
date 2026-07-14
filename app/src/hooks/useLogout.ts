@@ -20,14 +20,9 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: logout,
-    onSettled: async () => {
+    onSettled: () => {
+      queryClient.setQueryData(CURRENT_USER_QUERY_KEY, null)
       navigate('/login', { replace: true })
-      // Re-fetch the current user so the UI reflects the cleared session
-      // immediately (removeQueries alone does not refetch active observers,
-      // leaving the nav stuck as signed-in until a manual refresh).
-      await queryClient.invalidateQueries({
-        queryKey: CURRENT_USER_QUERY_KEY,
-      })
     },
   })
 }

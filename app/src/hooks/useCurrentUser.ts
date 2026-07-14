@@ -14,15 +14,17 @@ function isUnauthorized(error: unknown): boolean {
  * Treats 401 as logged-out (data undefined, isAuthenticated false).
  */
 export function useCurrentUser() {
-  const query = useQuery<MeResponse>({
+  const query = useQuery<MeResponse | null>({
     queryKey: CURRENT_USER_QUERY_KEY,
     queryFn: getMe,
     retry: false,
+    // Logout stores null so observers do not restore a still-valid server session.
+    enabled: (currentQuery) => currentQuery.state.data !== null,
   })
 
   const isUnauthorizedError =
     query.isError && isUnauthorized(query.error)
-  const user = isUnauthorizedError ? undefined : query.data
+  const user = isUnauthorizedError ? undefined : (query.data ?? undefined)
 
   return {
     user,
