@@ -9,17 +9,24 @@ function isUnauthorized(error: unknown): boolean {
   return isAxiosError(error) && error.response?.status === 401
 }
 
+type UseCurrentUserOptions = {
+  forceSessionCheck?: boolean
+}
+
 /**
  * Resolves the current user via GET /user/profile (httpOnly session cookie).
  * Treats 401 as logged-out (data undefined, isAuthenticated false).
  */
-export function useCurrentUser() {
+export function useCurrentUser({
+  forceSessionCheck = false,
+}: UseCurrentUserOptions = {}) {
   const query = useQuery<MeResponse | null>({
     queryKey: CURRENT_USER_QUERY_KEY,
     queryFn: getMe,
     retry: false,
     // Logout stores null so observers do not restore a still-valid server session.
-    enabled: (currentQuery) => currentQuery.state.data !== null,
+    enabled: (currentQuery) =>
+      forceSessionCheck || currentQuery.state.data !== null,
   })
 
   const isUnauthorizedError =

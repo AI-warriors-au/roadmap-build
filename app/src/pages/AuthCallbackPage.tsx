@@ -23,7 +23,7 @@ export function AuthCallbackPage() {
 }
 
 function SuccessfulAuthCallback() {
-  const { isLoading } = useCurrentUser()
+  const { isLoading } = useCurrentUser({ forceSessionCheck: true })
 
   if (isLoading) {
     return null
