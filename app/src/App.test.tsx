@@ -128,7 +128,7 @@ describe('App', () => {
 
     renderWithProviders(<App />, { route: '/dashboard' })
 
-    await user.click(screen.getByRole('link', { name: 'Log in' }))
+    await user.click(await screen.findByRole('link', { name: 'Log in' }))
 
     expect(
       await screen.findByRole('heading', { name: 'Welcome to Learnmap' }),

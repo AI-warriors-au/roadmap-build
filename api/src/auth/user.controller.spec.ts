@@ -10,11 +10,12 @@ jest.mock('arctic', () => ({
 
 describe('UserController', () => {
   let controller: UserController;
-  let authService: { getCurrentUser: jest.Mock };
+  let authService: { getCurrentUser: jest.Mock; updateProfile: jest.Mock };
 
   beforeEach(async () => {
     authService = {
       getCurrentUser: jest.fn(),
+      updateProfile: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -47,5 +48,25 @@ describe('UserController', () => {
     await expect(
       controller.profile({ user: { id: 'missing' } } as Request),
     ).rejects.toBeInstanceOf(UnauthorizedException);
+  });
+
+  it('PATCH /user/profile updates the caller display name', async () => {
+    const updated = {
+      id: 'user-1',
+      email: 'a@b.com',
+      displayName: 'Ada Lovelace',
+      avatarUrl: null,
+      onboardedAt: null,
+    };
+    authService.updateProfile.mockResolvedValue(updated);
+
+    await expect(
+      controller.updateProfile({ user: { id: 'user-1' } } as Request, {
+        displayName: 'Ada Lovelace',
+      }),
+    ).resolves.toEqual(updated);
+    expect(authService.updateProfile).toHaveBeenCalledWith('user-1', {
+      displayName: 'Ada Lovelace',
+    });
   });
 });

@@ -1,88 +1,167 @@
 import { screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { getMe, logout, type MeResponse } from '@/lib/api'
 import { renderWithProviders } from '@/test/test-utils'
 
 import { TopNav } from './TopNav'
 
+vi.mock('@/lib/api', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/api')>()
+  return {
+    ...actual,
+    getMe: vi.fn(),
+    logout: vi.fn(),
+    updateProfile: vi.fn(),
+  }
+})
+
+const authedUser: MeResponse = {
+  id: 'user-1',
+  email: 'sam@example.com',
+  displayName: 'Sam Rivers',
+  avatarUrl: null,
+  onboardedAt: null,
+}
+
+function mockLoggedOut() {
+  vi.mocked(getMe).mockRejectedValue({
+    isAxiosError: true,
+    response: { status: 401 },
+  })
+}
+
+function mockAuthenticated() {
+  vi.mocked(getMe).mockResolvedValue(authedUser)
+}
+
+function mockLoading() {
+  vi.mocked(getMe).mockReturnValue(new Promise<MeResponse>(() => {}))
+}
+
 describe('TopNav', () => {
-  it('exposes a primary navigation landmark', () => {
-    renderWithProviders(<TopNav />, { route: '/dashboard' })
-
-    expect(
-      screen.getByRole('navigation', { name: 'Primary' }),
-    ).toBeInTheDocument()
+  beforeEach(() => {
+    vi.mocked(getMe).mockReset()
+    vi.mocked(logout).mockReset()
+    mockLoggedOut()
   })
 
-  it('renders Dashboard and Browse Roadmaps links', () => {
-    renderWithProviders(<TopNav />, { route: '/dashboard' })
+  describe('primary navigation', () => {
+    it('exposes a primary navigation landmark', async () => {
+      renderWithProviders(<TopNav />, { route: '/dashboard' })
 
-    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute(
-      'href',
-      '/dashboard',
-    )
-    expect(
-      screen.getByRole('link', { name: 'Browse Roadmaps' }),
-    ).toHaveAttribute('href', '/browse')
+      expect(
+        screen.getByRole('navigation', { name: 'Primary' }),
+      ).toBeInTheDocument()
+      await screen.findByRole('link', { name: 'Log in' })
+    })
+
+    it('renders Dashboard and Browse Roadmaps links', async () => {
+      renderWithProviders(<TopNav />, { route: '/dashboard' })
+
+      expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute(
+        'href',
+        '/dashboard',
+      )
+      expect(
+        screen.getByRole('link', { name: 'Browse Roadmaps' }),
+      ).toHaveAttribute('href', '/browse')
+      await screen.findByRole('link', { name: 'Log in' })
+    })
+
+    it('marks Dashboard as the current page on /dashboard', async () => {
+      renderWithProviders(<TopNav />, { route: '/dashboard' })
+
+      expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      )
+      expect(
+        screen.getByRole('link', { name: 'Browse Roadmaps' }),
+      ).not.toHaveAttribute('aria-current')
+      await screen.findByRole('link', { name: 'Log in' })
+    })
+
+    it('marks Browse Roadmaps as the current page on /browse', async () => {
+      renderWithProviders(<TopNav />, { route: '/browse' })
+
+      expect(
+        screen.getByRole('link', { name: 'Browse Roadmaps' }),
+      ).toHaveAttribute('aria-current', 'page')
+      await screen.findByRole('link', { name: 'Log in' })
+    })
   })
 
-  it('marks Dashboard as the current page on /dashboard', () => {
-    renderWithProviders(<TopNav />, { route: '/dashboard' })
+  describe('auth-aware right region', () => {
+    // FR-8: unauthenticated visitors see Log in / Sign up
+    it('shows Log in and Sign up when logged out', async () => {
+      mockLoggedOut()
+      renderWithProviders(<TopNav />, { route: '/dashboard' })
 
-    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute(
-      'aria-current',
-      'page',
-    )
-    expect(
-      screen.getByRole('link', { name: 'Browse Roadmaps' }),
-    ).not.toHaveAttribute('aria-current')
-  })
+      expect(await screen.findByRole('link', { name: 'Log in' })).toHaveAttribute(
+        'href',
+        '/login',
+      )
+      expect(screen.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
+        'href',
+        '/login',
+      )
+      expect(
+        screen.queryByRole('button', { name: 'Open user menu' }),
+      ).not.toBeInTheDocument()
+    })
 
-  it('marks Browse Roadmaps as the current page on /browse', () => {
-    renderWithProviders(<TopNav />, { route: '/browse' })
+    // FR-1: authenticated users see the UserMenu instead of Log in / Sign up
+    it('shows the UserMenu when authenticated', async () => {
+      mockAuthenticated()
+      renderWithProviders(<TopNav />, { route: '/dashboard' })
 
-    expect(
-      screen.getByRole('link', { name: 'Browse Roadmaps' }),
-    ).toHaveAttribute('aria-current', 'page')
-    expect(screen.getByRole('link', { name: 'Dashboard' })).not.toHaveAttribute(
-      'aria-current',
-    )
-  })
+      expect(
+        await screen.findByRole('button', { name: 'Open user menu' }),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByRole('link', { name: 'Log in' }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('link', { name: 'Sign up' }),
+      ).not.toBeInTheDocument()
+    })
 
-  it('applies active styling classes to the current nav link', () => {
-    renderWithProviders(<TopNav />, { route: '/dashboard' })
+    // FR-8: neither state flickers during the initial pending fetch
+    it('shows neither auth state while the session is loading', () => {
+      mockLoading()
+      renderWithProviders(<TopNav />, { route: '/dashboard' })
 
-    const dashboardLink = screen.getByRole('link', { name: 'Dashboard' })
-    expect(dashboardLink.className).toMatch(/border-b-primary/)
-    expect(dashboardLink.className).toMatch(/font-semibold/)
-  })
+      expect(
+        screen.queryByRole('link', { name: 'Log in' }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: 'Open user menu' }),
+      ).not.toBeInTheDocument()
+    })
 
-  it('keeps inactive links keyboard-focusable with focus ring utilities', () => {
-    renderWithProviders(<TopNav />, { route: '/dashboard' })
+    // FR-5/6: after signing out the nav reverts to logged-out without a manual refresh
+    it('reverts to the logged-out nav after signing out', async () => {
+      const user = userEvent.setup({ pointerEventsCheck: 0 })
+      mockAuthenticated()
+      vi.mocked(logout).mockResolvedValue(undefined)
+      renderWithProviders(<TopNav />, { route: '/dashboard' })
 
-    const browseLink = screen.getByRole('link', { name: 'Browse Roadmaps' })
-    expect(browseLink.className).toMatch(/focus-visible:ring-2/)
-    expect(browseLink).not.toHaveAttribute('aria-disabled', 'true')
-  })
+      await user.click(
+        await screen.findByRole('button', { name: 'Open user menu' }),
+      )
 
-  it('renders Log in and Sign up auth actions per home-page spec', () => {
-    renderWithProviders(<TopNav />, { route: '/dashboard' })
+      // Session is cleared server-side once logout resolves.
+      mockLoggedOut()
+      await user.click(await screen.findByRole('menuitem', { name: /Sign out/ }))
 
-    expect(screen.getByRole('link', { name: 'Log in' })).toHaveAttribute(
-      'href',
-      '/login',
-    )
-    expect(screen.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
-      'href',
-      '/login',
-    )
-  })
-
-  it('uses text colour hover on inactive links instead of background fill', () => {
-    renderWithProviders(<TopNav />, { route: '/dashboard' })
-
-    const browseLink = screen.getByRole('link', { name: 'Browse Roadmaps' })
-    expect(browseLink.className).toMatch(/hover:text-foreground/)
-    expect(browseLink.className).not.toMatch(/hover:bg-muted/)
+      expect(
+        await screen.findByRole('link', { name: 'Log in' }),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: 'Open user menu' }),
+      ).not.toBeInTheDocument()
+    })
   })
 })

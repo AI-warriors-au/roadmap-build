@@ -12,6 +12,7 @@ import {
   type OAuthUpsertResult,
   type ProviderProfile,
 } from './auth.types';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { GITHUB_OAUTH } from './oauth-providers';
 import { SessionService } from './session.service';
 
@@ -45,6 +46,46 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+    return this.toMeResponse(user);
+  }
+
+  /** Updates only the caller's own display name (email/avatar are read-only). */
+  async updateProfile(
+    userId: string,
+    dto: UpdateProfileDto,
+  ): Promise<MeResponse> {
+    try {
+      const user = await this.prisma.user.update({
+        where: { id: userId },
+        data: { displayName: dto.displayName },
+        select: {
+          id: true,
+          email: true,
+          displayName: true,
+          avatarUrl: true,
+          onboardedAt: true,
+        },
+      });
+
+      return this.toMeResponse(user);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new UnauthorizedException();
+      }
+      throw error;
+    }
+  }
+
+  private toMeResponse(user: {
+    id: string;
+    email: string;
+    displayName: string;
+    avatarUrl: string | null;
+    onboardedAt: Date | null;
+  }): MeResponse {
     return {
       id: user.id,
       email: user.email,
