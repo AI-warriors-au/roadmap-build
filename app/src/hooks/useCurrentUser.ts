@@ -18,6 +18,8 @@ export function useCurrentUser() {
     queryKey: CURRENT_USER_QUERY_KEY,
     queryFn: getMe,
     retry: false,
+    // Avoid refetching /user/profile on every route change; guards share this query.
+    staleTime: 60_000,
   })
 
   const isUnauthorizedError =
@@ -26,7 +28,8 @@ export function useCurrentUser() {
 
   return {
     user,
-    isLoading: query.isPending || query.isFetching,
+    // Initial session check only — background refetches must not re-trigger guards.
+    isLoading: query.isPending,
     isAuthenticated: Boolean(user),
     isUnauthorized: isUnauthorizedError,
     error: isUnauthorizedError ? null : query.error,

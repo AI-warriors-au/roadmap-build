@@ -20,6 +20,7 @@ describe('AuthService', () => {
     user: {
       findUnique: jest.Mock;
       create: jest.Mock;
+      update: jest.Mock;
     };
   };
   let github: {
@@ -46,6 +47,7 @@ describe('AuthService', () => {
       user: {
         findUnique: jest.fn(),
         create: jest.fn(),
+        update: jest.fn(),
       },
     };
 
@@ -635,6 +637,42 @@ describe('AuthService', () => {
       await expect(service.getCurrentUser('missing')).rejects.toBeInstanceOf(
         UnauthorizedException,
       );
+    });
+  });
+
+  describe('onboardUser', () => {
+    it('updates display name and sets onboardedAt', async () => {
+      prisma.user.update.mockResolvedValue({
+        id: 'user-1',
+        email: 'a@b.com',
+        displayName: 'Ada Lovelace',
+        avatarUrl: null,
+        onboardedAt: new Date('2026-01-15T00:00:00.000Z'),
+      });
+
+      await expect(
+        service.onboardUser('user-1', 'Ada Lovelace'),
+      ).resolves.toEqual({
+        id: 'user-1',
+        email: 'a@b.com',
+        displayName: 'Ada Lovelace',
+        avatarUrl: null,
+        onboardedAt: '2026-01-15T00:00:00.000Z',
+      });
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: {
+          displayName: 'Ada Lovelace',
+          onboardedAt: expect.any(Date) as Date,
+        },
+        select: {
+          id: true,
+          email: true,
+          displayName: true,
+          avatarUrl: true,
+          onboardedAt: true,
+        },
+      });
     });
   });
 });

@@ -2,12 +2,11 @@ import { Navigate, useSearchParams } from 'react-router-dom'
 
 import { useCurrentUser } from '@/hooks/useCurrentUser'
 
+import { AuthLoadingState } from '@/components/auth/AuthLoadingState'
+
 /**
  * Handles the post-OAuth redirect from the API:
  * `{APP_ORIGIN}/#/auth/callback?new=true|false` or `?error=oauth_failed`.
- *
- * Onboarding for new users is owned by a later story — both success paths
- * land on the dashboard for now.
  */
 export function AuthCallbackPage() {
   const [params] = useSearchParams()
@@ -19,15 +18,23 @@ export function AuthCallbackPage() {
     )
   }
 
-  return <SuccessfulAuthCallback />
+  return <SuccessfulAuthCallback isNewUser={params.get('new') === 'true'} />
 }
 
-function SuccessfulAuthCallback() {
-  const { isLoading } = useCurrentUser()
+function SuccessfulAuthCallback({ isNewUser }: { isNewUser: boolean }) {
+  const { user, isLoading, isAuthenticated } = useCurrentUser()
 
   if (isLoading) {
-    return null
+    return <AuthLoadingState />
   }
 
-  return <Navigate to="/dashboard" replace />
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/login" replace />
+  }
+
+  const needsOnboarding = isNewUser || !user.onboardedAt
+
+  return (
+    <Navigate to={needsOnboarding ? '/onboarding' : '/dashboard'} replace />
+  )
 }

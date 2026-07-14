@@ -11,12 +11,15 @@ import { cn } from '@/lib/utils'
 
 type LoginLocationState = {
   oauthError?: string
+  sessionExpired?: boolean
 }
 
 export function LoginPage() {
   const { user, isLoading } = useCurrentUser()
   const location = useLocation()
-  const oauthError = (location.state as LoginLocationState | null)?.oauthError
+  const locationState = location.state as LoginLocationState | null
+  const oauthError = locationState?.oauthError
+  const sessionExpired = locationState?.sessionExpired
   const [connecting, setConnecting] = useState(false)
 
   if (isLoading) {
@@ -32,7 +35,12 @@ export function LoginPage() {
   }
 
   if (user) {
-    return <Navigate to="/dashboard" replace />
+    return (
+      <Navigate
+        to={user.onboardedAt ? '/dashboard' : '/onboarding'}
+        replace
+      />
+    )
   }
 
   function startGithubSignIn() {
@@ -62,6 +70,12 @@ export function LoginPage() {
           <p className="text-muted-foreground mt-2 mb-8 text-base leading-relaxed">
             Sign in with GitHub to start building your learning path.
           </p>
+
+          {sessionExpired ? (
+            <p className="text-destructive mb-4 w-full text-sm" role="alert">
+              Your session has expired. Please sign in again.
+            </p>
+          ) : null}
 
           {oauthError ? (
             <p className="text-destructive mb-4 w-full text-sm" role="alert">

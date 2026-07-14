@@ -1,9 +1,12 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
+import { createMockUser } from '@/contexts/AuthContext'
 import { renderWithProviders } from '@/test/test-utils'
 
 import { TopNav } from './TopNav'
+
+const onboardedUser = createMockUser()
 
 describe('TopNav', () => {
   it('exposes a primary navigation landmark', () => {
@@ -65,7 +68,7 @@ describe('TopNav', () => {
     expect(browseLink).not.toHaveAttribute('aria-disabled', 'true')
   })
 
-  it('renders Log in and Sign up auth actions per home-page spec', () => {
+  it('renders Log in and Sign up auth actions when logged out', () => {
     renderWithProviders(<TopNav />, { route: '/dashboard' })
 
     expect(screen.getByRole('link', { name: 'Log in' })).toHaveAttribute(
@@ -76,6 +79,19 @@ describe('TopNav', () => {
       'href',
       '/login',
     )
+  })
+
+  it('renders the user menu trigger when authenticated', () => {
+    renderWithProviders(<TopNav />, {
+      route: '/dashboard',
+      authUser: onboardedUser,
+    })
+
+    expect(
+      screen.getByRole('button', { name: 'Open user menu' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Sign out' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Log in' })).not.toBeInTheDocument()
   })
 
   it('uses text colour hover on inactive links instead of background fill', () => {

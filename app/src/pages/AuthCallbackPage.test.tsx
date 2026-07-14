@@ -1,6 +1,7 @@
 import { screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { createMockUser } from '@/contexts/AuthContext'
 import { getMe } from '@/lib/api'
 import { renderWithProviders } from '@/test/test-utils'
 
@@ -18,37 +19,56 @@ vi.mock('@/lib/api', async (importOriginal) => {
   }
 })
 
+const notOnboardedUser = createMockUser({ onboardedAt: null })
+const onboardedUser = createMockUser()
+
 describe('AuthCallbackPage', () => {
   beforeEach(() => {
     vi.mocked(getMe).mockReset()
-    vi.mocked(getMe).mockResolvedValue({
-      id: 'user-1',
-      email: 'ada@example.com',
-      displayName: 'Ada',
-      avatarUrl: null,
-      onboardedAt: null,
-    })
+    vi.mocked(getMe).mockResolvedValue(notOnboardedUser)
   })
 
-  it('redirects successful OAuth callbacks to the dashboard', async () => {
-    renderWithProviders(<App />, { route: '/auth/callback?new=false' })
+  it('redirects returning OAuth callbacks to the dashboard', async () => {
+    vi.mocked(getMe).mockResolvedValue(onboardedUser)
+
+    renderWithProviders(<App />, {
+      route: '/auth/callback?new=false',
+      authUser: onboardedUser,
+    })
 
     await waitFor(() => {
       expect(
         screen.getByRole('heading', { name: 'Dashboard' }),
       ).toBeInTheDocument()
     })
-    expect(getMe).toHaveBeenCalledOnce()
   })
 
-  it('redirects new-user OAuth callbacks to the dashboard', async () => {
-    renderWithProviders(<App />, { route: '/auth/callback?new=true' })
+  it('redirects returning but not-yet-onboarded OAuth callbacks to onboarding', async () => {
+    renderWithProviders(<App />, {
+      route: '/auth/callback?new=false',
+      authUser: notOnboardedUser,
+    })
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Display name')).toBeInTheDocument()
+    })
+    expect(
+      screen.queryByRole('heading', { name: 'Dashboard' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('redirects new-user OAuth callbacks to onboarding', async () => {
+    renderWithProviders(<App />, {
+      route: '/auth/callback?new=true',
+      authUser: notOnboardedUser,
+    })
 
     await waitFor(() => {
       expect(
-        screen.getByRole('heading', { name: 'Dashboard' }),
+        screen.getByRole('heading', { name: 'Welcome to Learnmap' }),
       ).toBeInTheDocument()
     })
+    expect(screen.getByLabelText('Display name')).toBeInTheDocument()
   })
 
   it('redirects OAuth failures to the login page', async () => {

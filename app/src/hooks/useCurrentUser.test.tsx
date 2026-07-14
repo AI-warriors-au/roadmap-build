@@ -100,7 +100,8 @@ describe('useCurrentUser', () => {
       ),
     })
 
-    expect(result.current.isLoading).toBe(true)
+    expect(result.current.isLoading).toBe(false)
+    expect(result.current.isAuthenticated).toBe(true)
 
     rejectRequest(
       Object.assign(new Error('Unauthorized'), {
@@ -115,5 +116,39 @@ describe('useCurrentUser', () => {
 
     expect(result.current.isAuthenticated).toBe(false)
     expect(result.current.user).toBeUndefined()
+  })
+
+  it('keeps cached user data during background refetch errors', async () => {
+    vi.mocked(getMe).mockResolvedValue({
+      id: 'user-1',
+      email: 'ada@example.com',
+      displayName: 'Ada',
+      avatarUrl: null,
+      onboardedAt: null,
+    })
+
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false, staleTime: 0 } },
+    })
+    client.setQueryData(CURRENT_USER_QUERY_KEY, {
+      id: 'user-1',
+      email: 'ada@example.com',
+      displayName: 'Ada',
+      avatarUrl: null,
+      onboardedAt: null,
+    })
+
+    const { result } = renderHook(() => useCurrentUser(), {
+      wrapper: ({ children }) => (
+        <QueryClientProvider client={client}>{children}</QueryClientProvider>
+      ),
+    })
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false)
+    })
+
+    expect(result.current.isAuthenticated).toBe(true)
+    expect(result.current.user?.displayName).toBe('Ada')
   })
 })

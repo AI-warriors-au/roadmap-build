@@ -2,6 +2,7 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { createMockUser } from '@/contexts/AuthContext'
 import { getHealth, getMe } from '@/lib/api'
 import { renderWithProviders } from '@/test/test-utils'
 
@@ -13,8 +14,19 @@ vi.mock('@/lib/api', async (importOriginal) => {
     ...actual,
     getHealth: vi.fn(),
     getMe: vi.fn(),
+    postLogout: vi.fn(),
   }
 })
+
+const onboardedUser = createMockUser()
+const notOnboardedUser = createMockUser({ onboardedAt: null })
+
+function unauthorizedError() {
+  return Object.assign(new Error('Unauthorized'), {
+    isAxiosError: true,
+    response: { status: 401 },
+  })
+}
 
 describe('App', () => {
   beforeEach(() => {
@@ -24,17 +36,52 @@ describe('App', () => {
       database: 'connected',
     })
     vi.mocked(getMe).mockReset()
-    vi.mocked(getMe).mockRejectedValue({
-      isAxiosError: true,
-      response: { status: 401 },
-    })
+    vi.mocked(getMe).mockRejectedValue(unauthorizedError())
   })
 
-  it('opens the dashboard by default and redirects / into the shell', async () => {
+  it('redirects unauthenticated visitors from / to the login page', async () => {
     renderWithProviders(<App />, { route: '/' })
 
     expect(
-      screen.getByRole('heading', { name: 'Dashboard' }),
+      await screen.findByRole('heading', { name: 'Welcome to Learnmap' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { name: 'Dashboard' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('redirects unauthenticated visitors from /dashboard to the login page', async () => {
+    renderWithProviders(<App />, { route: '/dashboard' })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Welcome to Learnmap' }),
+    ).toBeInTheDocument()
+  })
+
+  it('redirects not-yet-onboarded users from /dashboard to onboarding', async () => {
+    vi.mocked(getMe).mockResolvedValue(notOnboardedUser)
+
+    renderWithProviders(<App />, {
+      route: '/dashboard',
+      authUser: notOnboardedUser,
+    })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Welcome to Learnmap' }),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Display name')).toBeInTheDocument()
+  })
+
+  it('opens the dashboard for onboarded users and redirects / into the shell', async () => {
+    vi.mocked(getMe).mockResolvedValue(onboardedUser)
+
+    renderWithProviders(<App />, {
+      route: '/',
+      authUser: onboardedUser,
+    })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Dashboard' }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('navigation', { name: 'Primary' }),
@@ -51,7 +98,12 @@ describe('App', () => {
   })
 
   it('shows the health widget on the dashboard', async () => {
-    renderWithProviders(<App />, { route: '/dashboard' })
+    vi.mocked(getMe).mockResolvedValue(onboardedUser)
+
+    renderWithProviders(<App />, {
+      route: '/dashboard',
+      authUser: onboardedUser,
+    })
 
     expect(
       screen.getByRole('region', { name: 'API health' }),
@@ -62,10 +114,17 @@ describe('App', () => {
     })
   })
 
-  it('renders dashboard inside AppShell with active nav state', () => {
-    renderWithProviders(<App />, { route: '/dashboard' })
+  it('renders dashboard inside AppShell with active nav state', async () => {
+    vi.mocked(getMe).mockResolvedValue(onboardedUser)
 
-    expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
+    renderWithProviders(<App />, {
+      route: '/dashboard',
+      authUser: onboardedUser,
+    })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Dashboard' }),
+    ).toBeInTheDocument()
     expect(
       screen.getByRole('navigation', { name: 'Primary' }),
     ).toBeInTheDocument()
@@ -75,11 +134,16 @@ describe('App', () => {
     )
   })
 
-  it('renders browse inside AppShell with active nav state', () => {
-    renderWithProviders(<App />, { route: '/browse' })
+  it('renders browse inside AppShell with active nav state', async () => {
+    vi.mocked(getMe).mockResolvedValue(onboardedUser)
+
+    renderWithProviders(<App />, {
+      route: '/browse',
+      authUser: onboardedUser,
+    })
 
     expect(
-      screen.getByRole('heading', { name: 'Browse Roadmaps' }),
+      await screen.findByRole('heading', { name: 'Browse Roadmaps' }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('link', { name: 'Browse Roadmaps' }),
@@ -87,12 +151,18 @@ describe('App', () => {
   })
 
   it('does not unmount the shell when navigating between shell routes', async () => {
+    vi.mocked(getMe).mockResolvedValue(onboardedUser)
     const user = userEvent.setup()
 
-    renderWithProviders(<App />, { route: '/dashboard' })
+    renderWithProviders(<App />, {
+      route: '/dashboard',
+      authUser: onboardedUser,
+    })
 
     const nav = screen.getByRole('navigation', { name: 'Primary' })
-    expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { name: 'Dashboard' }),
+    ).toBeInTheDocument()
 
     await user.click(screen.getByRole('link', { name: 'Browse Roadmaps' }))
 
@@ -105,11 +175,16 @@ describe('App', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('renders the 404 page inside the shell for unknown routes', () => {
-    renderWithProviders(<App />, { route: '/does-not-exist' })
+  it('renders the 404 page inside the shell for unknown routes', async () => {
+    vi.mocked(getMe).mockResolvedValue(onboardedUser)
+
+    renderWithProviders(<App />, {
+      route: '/does-not-exist',
+      authUser: onboardedUser,
+    })
 
     expect(
-      screen.getByRole('heading', { name: "This path doesn't exist" }),
+      await screen.findByRole('heading', { name: "This path doesn't exist" }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('navigation', { name: 'Primary' }),
@@ -123,18 +198,17 @@ describe('App', () => {
     )
   })
 
-  it('renders the login page when using an auth action', async () => {
-    const user = userEvent.setup()
+  it('shows a loading state while session is being checked', () => {
+    renderWithProviders(<App />, {
+      route: '/dashboard',
+      authLoading: true,
+    })
 
-    renderWithProviders(<App />, { route: '/dashboard' })
-
-    await user.click(screen.getByRole('link', { name: 'Log in' }))
-
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Checking sign-in status…',
+    )
     expect(
-      await screen.findByRole('heading', { name: 'Welcome to Learnmap' }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('navigation', { name: 'Primary' }),
-    ).toBeInTheDocument()
+      screen.queryByRole('heading', { name: 'Dashboard' }),
+    ).not.toBeInTheDocument()
   })
 })
