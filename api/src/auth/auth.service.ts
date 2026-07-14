@@ -8,15 +8,18 @@ import {
   OAUTH_CODE_VERIFIER_COOKIE,
   OAUTH_COOKIE_MAX_AGE_MS,
   OAUTH_STATE_COOKIE,
+  type OAuthUpsertResult,
   type ProviderProfile,
 } from './auth.types';
 import { GITHUB_OAUTH } from './oauth-providers';
+import { SessionService } from './session.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly config: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly session: SessionService,
     @Inject(GITHUB_OAUTH) private readonly github: GitHub | null,
   ) {}
 
@@ -60,7 +63,8 @@ export class AuthService {
     try {
       const tokens = await this.github.validateAuthorizationCode(code);
       const profile = await this.fetchGithubProfile(tokens.accessToken());
-      const { isNewUser } = await this.upsertUserFromOAuth(profile);
+      const { userId, isNewUser } = await this.upsertUserFromOAuth(profile);
+      this.session.createSession(userId, res);
       this.clearOAuthCookies(res);
       this.redirectToCallback(res, isNewUser);
     } catch {
@@ -71,7 +75,7 @@ export class AuthService {
 
   async upsertUserFromOAuth(
     profile: ProviderProfile,
-  ): Promise<{ isNewUser: boolean }> {
+  ): Promise<OAuthUpsertResult> {
     const existingAccount = await this.prisma.oAuthAccount.findUnique({
       where: {
         provider_providerId: {
@@ -79,10 +83,11 @@ export class AuthService {
           providerId: profile.providerId,
         },
       },
+      select: { userId: true },
     });
 
     if (existingAccount) {
-      return { isNewUser: false };
+      return { userId: existingAccount.userId, isNewUser: false };
     }
 
     const existingUser = await this.prisma.user.findUnique({
@@ -94,7 +99,7 @@ export class AuthService {
     }
 
     try {
-      await this.prisma.user.create({
+      const createdUser = await this.prisma.user.create({
         data: {
           email: profile.email,
           displayName: profile.displayName,
@@ -108,7 +113,7 @@ export class AuthService {
           },
         },
       });
-      return { isNewUser: true };
+      return { userId: createdUser.id, isNewUser: true };
     } catch (error) {
       if (!this.isUniqueConstraintError(error)) {
         throw error;
@@ -128,9 +133,10 @@ export class AuthService {
             providerId: profile.providerId,
           },
         },
+        select: { userId: true },
       });
       if (racedAccount) {
-        return { isNewUser: false };
+        return { userId: racedAccount.userId, isNewUser: false };
       }
 
       throw error;
@@ -246,7 +252,7 @@ export class AuthService {
   private async ensureOAuthAccountLinked(
     userId: string,
     profile: ProviderProfile,
-  ): Promise<{ isNewUser: boolean }> {
+  ): Promise<OAuthUpsertResult> {
     try {
       await this.prisma.oAuthAccount.create({
         data: {
@@ -258,12 +264,12 @@ export class AuthService {
       });
     } catch (error) {
       if (this.isUniqueConstraintError(error)) {
-        return { isNewUser: false };
+        return { userId, isNewUser: false };
       }
       throw error;
     }
 
-    return { isNewUser: false };
+    return { userId, isNewUser: false };
   }
 
   private getAppOrigin(): string | null {
