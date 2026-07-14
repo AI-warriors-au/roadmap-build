@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
-import type { StringValue } from 'ms';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JWT_DEFAULT_EXPIRES_IN } from './auth.types';
+import { resolveJwtExpiresIn } from './jwt-expires-in';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { createGithubProvider, GITHUB_OAUTH } from './oauth-providers';
 import { SessionService } from './session.service';
@@ -18,8 +17,7 @@ import { SessionService } from './session.service';
       useFactory: (config: ConfigService) => ({
         secret: config.getOrThrow<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: (config.get<string>('JWT_EXPIRES_IN') ??
-            JWT_DEFAULT_EXPIRES_IN) as StringValue,
+          expiresIn: resolveJwtExpiresIn(config.get<string>('JWT_EXPIRES_IN')),
         },
       }),
     }),

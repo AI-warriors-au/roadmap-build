@@ -467,6 +467,51 @@ describe('AuthService', () => {
       expect(redirect).not.toHaveBeenCalled();
     });
 
+    it('returns 500 when session creation fails after a successful upsert', async () => {
+      const send = jest.fn();
+      const status = jest.fn().mockReturnValue({ send });
+      const redirect = jest.fn();
+      const res = {
+        cookie: jest.fn(),
+        clearCookie: jest.fn(),
+        redirect,
+        status,
+        send,
+      } as unknown as Response;
+      const req = createRequestMock({ [OAUTH_STATE_COOKIE]: 'state-1' });
+
+      mockGithubUserAndEmails(
+        {
+          id: 42,
+          login: 'octocat',
+          name: 'The Octocat',
+          avatar_url: null,
+        },
+        [
+          {
+            email: 'octocat@github.com',
+            primary: true,
+            verified: true,
+          },
+        ],
+      );
+
+      prisma.oAuthAccount.findUnique.mockResolvedValue({
+        userId: 'user-returning',
+      });
+      session.createSession.mockImplementation(() => {
+        throw new Error('session failed');
+      });
+
+      await service.handleGithubCallback('code-1', 'state-1', req, res);
+
+      expect(status).toHaveBeenCalledWith(500);
+      expect(send).toHaveBeenCalledWith(
+        'Authentication succeeded but session creation failed',
+      );
+      expect(redirect).not.toHaveBeenCalled();
+    });
+
     it('redirects to error when profile fetch fails', async () => {
       const { res, redirect } = createResponseMock();
       const req = createRequestMock({ [OAUTH_STATE_COOKIE]: 'state-1' });

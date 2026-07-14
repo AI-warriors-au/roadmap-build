@@ -78,8 +78,9 @@ export class AuthService {
       try {
         this.session.createSession(upsertResult.userId, res);
       } catch {
-        // User was persisted; avoid oauth_failed redirect if only session issuance fails.
-        res.redirect(callbackUrl);
+        res
+          .status(500)
+          .send('Authentication succeeded but session creation failed');
         return;
       }
 
