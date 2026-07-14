@@ -9,28 +9,45 @@ function formatHealthLabel(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
-export function HomePage() {
+export function HealthWidget() {
   const { data, isPending, isError, isFetching, error, refetch } = useQuery({
     queryKey: ['health'],
     queryFn: getHealth,
   })
 
   return (
-    <main className="flex min-h-svh flex-col items-center justify-center gap-4 p-8">
-      <h1 className="text-3xl font-semibold tracking-tight">roadmap-build</h1>
+    <section
+      aria-label="API health"
+      className="border-border bg-card text-card-foreground flex flex-col gap-4 rounded-lg border p-6"
+    >
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="text-foreground text-sm font-semibold">API health</h2>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={isFetching}
+          onClick={() => {
+            void refetch()
+          }}
+        >
+          <RefreshCw className={cn(isFetching && 'animate-spin')} />
+          {isFetching ? 'Refreshing…' : 'Refresh health'}
+        </Button>
+      </div>
 
       {isPending && (
-        <p className="text-muted-foreground">Checking API health…</p>
+        <p className="text-muted-foreground text-sm">Checking API health…</p>
       )}
 
       {isError && (
-        <p className="text-destructive" role="alert">
+        <p className="text-destructive text-sm" role="alert">
           {`Could not reach the API${error instanceof Error ? `: ${error.message}` : ''}`}
         </p>
       )}
 
       {data && (
-        <dl className="border-border bg-card text-card-foreground grid min-w-64 gap-3 rounded-lg border p-6 text-sm">
+        <dl className="grid gap-3 text-sm">
           <div className="flex items-center justify-between gap-4">
             <dt className="text-muted-foreground">Status</dt>
             <dd
@@ -57,18 +74,6 @@ export function HomePage() {
           </div>
         </dl>
       )}
-
-      <Button
-        type="button"
-        variant="outline"
-        disabled={isFetching}
-        onClick={() => {
-          void refetch()
-        }}
-      >
-        <RefreshCw className={cn(isFetching && 'animate-spin')} />
-        {isFetching ? 'Refreshing…' : 'Refresh health'}
-      </Button>
-    </main>
+    </section>
   )
 }
