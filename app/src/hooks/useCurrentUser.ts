@@ -22,11 +22,12 @@ export function useCurrentUser() {
 
   const isUnauthorizedError =
     query.isError && isUnauthorized(query.error)
+  const user = isUnauthorizedError ? undefined : query.data
 
   return {
-    user: query.data,
-    isLoading: query.isPending,
-    isAuthenticated: Boolean(query.data),
+    user,
+    isLoading: query.isPending || query.isFetching,
+    isAuthenticated: Boolean(user),
     isUnauthorized: isUnauthorizedError,
     error: isUnauthorizedError ? null : query.error,
     refetch: query.refetch,
