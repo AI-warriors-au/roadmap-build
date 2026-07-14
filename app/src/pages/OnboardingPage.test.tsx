@@ -74,6 +74,22 @@ describe('OnboardingPage', () => {
     ).toBeInTheDocument()
   })
 
+  it('disables continue when the display name is cleared', async () => {
+    const user = userEvent.setup()
+
+    renderWithProviders(<App />, {
+      route: '/onboarding',
+      authUser: notOnboardedUser,
+    })
+
+    const input = await screen.findByLabelText('Display name')
+    await user.clear(input)
+
+    expect(
+      screen.getByRole('button', { name: 'Continue to dashboard' }),
+    ).toBeDisabled()
+  })
+
   it('redirects onboarded users away from onboarding', async () => {
     vi.mocked(getMe).mockResolvedValue(onboardedUser)
 

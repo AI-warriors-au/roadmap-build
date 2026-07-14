@@ -10,8 +10,13 @@ export function useSignOut() {
   const navigate = useNavigate()
 
   return useCallback(async () => {
-    await postLogout()
-    queryClient.removeQueries({ queryKey: CURRENT_USER_QUERY_KEY })
-    navigate('/login', { replace: true })
+    try {
+      await postLogout()
+    } catch {
+      // Local sign-out should proceed even when the API is unreachable.
+    } finally {
+      queryClient.removeQueries({ queryKey: CURRENT_USER_QUERY_KEY })
+      navigate('/login', { replace: true })
+    }
   }, [navigate, queryClient])
 }

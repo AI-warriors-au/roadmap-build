@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -15,6 +15,13 @@ export function OnboardingPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [displayName, setDisplayName] = useState('')
+  const [hasEditedDisplayName, setHasEditedDisplayName] = useState(false)
+
+  useEffect(() => {
+    if (user && !hasEditedDisplayName) {
+      setDisplayName(user.displayName)
+    }
+  }, [user, hasEditedDisplayName])
 
   const onboardMutation = useMutation({
     mutationFn: onboardUser,
@@ -27,8 +34,6 @@ export function OnboardingPage() {
   if (isLoading || !user) {
     return <AuthLoadingState />
   }
-
-  const resolvedDisplayName = displayName || user.displayName
 
   return (
     <div className="bg-background-brand flex min-h-[calc(100svh-3.5rem)] flex-col items-center justify-center px-6 py-10">
@@ -69,10 +74,10 @@ export function OnboardingPage() {
             className="w-full text-left"
             onSubmit={(event) => {
               event.preventDefault()
-              if (!resolvedDisplayName.trim() || onboardMutation.isPending) {
+              if (!displayName.trim() || onboardMutation.isPending) {
                 return
               }
-              onboardMutation.mutate({ displayName: resolvedDisplayName.trim() })
+              onboardMutation.mutate({ displayName: displayName.trim() })
             }}
           >
             <label
@@ -87,8 +92,9 @@ export function OnboardingPage() {
               type="text"
               required
               maxLength={100}
-              defaultValue={user.displayName}
+              value={displayName}
               onChange={(event) => {
+                setHasEditedDisplayName(true)
                 setDisplayName(event.target.value)
               }}
               className="border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-ring mb-4 h-11 w-full rounded-lg border px-3 text-sm focus-visible:ring-2 focus-visible:outline-none"
@@ -102,7 +108,7 @@ export function OnboardingPage() {
 
             <Button
               type="submit"
-              disabled={onboardMutation.isPending || !resolvedDisplayName.trim()}
+              disabled={onboardMutation.isPending || !displayName.trim()}
               className="h-12 w-full rounded-full text-base font-semibold"
             >
               {onboardMutation.isPending ? (

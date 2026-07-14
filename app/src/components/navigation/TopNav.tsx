@@ -17,7 +17,7 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
   )
 
 export function TopNav() {
-  const { user, isAuthenticated } = useCurrentUser()
+  const { user, isAuthenticated, isLoading } = useCurrentUser()
 
   return (
     <header className="bg-background sticky top-0 z-[100] border-b">
@@ -36,7 +36,7 @@ export function TopNav() {
         </nav>
         <div className="flex-1" aria-hidden="true" />
         <div className="flex items-center gap-2">
-          {isAuthenticated && user ? (
+          {isLoading ? null : isAuthenticated && user ? (
             <UserMenu user={user} />
           ) : (
             <>

@@ -63,4 +63,26 @@ describe('useSignOut', () => {
       )
     })
   })
+
+  it('still clears local auth state when logout fails', async () => {
+    vi.mocked(postLogout).mockRejectedValue(new Error('Network error'))
+
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+    queryClient.setQueryData(CURRENT_USER_QUERY_KEY, createMockUser())
+
+    const { result } = renderHook(() => useSignOut(), {
+      wrapper: createWrapper(queryClient),
+    })
+
+    await result.current()
+
+    expect(queryClient.getQueryData(CURRENT_USER_QUERY_KEY)).toBeUndefined()
+    await waitFor(() => {
+      expect(document.querySelector('[data-testid="location"]')).toHaveTextContent(
+        '/login',
+      )
+    })
+  })
 })
