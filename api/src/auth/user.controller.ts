@@ -18,7 +18,7 @@ export class UserController {
   @Post('onboard')
   onboard(
     @Req() req: Request,
-    @Body('displayName') displayName: string,
+    @Body('displayName') displayName: unknown,
   ): Promise<MeResponse> {
     return this.authService.onboardUser(req.user!.id, displayName);
   }

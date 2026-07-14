@@ -68,10 +68,10 @@ describe('TopNav', () => {
     expect(browseLink).not.toHaveAttribute('aria-disabled', 'true')
   })
 
-  it('renders Log in and Sign up auth actions when logged out', () => {
+  it('renders Log in and Sign up auth actions when logged out', async () => {
     renderWithProviders(<TopNav />, { route: '/dashboard' })
 
-    expect(screen.getByRole('link', { name: 'Log in' })).toHaveAttribute(
+    expect(await screen.findByRole('link', { name: 'Log in' })).toHaveAttribute(
       'href',
       '/login',
     )
@@ -79,6 +79,19 @@ describe('TopNav', () => {
       'href',
       '/login',
     )
+  })
+
+  it('does not flash logged-out actions while auth is loading', () => {
+    renderWithProviders(<TopNav />, {
+      route: '/dashboard',
+      authLoading: true,
+    })
+
+    expect(screen.queryByRole('link', { name: 'Log in' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Sign up' })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Open user menu' }),
+    ).not.toBeInTheDocument()
   })
 
   it('renders the user menu trigger when authenticated', () => {

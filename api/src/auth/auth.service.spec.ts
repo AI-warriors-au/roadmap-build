@@ -1,8 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import {
-  BadRequestException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { OAuthProvider, Prisma } from '@prisma/client';
 import type { Request, Response } from 'express';
 import { PrismaService } from '../prisma/prisma.service';
@@ -689,13 +686,10 @@ describe('AuthService', () => {
 
       await service.onboardUser('user-1', '  Ada Lovelace  ');
 
-      expect(prisma.user.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({
-            displayName: 'Ada Lovelace',
-          }),
-        }),
-      );
+      const updateCall = prisma.user.update.mock.calls[0] as
+        | [{ data: { displayName: string } }]
+        | undefined;
+      expect(updateCall?.[0].data.displayName).toBe('Ada Lovelace');
     });
 
     it.each(['', '   ', 'a'.repeat(101)])(
@@ -707,5 +701,28 @@ describe('AuthService', () => {
         expect(prisma.user.update).not.toHaveBeenCalled();
       },
     );
+
+    it.each([undefined, null, 42, {}])(
+      'throws BadRequestException for non-string display name %j',
+      async (displayName) => {
+        await expect(
+          service.onboardUser('user-1', displayName),
+        ).rejects.toBeInstanceOf(BadRequestException);
+        expect(prisma.user.update).not.toHaveBeenCalled();
+      },
+    );
+
+    it('throws UnauthorizedException when the user no longer exists', async () => {
+      prisma.user.update.mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('Record not found', {
+          code: 'P2025',
+          clientVersion: '6.19.0',
+        }),
+      );
+
+      await expect(
+        service.onboardUser('user-1', 'Ada Lovelace'),
+      ).rejects.toBeInstanceOf(UnauthorizedException);
+    });
   });
 });

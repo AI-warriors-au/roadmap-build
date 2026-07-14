@@ -59,26 +59,42 @@ export class AuthService {
     };
   }
 
-  async onboardUser(userId: string, displayName: string): Promise<MeResponse> {
+  async onboardUser(userId: string, displayName: unknown): Promise<MeResponse> {
+    if (typeof displayName !== 'string') {
+      throw new BadRequestException('Display name is required');
+    }
+
     const trimmedDisplayName = displayName.trim();
     if (!trimmedDisplayName || trimmedDisplayName.length > 100) {
       throw new BadRequestException('Display name is required');
     }
 
-    const user = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        displayName: trimmedDisplayName,
-        onboardedAt: new Date(),
-      },
-      select: {
-        id: true,
-        email: true,
-        displayName: true,
-        avatarUrl: true,
-        onboardedAt: true,
-      },
-    });
+    let user;
+    try {
+      user = await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          displayName: trimmedDisplayName,
+          onboardedAt: new Date(),
+        },
+        select: {
+          id: true,
+          email: true,
+          displayName: true,
+          avatarUrl: true,
+          onboardedAt: true,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new UnauthorizedException();
+      }
+
+      throw error;
+    }
 
     return {
       id: user.id,

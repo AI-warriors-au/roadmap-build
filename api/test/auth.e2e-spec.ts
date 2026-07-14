@@ -441,7 +441,24 @@ describe('Auth (e2e)', () => {
       );
 
       const profile = await agent.get('/user/profile').expect(200);
-      expect(profile.body.displayName).toBe('Updated Name');
+      expect(profile.body).toEqual(
+        expect.objectContaining({
+          displayName: 'Updated Name',
+        }),
+      );
+    },
+  );
+
+  itWithDatabase(
+    'POST /user/onboard returns 400 when display name is missing or not a string',
+    async () => {
+      mockGithubProfileFetch();
+
+      const agent = request.agent(app.getHttpServer());
+      await completeGithubCallback(agent);
+
+      await agent.post('/user/onboard').send({}).expect(400);
+      await agent.post('/user/onboard').send({ displayName: 123 }).expect(400);
     },
   );
 
