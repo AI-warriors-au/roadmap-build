@@ -255,6 +255,26 @@ describe('AuthService', () => {
         },
       });
     });
+
+    it('returns the existing OAuth account owner when linking races on providerId', async () => {
+      prisma.oAuthAccount.findUnique
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({ userId: 'user-with-provider' });
+      prisma.user.findUnique.mockResolvedValue({ id: 'user-by-email' });
+      prisma.oAuthAccount.create.mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+          code: 'P2002',
+          clientVersion: '6.19.0',
+        }),
+      );
+
+      await expect(service.upsertUserFromOAuth(githubProfile)).resolves.toEqual(
+        {
+          userId: 'user-with-provider',
+          isNewUser: false,
+        },
+      );
+    });
   });
 
   describe('startGithubAuth', () => {
@@ -387,6 +407,64 @@ describe('AuthService', () => {
       expect(redirect).toHaveBeenCalledWith(
         'http://localhost:5173/auth/callback?new=true',
       );
+    });
+
+    it('does not create a session when APP_ORIGIN is missing after upsert', async () => {
+      config.get.mockImplementation((key: string) => {
+        if (key === 'NODE_ENV') return 'development';
+        return undefined;
+      });
+      const unconfiguredOriginService = new AuthService(
+        config as unknown as ConfigService,
+        prisma as unknown as PrismaService,
+        session,
+        github as never,
+      );
+      const send = jest.fn();
+      const status = jest.fn().mockReturnValue({ send });
+      const redirect = jest.fn();
+      const res = {
+        cookie: jest.fn(),
+        clearCookie: jest.fn(),
+        redirect,
+        status,
+        send,
+      } as unknown as Response;
+      const req = createRequestMock({ [OAUTH_STATE_COOKIE]: 'state-1' });
+
+      mockGithubUserAndEmails(
+        {
+          id: 42,
+          login: 'octocat',
+          name: 'The Octocat',
+          avatar_url: null,
+        },
+        [
+          {
+            email: 'octocat@github.com',
+            primary: true,
+            verified: true,
+          },
+        ],
+      );
+
+      prisma.oAuthAccount.findUnique.mockResolvedValue({
+        userId: 'user-returning',
+      });
+
+      await unconfiguredOriginService.handleGithubCallback(
+        'code-1',
+        'state-1',
+        req,
+        res,
+      );
+
+      expect(session.createSession).not.toHaveBeenCalled();
+      expect(status).toHaveBeenCalledWith(500);
+      expect(send).toHaveBeenCalledWith(
+        'Authentication succeeded but APP_ORIGIN is not configured',
+      );
+      expect(redirect).not.toHaveBeenCalled();
     });
 
     it('redirects to error when profile fetch fails', async () => {

@@ -80,4 +80,25 @@ describe('SessionService', () => {
       }),
     );
   });
+
+  it('uses the same duration parser as JWT for cookie maxAge', () => {
+    config.get.mockImplementation((key: string) => {
+      if (key === 'NODE_ENV') return 'development';
+      if (key === 'JWT_EXPIRES_IN') return '2 days';
+      return undefined;
+    });
+
+    const cookie = jest.fn();
+    const res = { cookie, clearCookie: jest.fn() } as unknown as Response;
+
+    service.createSession('user-1', res);
+
+    expect(cookie).toHaveBeenCalledWith(
+      SESSION_COOKIE,
+      'signed-jwt',
+      expect.objectContaining({
+        maxAge: 2 * 24 * 60 * 60 * 1000,
+      }),
+    );
+  });
 });

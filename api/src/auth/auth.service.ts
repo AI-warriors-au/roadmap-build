@@ -63,10 +63,27 @@ export class AuthService {
     try {
       const tokens = await this.github.validateAuthorizationCode(code);
       const profile = await this.fetchGithubProfile(tokens.accessToken());
-      const { userId, isNewUser } = await this.upsertUserFromOAuth(profile);
-      this.session.createSession(userId, res);
+      const upsertResult = await this.upsertUserFromOAuth(profile);
+      const callbackUrl = this.buildCallbackRedirectUrl(upsertResult.isNewUser);
+
       this.clearOAuthCookies(res);
-      this.redirectToCallback(res, isNewUser);
+
+      if (!callbackUrl) {
+        res
+          .status(500)
+          .send('Authentication succeeded but APP_ORIGIN is not configured');
+        return;
+      }
+
+      try {
+        this.session.createSession(upsertResult.userId, res);
+      } catch {
+        // User was persisted; avoid oauth_failed redirect if only session issuance fails.
+        res.redirect(callbackUrl);
+        return;
+      }
+
+      res.redirect(callbackUrl);
     } catch {
       this.clearOAuthCookies(res);
       this.redirectToError(res);
@@ -264,7 +281,18 @@ export class AuthService {
       });
     } catch (error) {
       if (this.isUniqueConstraintError(error)) {
-        return { userId, isNewUser: false };
+        const racedAccount = await this.prisma.oAuthAccount.findUnique({
+          where: {
+            provider_providerId: {
+              provider: profile.provider,
+              providerId: profile.providerId,
+            },
+          },
+          select: { userId: true },
+        });
+        if (racedAccount) {
+          return { userId: racedAccount.userId, isNewUser: false };
+        }
       }
       throw error;
     }
@@ -302,18 +330,6 @@ export class AuthService {
     const options = this.getCookieOptions();
     res.clearCookie(OAUTH_STATE_COOKIE, options);
     res.clearCookie(OAUTH_CODE_VERIFIER_COOKIE, options);
-  }
-
-  private redirectToCallback(res: Response, isNewUser: boolean): void {
-    const url = this.buildCallbackRedirectUrl(isNewUser);
-    if (!url) {
-      res
-        .status(500)
-        .send('Authentication succeeded but APP_ORIGIN is not configured');
-      return;
-    }
-
-    res.redirect(url);
   }
 
   private redirectToError(res: Response): void {

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import type { CookieOptions, Response } from 'express';
+import ms, { type StringValue } from 'ms';
 import {
   JWT_DEFAULT_EXPIRES_IN,
   SESSION_COOKIE,
@@ -35,28 +36,14 @@ export class SessionService {
   }
 
   private getSessionMaxAgeMs(): number {
-    const expiresIn =
-      this.config.get<string>('JWT_EXPIRES_IN') ?? JWT_DEFAULT_EXPIRES_IN;
-    const match = /^(\d+)([dhms])$/.exec(expiresIn);
+    const expiresIn = (this.config.get<string>('JWT_EXPIRES_IN') ??
+      JWT_DEFAULT_EXPIRES_IN) as StringValue;
+    const maxAge = ms(expiresIn);
 
-    if (!match) {
-      return 7 * 24 * 60 * 60 * 1000;
+    if (typeof maxAge !== 'number' || maxAge <= 0) {
+      return ms(JWT_DEFAULT_EXPIRES_IN as StringValue);
     }
 
-    const value = Number(match[1]);
-    const unit = match[2];
-
-    switch (unit) {
-      case 'd':
-        return value * 24 * 60 * 60 * 1000;
-      case 'h':
-        return value * 60 * 60 * 1000;
-      case 'm':
-        return value * 60 * 1000;
-      case 's':
-        return value * 1000;
-      default:
-        return 7 * 24 * 60 * 60 * 1000;
-    }
+    return maxAge;
   }
 }
