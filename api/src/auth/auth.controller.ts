@@ -1,10 +1,16 @@
-import { Controller, Get, Query, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
+import { Public } from './public.decorator';
+import { SessionService } from './session.service';
 
+@Public()
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly session: SessionService,
+  ) {}
 
   // Google OAuth disabled until a Google Cloud OAuth app is available.
   // @Get('google')
@@ -35,5 +41,11 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     await this.authService.handleGithubCallback(code, state, req, res);
+  }
+
+  @Post('logout')
+  logout(@Res() res: Response): void {
+    this.session.clearSession(res);
+    res.status(204).send();
   }
 }

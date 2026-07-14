@@ -26,6 +26,7 @@ describe('AuthService', () => {
     validateAuthorizationCode: jest.Mock;
   } | null;
   let config: { get: jest.Mock };
+  let session: { createSession: jest.Mock };
 
   const githubProfile: ProviderProfile = {
     provider: OAuthProvider.GITHUB,
@@ -66,9 +67,14 @@ describe('AuthService', () => {
       }),
     };
 
+    session = {
+      createSession: jest.fn(),
+    };
+
     service = new AuthService(
       config as unknown as ConfigService,
       prisma as unknown as PrismaService,
+      session,
       github as never,
     );
   });
@@ -158,10 +164,13 @@ describe('AuthService', () => {
 
   describe('upsertUserFromOAuth', () => {
     it('returns isNewUser false when OAuth account already exists', async () => {
-      prisma.oAuthAccount.findUnique.mockResolvedValue({ id: 'oauth-1' });
+      prisma.oAuthAccount.findUnique.mockResolvedValue({
+        userId: 'user-existing',
+      });
 
       await expect(service.upsertUserFromOAuth(githubProfile)).resolves.toEqual(
         {
+          userId: 'user-existing',
           isNewUser: false,
         },
       );
@@ -175,6 +184,7 @@ describe('AuthService', () => {
 
       await expect(service.upsertUserFromOAuth(githubProfile)).resolves.toEqual(
         {
+          userId: 'user-1',
           isNewUser: false,
         },
       );
@@ -195,6 +205,7 @@ describe('AuthService', () => {
 
       await expect(service.upsertUserFromOAuth(githubProfile)).resolves.toEqual(
         {
+          userId: 'user-new',
           isNewUser: true,
         },
       );
@@ -231,6 +242,7 @@ describe('AuthService', () => {
 
       await expect(service.upsertUserFromOAuth(githubProfile)).resolves.toEqual(
         {
+          userId: 'user-1',
           isNewUser: false,
         },
       );
@@ -269,6 +281,7 @@ describe('AuthService', () => {
       const unconfiguredService = new AuthService(
         config as unknown as ConfigService,
         prisma as unknown as PrismaService,
+        session,
         null,
       );
       const { res, redirect } = createResponseMock();
@@ -314,11 +327,14 @@ describe('AuthService', () => {
         ],
       );
 
-      prisma.oAuthAccount.findUnique.mockResolvedValue({ id: 'oauth-1' });
+      prisma.oAuthAccount.findUnique.mockResolvedValue({
+        userId: 'user-returning',
+      });
 
       await service.handleGithubCallback('code-1', 'state-1', req, res);
 
       expect(github?.validateAuthorizationCode).toHaveBeenCalledWith('code-1');
+      expect(session.createSession).toHaveBeenCalledWith('user-returning', res);
       expect(redirect).toHaveBeenCalledWith(
         'http://localhost:5173/auth/callback?new=false',
       );
@@ -392,6 +408,7 @@ describe('AuthService', () => {
       const unconfiguredService = new AuthService(
         config as unknown as ConfigService,
         prisma as unknown as PrismaService,
+        session,
         null,
       );
       const { res, redirect } = createResponseMock();
@@ -413,6 +430,7 @@ describe('AuthService', () => {
       const unconfiguredOriginService = new AuthService(
         config as unknown as ConfigService,
         prisma as unknown as PrismaService,
+        session,
         github as never,
       );
       const send = jest.fn();
