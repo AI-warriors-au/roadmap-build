@@ -28,6 +28,15 @@ export interface JwtPayload {
   sub: string;
 }
 
+/** Minimal current-user payload for GET /user/profile (shared by SPA consumers). */
+export interface MeResponse {
+  id: string;
+  email: string;
+  displayName: string;
+  avatarUrl: string | null;
+  onboardedAt: string | null;
+}
+
 declare module 'express-serve-static-core' {
   interface Request {
     user?: AuthenticatedUser;

@@ -4,7 +4,6 @@ import { AuthService } from './auth.service';
 import { Public } from './public.decorator';
 import { SessionService } from './session.service';
 
-@Public()
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -13,11 +12,13 @@ export class AuthController {
   ) {}
 
   // Google OAuth disabled until a Google Cloud OAuth app is available.
+  // @Public()
   // @Get('google')
   // google(@Res() res: Response): void {
   //   this.authService.startGoogleAuth(res);
   // }
   //
+  // @Public()
   // @Get('google/callback')
   // async googleCallback(
   //   @Query('code') code: string | undefined,
@@ -28,11 +29,13 @@ export class AuthController {
   //   await this.authService.handleGoogleCallback(code, state, req, res);
   // }
 
+  @Public()
   @Get('github')
   github(@Res() res: Response): void {
     this.authService.startGithubAuth(res);
   }
 
+  @Public()
   @Get('github/callback')
   async githubCallback(
     @Query('code') code: string | undefined,
@@ -43,6 +46,7 @@ export class AuthController {
     await this.authService.handleGithubCallback(code, state, req, res);
   }
 
+  @Public()
   @Post('logout')
   logout(@Res() res: Response): void {
     this.session.clearSession(res);

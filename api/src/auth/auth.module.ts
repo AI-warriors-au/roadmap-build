@@ -8,6 +8,7 @@ import { resolveJwtExpiresIn } from './jwt-expires-in';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { createGithubProvider, GITHUB_OAUTH } from './oauth-providers';
 import { SessionService } from './session.service';
+import { UserController } from './user.controller';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { SessionService } from './session.service';
       }),
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, UserController],
   providers: [
     AuthService,
     SessionService,

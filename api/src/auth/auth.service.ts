@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OAuthProvider, Prisma } from '@prisma/client';
 import { generateState, type GitHub } from 'arctic';
@@ -8,6 +8,7 @@ import {
   OAUTH_CODE_VERIFIER_COOKIE,
   OAUTH_COOKIE_MAX_AGE_MS,
   OAUTH_STATE_COOKIE,
+  type MeResponse,
   type OAuthUpsertResult,
   type ProviderProfile,
 } from './auth.types';
@@ -27,6 +28,31 @@ export class AuthService {
   // startGoogleAuth(res: Response): void { ... }
   // async handleGoogleCallback(...): Promise<void> { ... }
   // private async fetchGoogleProfile(accessToken: string): Promise<ProviderProfile> { ... }
+
+  async getCurrentUser(userId: string): Promise<MeResponse> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        displayName: true,
+        avatarUrl: true,
+        onboardedAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+      avatarUrl: user.avatarUrl,
+      onboardedAt: user.onboardedAt?.toISOString() ?? null,
+    };
+  }
 
   startGithubAuth(res: Response): void {
     if (!this.github) {
@@ -167,9 +193,9 @@ export class AuthService {
       return null;
     }
 
-    const url = new URL('/auth/callback', origin);
-    url.searchParams.set('new', String(isNewUser));
-    return url.toString();
+    // HashRouter expects routes in the hash fragment.
+    const params = new URLSearchParams({ new: String(isNewUser) });
+    return `${origin.replace(/\/$/, '')}/#/auth/callback?${params.toString()}`;
   }
 
   buildErrorRedirectUrl(): string | null {
@@ -178,9 +204,7 @@ export class AuthService {
       return null;
     }
 
-    const url = new URL('/auth/callback', origin);
-    url.searchParams.set('error', 'oauth_failed');
-    return url.toString();
+    return `${origin.replace(/\/$/, '')}/#/auth/callback?error=oauth_failed`;
   }
 
   isValidState(
