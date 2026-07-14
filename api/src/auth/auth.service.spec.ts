@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+import { UnauthorizedException } from '@nestjs/common';
 import { OAuthProvider, Prisma } from '@prisma/client';
 import type { Request, Response } from 'express';
 import { PrismaService } from '../prisma/prisma.service';
@@ -136,13 +137,13 @@ describe('AuthService', () => {
   describe('buildCallbackRedirectUrl', () => {
     it('builds new-user callback URL', () => {
       expect(service.buildCallbackRedirectUrl(true)).toBe(
-        'http://localhost:5173/auth/callback?new=true',
+        'http://localhost:5173/#/auth/callback?new=true',
       );
     });
 
     it('builds returning-user callback URL', () => {
       expect(service.buildCallbackRedirectUrl(false)).toBe(
-        'http://localhost:5173/auth/callback?new=false',
+        'http://localhost:5173/#/auth/callback?new=false',
       );
     });
   });
@@ -150,7 +151,7 @@ describe('AuthService', () => {
   describe('buildErrorRedirectUrl', () => {
     it('builds oauth error callback URL', () => {
       expect(service.buildErrorRedirectUrl()).toBe(
-        'http://localhost:5173/auth/callback?error=oauth_failed',
+        'http://localhost:5173/#/auth/callback?error=oauth_failed',
       );
     });
 
@@ -309,7 +310,7 @@ describe('AuthService', () => {
       unconfiguredService.startGithubAuth(res);
 
       expect(redirect).toHaveBeenCalledWith(
-        'http://localhost:5173/auth/callback?error=oauth_failed',
+        'http://localhost:5173/#/auth/callback?error=oauth_failed',
       );
     });
   });
@@ -322,7 +323,7 @@ describe('AuthService', () => {
       await service.handleGithubCallback('code', 'other-state', req, res);
 
       expect(redirect).toHaveBeenCalledWith(
-        'http://localhost:5173/auth/callback?error=oauth_failed',
+        'http://localhost:5173/#/auth/callback?error=oauth_failed',
       );
       expect(github?.validateAuthorizationCode).not.toHaveBeenCalled();
     });
@@ -356,7 +357,7 @@ describe('AuthService', () => {
       expect(github?.validateAuthorizationCode).toHaveBeenCalledWith('code-1');
       expect(session.createSession).toHaveBeenCalledWith('user-returning', res);
       expect(redirect).toHaveBeenCalledWith(
-        'http://localhost:5173/auth/callback?new=false',
+        'http://localhost:5173/#/auth/callback?new=false',
       );
     });
 
@@ -405,7 +406,7 @@ describe('AuthService', () => {
         },
       });
       expect(redirect).toHaveBeenCalledWith(
-        'http://localhost:5173/auth/callback?new=true',
+        'http://localhost:5173/#/auth/callback?new=true',
       );
     });
 
@@ -523,7 +524,7 @@ describe('AuthService', () => {
       await service.handleGithubCallback('code-1', 'state-1', req, res);
 
       expect(redirect).toHaveBeenCalledWith(
-        'http://localhost:5173/auth/callback?error=oauth_failed',
+        'http://localhost:5173/#/auth/callback?error=oauth_failed',
       );
     });
 
@@ -545,7 +546,7 @@ describe('AuthService', () => {
       );
 
       expect(redirect).toHaveBeenCalledWith(
-        'http://localhost:5173/auth/callback?error=oauth_failed',
+        'http://localhost:5173/#/auth/callback?error=oauth_failed',
       );
     });
     it('responds with 500 when APP_ORIGIN is missing during callback failure', async () => {
@@ -578,6 +579,62 @@ describe('AuthService', () => {
       expect(status).toHaveBeenCalledWith(500);
       expect(send).toHaveBeenCalledWith('OAuth failed');
       expect(redirect).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getCurrentUser', () => {
+    it('returns the current user profile', async () => {
+      prisma.user.findUnique.mockResolvedValue({
+        id: 'user-1',
+        email: 'ada@example.com',
+        displayName: 'Ada',
+        avatarUrl: 'https://example.com/a.png',
+        onboardedAt: new Date('2026-01-15T00:00:00.000Z'),
+      });
+
+      await expect(service.getCurrentUser('user-1')).resolves.toEqual({
+        id: 'user-1',
+        email: 'ada@example.com',
+        displayName: 'Ada',
+        avatarUrl: 'https://example.com/a.png',
+        onboardedAt: '2026-01-15T00:00:00.000Z',
+      });
+      expect(prisma.user.findUnique).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        select: {
+          id: true,
+          email: true,
+          displayName: true,
+          avatarUrl: true,
+          onboardedAt: true,
+        },
+      });
+    });
+
+    it('returns null onboardedAt when the user has not onboarded', async () => {
+      prisma.user.findUnique.mockResolvedValue({
+        id: 'user-2',
+        email: 'new@example.com',
+        displayName: 'New User',
+        avatarUrl: null,
+        onboardedAt: null,
+      });
+
+      await expect(service.getCurrentUser('user-2')).resolves.toEqual({
+        id: 'user-2',
+        email: 'new@example.com',
+        displayName: 'New User',
+        avatarUrl: null,
+        onboardedAt: null,
+      });
+    });
+
+    it('throws UnauthorizedException when the user no longer exists', async () => {
+      prisma.user.findUnique.mockResolvedValue(null);
+
+      await expect(service.getCurrentUser('missing')).rejects.toBeInstanceOf(
+        UnauthorizedException,
+      );
     });
   });
 });

@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { getHealth } from '@/lib/api'
+import { getHealth, getMe } from '@/lib/api'
 import { renderWithProviders } from '@/test/test-utils'
 
 import App from './App'
@@ -12,6 +12,7 @@ vi.mock('@/lib/api', async (importOriginal) => {
   return {
     ...actual,
     getHealth: vi.fn(),
+    getMe: vi.fn(),
   }
 })
 
@@ -21,6 +22,11 @@ describe('App', () => {
     vi.mocked(getHealth).mockResolvedValue({
       status: 'ok',
       database: 'connected',
+    })
+    vi.mocked(getMe).mockReset()
+    vi.mocked(getMe).mockRejectedValue({
+      isAxiosError: true,
+      response: { status: 401 },
     })
   })
 
@@ -125,7 +131,7 @@ describe('App', () => {
     await user.click(screen.getByRole('link', { name: 'Log in' }))
 
     expect(
-      screen.getByRole('heading', { name: 'Log in or sign up' }),
+      await screen.findByRole('heading', { name: 'Welcome to Learnmap' }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('navigation', { name: 'Primary' }),

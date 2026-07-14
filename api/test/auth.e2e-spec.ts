@@ -112,7 +112,7 @@ describe('Auth (e2e)', () => {
       .expect(302);
 
     expect(response.headers.location).toBe(
-      `${APP_ORIGIN}/auth/callback?error=oauth_failed`,
+      `${APP_ORIGIN}/#/auth/callback?error=oauth_failed`,
     );
   });
 
@@ -123,7 +123,7 @@ describe('Auth (e2e)', () => {
       .expect(302);
 
     expect(response.headers.location).toBe(
-      `${APP_ORIGIN}/auth/callback?error=oauth_failed`,
+      `${APP_ORIGIN}/#/auth/callback?error=oauth_failed`,
     );
   });
 
@@ -136,7 +136,7 @@ describe('Auth (e2e)', () => {
       const response = await completeGithubCallback(agent);
 
       expect(response.headers.location).toBe(
-        `${APP_ORIGIN}/auth/callback?new=true`,
+        `${APP_ORIGIN}/#/auth/callback?new=true`,
       );
 
       const cookieHeader = response.headers['set-cookie'];
@@ -190,7 +190,7 @@ describe('Auth (e2e)', () => {
       const response = await completeGithubCallback(agent);
 
       expect(response.headers.location).toBe(
-        `${APP_ORIGIN}/auth/callback?new=false`,
+        `${APP_ORIGIN}/#/auth/callback?new=false`,
       );
     },
   );
@@ -209,7 +209,7 @@ describe('Auth (e2e)', () => {
       const response = await completeGithubCallback(agent);
 
       expect(response.headers.location).toBe(
-        `${APP_ORIGIN}/auth/callback?new=false`,
+        `${APP_ORIGIN}/#/auth/callback?new=false`,
       );
 
       const prisma = app.get(PrismaService);
@@ -241,7 +241,7 @@ describe('Auth (e2e)', () => {
       const response = await completeGithubCallback(agent);
 
       expect(response.headers.location).toBe(
-        `${APP_ORIGIN}/auth/callback?new=false`,
+        `${APP_ORIGIN}/#/auth/callback?new=false`,
       );
 
       const linkedUser = await prisma.user.findUnique({
@@ -298,4 +298,30 @@ describe('Auth (e2e)', () => {
       : String(cookieHeader ?? '');
     expect(cookieValues).toContain(`${SESSION_COOKIE}=`);
   });
+
+  it('GET /user/profile returns 401 without a session cookie', async () => {
+    await request(app.getHttpServer()).get('/user/profile').expect(401);
+  });
+
+  itWithDatabase(
+    'GET /user/profile returns the current user when authenticated',
+    async () => {
+      mockGithubProfileFetch();
+
+      const agent = request.agent(app.getHttpServer());
+      await completeGithubCallback(agent);
+
+      const response = await agent.get('/user/profile').expect(200);
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          id: expect.any(String) as string,
+          email: E2E_GITHUB_EMAIL,
+          displayName: 'E2E User',
+          avatarUrl: null,
+          onboardedAt: null,
+        }),
+      );
+    },
+  );
 });
