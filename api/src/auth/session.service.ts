@@ -3,11 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import type { CookieOptions, Response } from 'express';
 import ms, { type StringValue } from 'ms';
-import {
-  JWT_DEFAULT_EXPIRES_IN,
-  SESSION_COOKIE,
-  type JwtPayload,
-} from './auth.types';
+import { resolveJwtExpiresIn } from './jwt-expires-in';
+import { SESSION_COOKIE, type JwtPayload } from './auth.types';
 
 @Injectable()
 export class SessionService {
@@ -17,33 +14,33 @@ export class SessionService {
   ) {}
 
   createSession(userId: string, res: Response): void {
-    const token = this.jwt.sign({ sub: userId } satisfies JwtPayload);
-    res.cookie(SESSION_COOKIE, token, this.getCookieOptions());
+    const expiresIn = resolveJwtExpiresIn(
+      this.config.get<string>('JWT_EXPIRES_IN'),
+    );
+    const token = this.jwt.sign({ sub: userId } satisfies JwtPayload, {
+      expiresIn,
+    });
+
+    res.cookie(SESSION_COOKIE, token, this.getCookieOptions(expiresIn));
   }
 
   clearSession(res: Response): void {
-    res.clearCookie(SESSION_COOKIE, this.getCookieOptions());
+    res.clearCookie(SESSION_COOKIE, this.getBaseCookieOptions());
   }
 
-  private getCookieOptions(): CookieOptions {
+  private getCookieOptions(expiresIn: StringValue): CookieOptions {
+    return {
+      ...this.getBaseCookieOptions(),
+      maxAge: ms(expiresIn),
+    };
+  }
+
+  private getBaseCookieOptions(): CookieOptions {
     return {
       httpOnly: true,
       sameSite: 'lax',
       secure: this.config.get<string>('NODE_ENV') === 'production',
       path: '/',
-      maxAge: this.getSessionMaxAgeMs(),
     };
-  }
-
-  private getSessionMaxAgeMs(): number {
-    const expiresIn = (this.config.get<string>('JWT_EXPIRES_IN') ??
-      JWT_DEFAULT_EXPIRES_IN) as StringValue;
-    const maxAge = ms(expiresIn);
-
-    if (typeof maxAge !== 'number' || maxAge <= 0) {
-      return ms(JWT_DEFAULT_EXPIRES_IN as StringValue);
-    }
-
-    return maxAge;
   }
 }

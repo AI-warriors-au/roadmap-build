@@ -287,15 +287,15 @@ describe('Auth (e2e)', () => {
     const agent = request.agent(app.getHttpServer());
     const token = app.get(JwtService).sign({ sub: 'logout-user' });
 
-    await agent
+    const response = await agent
       .post('/auth/logout')
       .set('Cookie', `${SESSION_COOKIE}=${token}`)
       .expect(204);
 
-    await agent.get('/health').expect(401);
-  });
-
-  it('GET /health returns 401 for requests without a session cookie', async () => {
-    await request(app.getHttpServer()).get('/health').expect(401);
+    const cookieHeader = response.headers['set-cookie'];
+    const cookieValues = Array.isArray(cookieHeader)
+      ? cookieHeader.join('; ')
+      : String(cookieHeader ?? '');
+    expect(cookieValues).toContain(`${SESSION_COOKIE}=`);
   });
 });

@@ -33,7 +33,10 @@ describe('SessionService', () => {
 
     service.createSession('user-1', res);
 
-    expect(jwt.sign).toHaveBeenCalledWith({ sub: 'user-1' });
+    expect(jwt.sign).toHaveBeenCalledWith(
+      { sub: 'user-1' },
+      { expiresIn: '7d' },
+    );
     expect(cookie).toHaveBeenCalledWith(
       SESSION_COOKIE,
       'signed-jwt',
@@ -100,5 +103,24 @@ describe('SessionService', () => {
         maxAge: 2 * 24 * 60 * 60 * 1000,
       }),
     );
+  });
+
+  it('throws when JWT_EXPIRES_IN is invalid', () => {
+    config.get.mockImplementation((key: string) => {
+      if (key === 'NODE_ENV') return 'development';
+      if (key === 'JWT_EXPIRES_IN') return 'not-a-duration';
+      return undefined;
+    });
+
+    const cookie = jest.fn();
+    const res = {
+      cookie,
+      clearCookie: jest.fn(),
+    } as unknown as Response;
+
+    expect(() => service.createSession('user-1', res)).toThrow(
+      'Invalid JWT_EXPIRES_IN: not-a-duration',
+    );
+    expect(cookie).not.toHaveBeenCalled();
   });
 });
