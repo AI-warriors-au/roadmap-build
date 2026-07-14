@@ -355,4 +355,111 @@ describe('Auth (e2e)', () => {
       );
     },
   );
+
+  it('POST /user/onboard returns 401 without a session cookie', async () => {
+    await request(app.getHttpServer())
+      .post('/user/onboard')
+      .send({ displayName: 'E2E User' })
+      .expect(401);
+  });
+
+  itWithDatabase(
+    'POST /user/onboard returns 400 when display name is empty',
+    async () => {
+      mockGithubProfileFetch();
+
+      const agent = request.agent(app.getHttpServer());
+      await completeGithubCallback(agent);
+
+      await agent.post('/user/onboard').send({ displayName: '' }).expect(400);
+      await agent
+        .post('/user/onboard')
+        .send({ displayName: '   ' })
+        .expect(400);
+    },
+  );
+
+  itWithDatabase(
+    'POST /user/onboard returns 400 when display name exceeds 100 characters',
+    async () => {
+      mockGithubProfileFetch();
+
+      const agent = request.agent(app.getHttpServer());
+      await completeGithubCallback(agent);
+
+      await agent
+        .post('/user/onboard')
+        .send({ displayName: 'a'.repeat(101) })
+        .expect(400);
+    },
+  );
+
+  itWithDatabase(
+    'POST /user/onboard trims whitespace from the display name',
+    async () => {
+      mockGithubProfileFetch();
+
+      const agent = request.agent(app.getHttpServer());
+      await completeGithubCallback(agent);
+
+      const response = await agent
+        .post('/user/onboard')
+        .send({ displayName: '  Trimmed Name  ' })
+        .expect(201);
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          displayName: 'Trimmed Name',
+        }),
+      );
+    },
+  );
+
+  itWithDatabase(
+    'POST /user/onboard updates display name for already onboarded users',
+    async () => {
+      mockGithubProfileFetch();
+
+      const agent = request.agent(app.getHttpServer());
+      await completeGithubCallback(agent);
+
+      await agent
+        .post('/user/onboard')
+        .send({ displayName: 'First Name' })
+        .expect(201);
+
+      const response = await agent
+        .post('/user/onboard')
+        .send({ displayName: 'Updated Name' })
+        .expect(201);
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          displayName: 'Updated Name',
+          onboardedAt: expect.any(String) as string,
+        }),
+      );
+
+      const profile = await agent.get('/user/profile').expect(200);
+      expect(profile.body.displayName).toBe('Updated Name');
+    },
+  );
+
+  itWithDatabase(
+    'GET /user/profile sets Cache-Control to no-store',
+    async () => {
+      mockGithubProfileFetch();
+
+      const agent = request.agent(app.getHttpServer());
+      await completeGithubCallback(agent);
+
+      const response = await agent.get('/user/profile').expect(200);
+
+      expect(response.headers['cache-control']).toBe('no-store');
+    },
+  );
+
+  it('POST /auth/logout returns 204 without a session cookie', async () => {
+    await request(app.getHttpServer()).post('/auth/logout').expect(204);
+  });
 });

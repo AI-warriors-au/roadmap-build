@@ -1,5 +1,8 @@
 import { ConfigService } from '@nestjs/config';
-import { UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { OAuthProvider, Prisma } from '@prisma/client';
 import type { Request, Response } from 'express';
 import { PrismaService } from '../prisma/prisma.service';
@@ -674,5 +677,35 @@ describe('AuthService', () => {
         },
       });
     });
+
+    it('trims whitespace from the display name', async () => {
+      prisma.user.update.mockResolvedValue({
+        id: 'user-1',
+        email: 'a@b.com',
+        displayName: 'Ada Lovelace',
+        avatarUrl: null,
+        onboardedAt: new Date('2026-01-15T00:00:00.000Z'),
+      });
+
+      await service.onboardUser('user-1', '  Ada Lovelace  ');
+
+      expect(prisma.user.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            displayName: 'Ada Lovelace',
+          }),
+        }),
+      );
+    });
+
+    it.each(['', '   ', 'a'.repeat(101)])(
+      'throws BadRequestException for invalid display name %j',
+      async (displayName) => {
+        await expect(
+          service.onboardUser('user-1', displayName),
+        ).rejects.toBeInstanceOf(BadRequestException);
+        expect(prisma.user.update).not.toHaveBeenCalled();
+      },
+    );
   });
 });
