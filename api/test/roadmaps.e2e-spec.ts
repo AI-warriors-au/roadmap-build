@@ -20,6 +20,14 @@ type CatalogItem = {
   isEnrolled: boolean;
 };
 
+type CatalogListBody = {
+  items: CatalogItem[];
+};
+
+function catalogItems(body: unknown): CatalogItem[] {
+  return (body as CatalogListBody).items;
+}
+
 describe('Roadmaps catalog (e2e)', () => {
   let app: INestApplication<App>;
   let databaseAvailable = false;
@@ -176,7 +184,7 @@ describe('Roadmaps catalog (e2e)', () => {
       expect(response.headers['cache-control']).toBe('no-store');
       expect(response.body).toHaveProperty('items');
 
-      const items = response.body.items as CatalogItem[];
+      const items = catalogItems(response.body);
       const fixtureItems = items.filter((item) =>
         item.slug.startsWith(E2E_SLUG_PREFIX),
       );
@@ -193,7 +201,7 @@ describe('Roadmaps catalog (e2e)', () => {
             tags: expect.arrayContaining([
               expect.objectContaining({ slug: 'e2e-frontend' }),
               expect.objectContaining({ slug: 'e2e-react' }),
-            ]),
+            ]) as CatalogItem['tags'],
           }),
           expect.objectContaining({
             id: publishedBackendId,
@@ -221,7 +229,7 @@ describe('Roadmaps catalog (e2e)', () => {
         .set('Cookie', sessionCookie)
         .expect(200);
 
-      const items = (response.body.items as CatalogItem[]).filter((item) =>
+      const items = catalogItems(response.body).filter((item) =>
         item.slug.startsWith(E2E_SLUG_PREFIX),
       );
 
@@ -230,25 +238,22 @@ describe('Roadmaps catalog (e2e)', () => {
     },
   );
 
-  itWithDatabase(
-    'GET /roadmaps?tags= matches any tag slug (OR)',
-    async () => {
-      const response = await request(app.getHttpServer())
-        .get('/roadmaps')
-        .query({ tags: 'e2e-frontend,e2e-backend' })
-        .set('Cookie', sessionCookie)
-        .expect(200);
+  itWithDatabase('GET /roadmaps?tags= matches any tag slug (OR)', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/roadmaps')
+      .query({ tags: 'e2e-frontend,e2e-backend' })
+      .set('Cookie', sessionCookie)
+      .expect(200);
 
-      const ids = (response.body.items as CatalogItem[])
-        .filter((item) => item.slug.startsWith(E2E_SLUG_PREFIX))
-        .map((item) => item.id);
+    const ids = catalogItems(response.body)
+      .filter((item) => item.slug.startsWith(E2E_SLUG_PREFIX))
+      .map((item) => item.id);
 
-      expect(ids).toEqual(
-        expect.arrayContaining([publishedFrontendId, publishedBackendId]),
-      );
-      expect(ids).not.toContain(unpublishedId);
-    },
-  );
+    expect(ids).toEqual(
+      expect.arrayContaining([publishedFrontendId, publishedBackendId]),
+    );
+    expect(ids).not.toContain(unpublishedId);
+  });
 
   itWithDatabase(
     'GET /roadmaps treats soft-unenrolled roadmaps as not enrolled',
@@ -258,7 +263,7 @@ describe('Roadmaps catalog (e2e)', () => {
         .set('Cookie', sessionCookie)
         .expect(200);
 
-      const items = response.body.items as CatalogItem[];
+      const items = catalogItems(response.body);
       const frontend = items.find((item) => item.id === publishedFrontendId);
       const backend = items.find((item) => item.id === publishedBackendId);
 

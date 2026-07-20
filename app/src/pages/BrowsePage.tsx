@@ -32,8 +32,8 @@ export function BrowsePage() {
 
   const totalCount = catalogQuery.data?.items.length
   const items = resultsQuery.data?.items ?? []
-  const showEmpty =
-    resultsQuery.isSuccess && items.length === 0 && !resultsQuery.isFetching
+  // Do not gate on isFetching — cached empty + background refetch would blank the catalog.
+  const showEmpty = resultsQuery.isSuccess && items.length === 0
 
   function toggleTag(slug: string) {
     setSelectedTags((current) =>
