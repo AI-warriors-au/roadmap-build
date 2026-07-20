@@ -52,6 +52,9 @@ function createMockPrisma(existingSeeded = false): {
   prisma: SeedPrismaClient;
   roadmapFindUnique: jest.Mock;
   transaction: jest.Mock;
+  topicDeleteMany: jest.Mock;
+  topicEdgeDeleteMany: jest.Mock;
+  resourceDeleteMany: jest.Mock;
 } {
   const roadmapFindUnique = jest
     .fn()
@@ -63,19 +66,21 @@ function createMockPrisma(existingSeeded = false): {
       Promise.resolve({ id: `tag-${where.slug}`, slug: where.slug }),
     );
   const roadmapTagUpsert = jest.fn().mockResolvedValue({});
+  const topicDeleteMany = jest.fn().mockResolvedValue({ count: 0 });
   const topicUpsert = jest.fn().mockResolvedValue({});
-  const topicEdgeUpsert = jest.fn().mockResolvedValue({});
-  const resourceFindFirst = jest.fn().mockResolvedValue(null);
+  const topicEdgeDeleteMany = jest.fn().mockResolvedValue({ count: 0 });
+  const topicEdgeCreate = jest.fn().mockResolvedValue({});
+  const resourceDeleteMany = jest.fn().mockResolvedValue({ count: 0 });
   const resourceCreate = jest.fn().mockResolvedValue({});
 
   const tx = {
     roadmap: { upsert: roadmapUpsert },
     tag: { upsert: tagUpsert },
     roadmapTag: { upsert: roadmapTagUpsert },
-    topic: { upsert: topicUpsert },
-    topicEdge: { upsert: topicEdgeUpsert },
+    topic: { deleteMany: topicDeleteMany, upsert: topicUpsert },
+    topicEdge: { deleteMany: topicEdgeDeleteMany, create: topicEdgeCreate },
     resource: {
-      findFirst: resourceFindFirst,
+      deleteMany: resourceDeleteMany,
       create: resourceCreate,
     },
   };
@@ -89,16 +94,19 @@ function createMockPrisma(existingSeeded = false): {
       roadmap: { findUnique: roadmapFindUnique },
       tag: { upsert: tagUpsert },
       roadmapTag: { upsert: roadmapTagUpsert },
-      topic: { upsert: topicUpsert },
-      topicEdge: { upsert: topicEdgeUpsert },
+      topic: { deleteMany: topicDeleteMany, upsert: topicUpsert },
+      topicEdge: { deleteMany: topicEdgeDeleteMany, create: topicEdgeCreate },
       resource: {
-        findFirst: resourceFindFirst,
+        deleteMany: resourceDeleteMany,
         create: resourceCreate,
       },
       $transaction: transaction,
     },
     roadmapFindUnique,
     transaction,
+    topicDeleteMany,
+    topicEdgeDeleteMany,
+    resourceDeleteMany,
   };
 }
 
@@ -137,6 +145,37 @@ describe('importRoadmapBundle', () => {
     );
 
     expect(transaction).not.toHaveBeenCalled();
+  });
+
+  it('removes stale graph data before re-importing an unseeded roadmap', async () => {
+    const bundle = createBundle();
+    const { prisma, topicDeleteMany, topicEdgeDeleteMany, resourceDeleteMany } =
+      createMockPrisma(false);
+
+    await importRoadmapBundle(prisma, bundle);
+
+    expect(topicDeleteMany).toHaveBeenCalledWith({
+      where: {
+        roadmapId: 'roadmap-1',
+        id: {
+          notIn: bundle.nodes.map((node) =>
+            deterministicTopicId(bundle.slug, node.id),
+          ),
+        },
+      },
+    });
+    expect(topicEdgeDeleteMany).toHaveBeenCalledWith({
+      where: { roadmapId: 'roadmap-1' },
+    });
+    expect(resourceDeleteMany).toHaveBeenCalledWith({
+      where: {
+        topicId: {
+          in: bundle.nodes.map((node) =>
+            deterministicTopicId(bundle.slug, node.id),
+          ),
+        },
+      },
+    });
   });
 });
 

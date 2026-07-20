@@ -93,10 +93,37 @@ export async function importRoadmapBundle(
     }
 
     const topicIdByNodeId = new Map<string, string>();
+    const bundleTopicIds = bundle.nodes.map((node) =>
+      deterministicTopicId(bundle.slug, node.id),
+    );
 
     for (const node of bundle.nodes) {
       const topicId = deterministicTopicId(bundle.slug, node.id);
       topicIdByNodeId.set(node.id, topicId);
+    }
+
+    await tx.topic.deleteMany({
+      where: {
+        roadmapId: roadmap.id,
+        ...(bundleTopicIds.length > 0 ? { id: { notIn: bundleTopicIds } } : {}),
+      },
+    });
+
+    await tx.topicEdge.deleteMany({
+      where: { roadmapId: roadmap.id },
+    });
+
+    if (bundleTopicIds.length > 0) {
+      await tx.resource.deleteMany({
+        where: { topicId: { in: bundleTopicIds } },
+      });
+    }
+
+    for (const node of bundle.nodes) {
+      const topicId = topicIdByNodeId.get(node.id);
+      if (!topicId) {
+        continue;
+      }
 
       await tx.topic.upsert({
         where: { id: topicId },
@@ -124,19 +151,12 @@ export async function importRoadmapBundle(
         continue;
       }
 
-      await tx.topicEdge.upsert({
-        where: {
-          sourceId_targetId: {
-            sourceId,
-            targetId,
-          },
-        },
-        create: {
+      await tx.topicEdge.create({
+        data: {
           roadmapId: roadmap.id,
           sourceId,
           targetId,
         },
-        update: {},
       });
     }
 
@@ -146,24 +166,15 @@ export async function importRoadmapBundle(
         continue;
       }
 
-      const existingResource = await tx.resource.findFirst({
-        where: {
+      await tx.resource.create({
+        data: {
           topicId,
+          title: resource.title,
           url: resource.url,
+          type: resource.type,
+          order: resource.order,
         },
       });
-
-      if (!existingResource) {
-        await tx.resource.create({
-          data: {
-            topicId,
-            title: resource.title,
-            url: resource.url,
-            type: resource.type,
-            order: resource.order,
-          },
-        });
-      }
     }
   });
 
