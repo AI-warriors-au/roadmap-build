@@ -1,0 +1,31 @@
+{
+  "upstreamRepo": "nilbuild/developer-roadmap",
+  "upstreamSha": "63c6428021ee54ef7aaaff283201741a59824d31",
+  "upstreamUrl": "https://roadmap.sh",
+  "license": "MIT",
+  "roadmaps": [
+    { "slug": "frontend", "tags": ["frontend"] },
+    { "slug": "backend", "tags": ["backend"] },
+    { "slug": "devops", "tags": ["devops"] },
+    { "slug": "react", "tags": ["react", "frontend"] },
+    { "slug": "vue", "tags": ["vue", "frontend"] },
+    { "slug": "angular", "tags": ["angular", "frontend"] },
+    { "slug": "javascript", "tags": ["javascript", "frontend"] },
+    { "slug": "typescript", "tags": ["typescript", "frontend"] },
+    { "slug": "graphql", "tags": ["graphql", "frontend"] },
+    { "slug": "design-system", "tags": ["design-system", "frontend"] },
+    { "slug": "nodejs", "tags": ["nodejs", "backend"] },
+    { "slug": "python", "tags": ["python", "backend"] },
+    { "slug": "java", "tags": ["java", "backend"] },
+    { "slug": "golang", "tags": ["golang", "backend"] },
+    { "slug": "rust", "tags": ["rust", "backend"] },
+    { "slug": "sql", "tags": ["sql", "data"] },
+    { "slug": "postgresql-dba", "tags": ["postgresql", "data"] },
+    { "slug": "mongodb", "tags": ["mongodb", "data"] },
+    { "slug": "docker", "tags": ["docker", "devops"] },
+    { "slug": "kubernetes", "tags": ["kubernetes", "devops"] },
+    { "slug": "aws", "tags": ["aws", "devops"] },
+    { "slug": "blockchain", "tags": ["blockchain"] },
+    { "slug": "machine-learning", "tags": ["machine-learning", "ai", "data"] }
+  ]
+}

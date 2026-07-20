@@ -1,0 +1,1693 @@
+{
+    "slug": "vue",
+    "title": "Vue Developer Roadmap: Learn to become a Vue developer",
+    "description": "Community driven, articles, resources, guides, interview questions, quizzes for vue development. Learn to become a modern Vue developer by following the steps, skills, resources and guides listed in this roadmap.",
+    "tags": [
+        "vue",
+        "frontend"
+    ],
+    "nodes": [
+        {
+            "id": "0EevuyZiyty3X3Jzpjl4y",
+            "title": "Components",
+            "positionX": 344.5448461352869,
+            "positionY": 177.7304293708296,
+            "order": 0
+        },
+        {
+            "id": "y9ToYDix-koRbR6FLydFw",
+            "title": "create-vue",
+            "positionX": 359.0448461352869,
+            "positionY": -59.05566976101454,
+            "order": 1
+        },
+        {
+            "id": "VNBRlJkdH6NOOzGXUrbZK",
+            "title": "Single File Components",
+            "positionX": -13.265315108760092,
+            "positionY": 177.7304293708296,
+            "order": 2
+        },
+        {
+            "id": "2HhKifjuDcP3eKpanRMEQ",
+            "title": "Component Registration",
+            "positionX": -13.265315108760092,
+            "positionY": 124.7304293708296,
+            "order": 3
+        },
+        {
+            "id": "raEfI4GLMW2fOucka07VE",
+            "title": "Props",
+            "positionX": -13.265315108760092,
+            "positionY": 230.7304293708296,
+            "order": 4
+        },
+        {
+            "id": "X0J3ogH3W8EQe68tLfcGL",
+            "title": "Events",
+            "positionX": 60.73468489123991,
+            "positionY": 230.7304293708296,
+            "order": 5
+        },
+        {
+            "id": "swpyZFUO4UO3mW8Bvf1Te",
+            "title": "v-model",
+            "positionX": 134.7346848912399,
+            "positionY": 230.7304293708296,
+            "order": 6
+        },
+        {
+            "id": "4S5fVFsFDMbq05ld7n0sF",
+            "title": "Attribute Inheritance",
+            "positionX": -13.265315108760092,
+            "positionY": 283.7304293708296,
+            "order": 7
+        },
+        {
+            "id": "VlcYnTHW5d4J_zLYupvu5",
+            "title": "Templates",
+            "positionX": 344.5448461352869,
+            "positionY": 279.7304293708296,
+            "order": 8
+        },
+        {
+            "id": "CGdw3PqLRb9OqFU5SqmE1",
+            "title": "Directives",
+            "positionX": 344.5448461352869,
+            "positionY": 374.33464066194904,
+            "order": 9
+        },
+        {
+            "id": "OpJ2NMKCGXQezpzURE45R",
+            "title": "API Styles",
+            "positionX": -293.59797432485874,
+            "positionY": 335.33464066194904,
+            "order": 10
+        },
+        {
+            "id": "PPUU3Rb73aCpT4zcyvlJE",
+            "title": "Options API",
+            "positionX": -519.8364531870259,
+            "positionY": 311.5660709449147,
+            "order": 11
+        },
+        {
+            "id": "a0qwdQTunxEjQ9A5wpF-q",
+            "title": "Composition API",
+            "positionX": -519.8364531870259,
+            "positionY": 364.56607094491454,
+            "order": 12
+        },
+        {
+            "id": "qRm08uDZW-D8QDc-9sPX8",
+            "title": "App Configurations",
+            "positionX": -240.45968546864998,
+            "positionY": 152.74910795099487,
+            "order": 13
+        },
+        {
+            "id": "ftqDoGpwqqWQnu4NQSsMk",
+            "title": "Rendering Lists",
+            "positionX": 0.9532181586903334,
+            "positionY": 521.9023298779132,
+            "order": 14
+        },
+        {
+            "id": "1oIt_5OK-t2WaCgaYt9A8",
+            "title": "Error / Warn Handler",
+            "positionX": -519.8364531870259,
+            "positionY": 99.74910795099487,
+            "order": 15
+        },
+        {
+            "id": "gihxGgt177BK_EYsAfpx9",
+            "title": "Global Properties",
+            "positionX": -519.8364531870259,
+            "positionY": 152.74910795099487,
+            "order": 16
+        },
+        {
+            "id": "f7N4pAp_jBlT8_8owAcbG",
+            "title": "Performance",
+            "positionX": -519.8364531870259,
+            "positionY": 205.74910795099487,
+            "order": 17
+        },
+        {
+            "id": "tU4Umtnfu01t9gLlnlK6b",
+            "title": "Conditional Rendering",
+            "positionX": 0.9532181586903334,
+            "positionY": 468.90232987791325,
+            "order": 18
+        },
+        {
+            "id": "NCIzs3jbQTv1xXhAaGfZN",
+            "title": "v-text",
+            "positionX": 316.3072938863818,
+            "positionY": 515.560061206005,
+            "order": 19
+        },
+        {
+            "id": "bZxtIBeIfeUcR32LZWrPW",
+            "title": "v-html",
+            "positionX": 424.093620869392,
+            "positionY": 515.560061206005,
+            "order": 20
+        },
+        {
+            "id": "_TlbGTKFCMO0wdLbC6xHX",
+            "title": "v-show",
+            "positionX": 316.3072938863818,
+            "positionY": 716.560061206005,
+            "order": 21
+        },
+        {
+            "id": "xHj3W9Ig3MVuVlGyXchaP",
+            "title": "v-if",
+            "positionX": 316.3072938863818,
+            "positionY": 768.560061206005,
+            "order": 22
+        },
+        {
+            "id": "0CtAZQcFJexMiJfZ-mofv",
+            "title": "v-else",
+            "positionX": 425.60847046222204,
+            "positionY": 768.560061206005,
+            "order": 23
+        },
+        {
+            "id": "a9caVhderJaVo0v14w8WB",
+            "title": "v-else-if",
+            "positionX": 316.3072938863818,
+            "positionY": 820.560061206005,
+            "order": 24
+        },
+        {
+            "id": "3ftwRjQ9e1-qDT9BV53zr",
+            "title": "v-for",
+            "positionX": 316.3072938863818,
+            "positionY": 911.0003386751386,
+            "order": 25
+        },
+        {
+            "id": "hVuRmhXVP65IPtuHTORjJ",
+            "title": "v-on",
+            "positionX": 316.3072938863818,
+            "positionY": 1001.0824225237909,
+            "order": 26
+        },
+        {
+            "id": "cuM9q9vYy8JpZPGeBffd1",
+            "title": "v-bind",
+            "positionX": 316.3072938863818,
+            "positionY": 567.560061206005,
+            "order": 27
+        },
+        {
+            "id": "cxu2Wbt306SxM4JKQQqnL",
+            "title": "v-model",
+            "positionX": 424.093620869392,
+            "positionY": 567.560061206005,
+            "order": 28
+        },
+        {
+            "id": "m9pQ3daR3KiwRATcQysHA",
+            "title": "v-slot",
+            "positionX": 319.60847046222204,
+            "positionY": 1090.7930632441885,
+            "order": 29
+        },
+        {
+            "id": "5k9CrbzhNy9iiS6ez2UE6",
+            "title": "v-once",
+            "positionX": 316.3072938863818,
+            "positionY": 619.560061206005,
+            "order": 30
+        },
+        {
+            "id": "mlsrhioiEkqnRIL6O3hNa",
+            "title": "v-pre",
+            "positionX": 424.093620869392,
+            "positionY": 619.560061206005,
+            "order": 31
+        },
+        {
+            "id": "RrSekP8Ub01coegMwLP6a",
+            "title": "v-cloak",
+            "positionX": 426.60847046222204,
+            "positionY": 1090.7930632441885,
+            "order": 32
+        },
+        {
+            "id": "RRPhAxIqvAcjZIcLe_N8-",
+            "title": "Optimizing Renders",
+            "positionX": 0.9532181586903334,
+            "positionY": 574.9023298779132,
+            "order": 33
+        },
+        {
+            "id": "dxwKfBxd5KYVkfEPMdHp-",
+            "title": "Debugging",
+            "positionX": 0.9532181586903334,
+            "positionY": 627.9023298779132,
+            "order": 34
+        },
+        {
+            "id": "WiGG9_4G5y-AVA9byw6_g",
+            "title": "Lifecycle Hooks",
+            "positionX": -293.52532545570534,
+            "positionY": 467.810061206005,
+            "order": 35
+        },
+        {
+            "id": "PQu4TyJOfCEaafW5th0e4",
+            "title": "Forms Handling",
+            "positionX": -293.59797432485874,
+            "positionY": 591.0683595993249,
+            "order": 36
+        },
+        {
+            "id": "NfB3HlZ3uwYK5xszvV50b",
+            "title": "Input Bindings",
+            "positionX": -514.5059150365778,
+            "positionY": 538.0683595993249,
+            "order": 37
+        },
+        {
+            "id": "gMFndBcrTC6FtGryqN6dX",
+            "title": "v-model",
+            "positionX": -514.5059150365778,
+            "positionY": 591.0683595993249,
+            "order": 38
+        },
+        {
+            "id": "dSfrFLr8wKkLAOMJwtCTr",
+            "title": "Modifiers",
+            "positionX": -514.5059150365778,
+            "positionY": 644.0683595993249,
+            "order": 39
+        },
+        {
+            "id": "4p6Gh2fMPA8hls_mWa5HR",
+            "title": "Event Handling",
+            "positionX": -293.59797432485874,
+            "positionY": 719.560061206005,
+            "order": 40
+        },
+        {
+            "id": "b7iXwtUnELg_ShbCyTrNA",
+            "title": "Binding Events",
+            "positionX": -512.8080206821377,
+            "positionY": 826.1444350693496,
+            "order": 41
+        },
+        {
+            "id": "gVahaZNPktQuqdukFEbQH",
+            "title": "Inline / Method Handlers",
+            "positionX": -512.8080206821377,
+            "positionY": 879.1444350693496,
+            "order": 42
+        },
+        {
+            "id": "Aaf7eA-5sbAD5Cs1MbdTQ",
+            "title": "Event Modifiers",
+            "positionX": -512.8080206821377,
+            "positionY": 932.1444350693496,
+            "order": 43
+        },
+        {
+            "id": "BXw36wqhmi3gExXwFCIBd",
+            "title": "Key Modifiers",
+            "positionX": -512.8080206821377,
+            "positionY": 985.1444350693496,
+            "order": 44
+        },
+        {
+            "id": "x0wl2Qz2LTP4Q2tThKAt3",
+            "title": "Mouse Button Modifiers",
+            "positionX": -512.8080206821377,
+            "positionY": 1038.1444350693496,
+            "order": 45
+        },
+        {
+            "id": "Bx1Atxcf15AEaA1BiSIc6",
+            "title": "Computed Properties",
+            "positionX": 59.54031453135002,
+            "positionY": 719.560061206005,
+            "order": 46
+        },
+        {
+            "id": "Re7tv1U0LxYqE5ShFxQSf",
+            "title": "Async Components",
+            "positionX": -248.45827207144166,
+            "positionY": 822.7507883342075,
+            "order": 47
+        },
+        {
+            "id": "SGsd08ZTu4H76s8cfbCKe",
+            "title": "Teleport Components",
+            "positionX": -248.45827207144166,
+            "positionY": 875.7507883342075,
+            "order": 48
+        },
+        {
+            "id": "xwVbhOpQMPPB4G-lhro0B",
+            "title": "Provide / Inject",
+            "positionX": -248.45827207144166,
+            "positionY": 928.7507883342075,
+            "order": 49
+        },
+        {
+            "id": "br1r8KIf5KInY5mk2xhA6",
+            "title": "Custom Directives",
+            "positionX": -248.45827207144166,
+            "positionY": 981.7507883342075,
+            "order": 50
+        },
+        {
+            "id": "_Nc8ivQrdpKuf8MwaV-K7",
+            "title": "Plugins",
+            "positionX": -248.45827207144166,
+            "positionY": 1034.7507883342075,
+            "order": 51
+        },
+        {
+            "id": "kdlXhbw_a81xdZtyK-pVa",
+            "title": "Watchers",
+            "positionX": -248.45827207144166,
+            "positionY": 1087.7507883342075,
+            "order": 52
+        },
+        {
+            "id": "jkX66izOHVWqtyd6KZ0K6",
+            "title": "Slots",
+            "positionX": -248.45827207144166,
+            "positionY": 1140.7507883342075,
+            "order": 53
+        },
+        {
+            "id": "SWpWg5J5N9ZfY_DaIigA5",
+            "title": "Transition",
+            "positionX": -239.61720569319456,
+            "positionY": 1245.0004887424668,
+            "order": 54
+        },
+        {
+            "id": "HjzOYjS-7ZEBvElRJ8uN2",
+            "title": "Transition Group",
+            "positionX": -239.61720569319456,
+            "positionY": 1298.0004887424668,
+            "order": 55
+        },
+        {
+            "id": "Z9szBPFXfqK_KsvzkR-rf",
+            "title": "VueUse",
+            "positionX": 391.4970609830833,
+            "positionY": 1203.736629603213,
+            "order": 56
+        },
+        {
+            "id": "ixRG0xfEp4BmyvCR0mtoR",
+            "title": "Routing",
+            "positionX": 92.54031453135002,
+            "positionY": 1422.1053534778678,
+            "order": 57
+        },
+        {
+            "id": "COxkmvqe9jFtV9WtGjfbh",
+            "title": "Vue Router",
+            "positionX": 338.60847046222204,
+            "positionY": 1422.1053534778678,
+            "order": 58
+        },
+        {
+            "id": "izGdctxP_OvQNvaMwVIrh",
+            "title": "Forms",
+            "positionX": -105.9953868087789,
+            "positionY": 1422.1053534778678,
+            "order": 59
+        },
+        {
+            "id": "BXz1utB_2eYzFvzSbFKx0",
+            "title": "FormKit",
+            "positionX": -134.5523118952504,
+            "positionY": 1502.7534021113336,
+            "order": 60
+        },
+        {
+            "id": "_Fmp8_z4SKWfKUE80_fqb",
+            "title": "Vee Validate",
+            "positionX": -134.5523118952504,
+            "positionY": 1555.7534021113336,
+            "order": 61
+        },
+        {
+            "id": "6U_CAhAY_jyj_4Mzj_HL_",
+            "title": "Vuelidate",
+            "positionX": -134.5523118952504,
+            "positionY": 1608.7534021113336,
+            "order": 62
+        },
+        {
+            "id": "Cm6mqXYp-G4mGfPxuU73_",
+            "title": "SSR",
+            "positionX": -370.65341088187324,
+            "positionY": 1422.1053534778678,
+            "order": 63
+        },
+        {
+            "id": "822tGnM9jOkYh9aNlosPr",
+            "title": "SSG",
+            "positionX": -518.3364531870259,
+            "positionY": 1315.8962774513473,
+            "order": 64
+        },
+        {
+            "id": "f2udJnT2q5eDmBZ_OKtmi",
+            "title": "Quasar",
+            "positionX": -381.65341088187324,
+            "positionY": 1262.8962774513473,
+            "order": 65
+        },
+        {
+            "id": "8xZxTLYq5m5_nkGh2lfUt",
+            "title": "Nuxt.js",
+            "positionX": -381.65341088187324,
+            "positionY": 1315.8962774513473,
+            "order": 66
+        },
+        {
+            "id": "_46COO0FGaFuCYwqaRRWy",
+            "title": "VitePress",
+            "positionX": -518.3364531870259,
+            "positionY": 1238.4448162837582,
+            "order": 67
+        },
+        {
+            "id": "LjEAviRMtPLwUUlfcof1h",
+            "title": "Vitest",
+            "positionX": -437.5730606910654,
+            "positionY": 1557.1656483488384,
+            "order": 68
+        },
+        {
+            "id": "p5bUvgr_3H-A55ZnEExk8",
+            "title": "Vue Testing Library",
+            "positionX": -437.5730606910654,
+            "positionY": 1610.1656483488384,
+            "order": 69
+        },
+        {
+            "id": "JbMKUVDMUygjXXmhndHVs",
+            "title": "Cypress",
+            "positionX": -437.57306069106534,
+            "positionY": 1663.1656483488384,
+            "order": 70
+        },
+        {
+            "id": "zqcE3bTnymdepV-Yc8qBl",
+            "title": "Playwright",
+            "positionX": -334.7759930933753,
+            "positionY": 1663.1656483488384,
+            "order": 71
+        },
+        {
+            "id": "TkzlmJ85O-e-KfMhTBwry",
+            "title": "Tailwind CSS",
+            "positionX": 90.64058812810305,
+            "positionY": 1553.4384945254162,
+            "order": 72
+        },
+        {
+            "id": "VNclt_QQthWb2u4xWI_uY",
+            "title": "Vuetify",
+            "positionX": 90.64058812810305,
+            "positionY": 1606.4384945254162,
+            "order": 73
+        },
+        {
+            "id": "NMIh8rqLM5P-Uk65uHATn",
+            "title": "Element UI",
+            "positionX": 90.64058812810305,
+            "positionY": 1659.4384945254162,
+            "order": 74
+        },
+        {
+            "id": "9AwVtwIv6TfP9F4ulz2F0",
+            "title": "State Management",
+            "positionX": 310.5448461352869,
+            "positionY": 1589.9384945254162,
+            "order": 75
+        },
+        {
+            "id": "NIvjyhtTFC1gomtGQT_2t",
+            "title": "Pinia",
+            "positionX": 365.0448461352869,
+            "positionY": 1499.4295074880922,
+            "order": 76
+        },
+        {
+            "id": "ZLlz0Azfze-8k3z8HnVvE",
+            "title": "API Calls",
+            "positionX": 322.0448461352869,
+            "positionY": 1767.5550770848167,
+            "order": 77
+        },
+        {
+            "id": "l2Rl6OQbL7kYvPlpYCZ0Z",
+            "title": "Apollo",
+            "positionX": 322.693038734734,
+            "positionY": 1858.88303846187,
+            "order": 78
+        },
+        {
+            "id": "n5IlN-wv4k0r16CvhoSpD",
+            "title": "Axios",
+            "positionX": 319.2119067267403,
+            "positionY": 1954.4720214419385,
+            "order": 79
+        },
+        {
+            "id": "ufnt87swK61kxShLuVc1-",
+            "title": "fetch",
+            "positionX": 410.7868316808595,
+            "positionY": 1954.4720214419385,
+            "order": 80
+        },
+        {
+            "id": "WSq_cDKQPZa_qmQlIdGXg",
+            "title": "Tanstack Query",
+            "positionX": 318.7868316808595,
+            "positionY": 2006.4720214419385,
+            "order": 81
+        },
+        {
+            "id": "3RwIO-S8-xOYKNmfwk0pf",
+            "title": "Mobile Apps",
+            "positionX": -86.12877362673987,
+            "positionY": 1767.5550770848167,
+            "order": 82
+        },
+        {
+            "id": "IsNzCdS05tbAK0D1zz0Sf",
+            "title": "Capacitor",
+            "positionX": -271.8080206821377,
+            "positionY": 1767.5550770848167,
+            "order": 83
+        }
+    ],
+    "edges": [
+        {
+            "sourceNodeId": "0EevuyZiyty3X3Jzpjl4y",
+            "targetNodeId": "2HhKifjuDcP3eKpanRMEQ"
+        },
+        {
+            "sourceNodeId": "0EevuyZiyty3X3Jzpjl4y",
+            "targetNodeId": "VNBRlJkdH6NOOzGXUrbZK"
+        },
+        {
+            "sourceNodeId": "0EevuyZiyty3X3Jzpjl4y",
+            "targetNodeId": "swpyZFUO4UO3mW8Bvf1Te"
+        },
+        {
+            "sourceNodeId": "0EevuyZiyty3X3Jzpjl4y",
+            "targetNodeId": "4S5fVFsFDMbq05ld7n0sF"
+        },
+        {
+            "sourceNodeId": "0EevuyZiyty3X3Jzpjl4y",
+            "targetNodeId": "VlcYnTHW5d4J_zLYupvu5"
+        },
+        {
+            "sourceNodeId": "VlcYnTHW5d4J_zLYupvu5",
+            "targetNodeId": "CGdw3PqLRb9OqFU5SqmE1"
+        },
+        {
+            "sourceNodeId": "qRm08uDZW-D8QDc-9sPX8",
+            "targetNodeId": "1oIt_5OK-t2WaCgaYt9A8"
+        },
+        {
+            "sourceNodeId": "qRm08uDZW-D8QDc-9sPX8",
+            "targetNodeId": "gihxGgt177BK_EYsAfpx9"
+        },
+        {
+            "sourceNodeId": "qRm08uDZW-D8QDc-9sPX8",
+            "targetNodeId": "f7N4pAp_jBlT8_8owAcbG"
+        },
+        {
+            "sourceNodeId": "OpJ2NMKCGXQezpzURE45R",
+            "targetNodeId": "PPUU3Rb73aCpT4zcyvlJE"
+        },
+        {
+            "sourceNodeId": "OpJ2NMKCGXQezpzURE45R",
+            "targetNodeId": "a0qwdQTunxEjQ9A5wpF-q"
+        },
+        {
+            "sourceNodeId": "WiGG9_4G5y-AVA9byw6_g",
+            "targetNodeId": "PQu4TyJOfCEaafW5th0e4"
+        },
+        {
+            "sourceNodeId": "PQu4TyJOfCEaafW5th0e4",
+            "targetNodeId": "NfB3HlZ3uwYK5xszvV50b"
+        },
+        {
+            "sourceNodeId": "PQu4TyJOfCEaafW5th0e4",
+            "targetNodeId": "gMFndBcrTC6FtGryqN6dX"
+        },
+        {
+            "sourceNodeId": "PQu4TyJOfCEaafW5th0e4",
+            "targetNodeId": "dSfrFLr8wKkLAOMJwtCTr"
+        },
+        {
+            "sourceNodeId": "PQu4TyJOfCEaafW5th0e4",
+            "targetNodeId": "4p6Gh2fMPA8hls_mWa5HR"
+        },
+        {
+            "sourceNodeId": "4p6Gh2fMPA8hls_mWa5HR",
+            "targetNodeId": "b7iXwtUnELg_ShbCyTrNA"
+        },
+        {
+            "sourceNodeId": "4p6Gh2fMPA8hls_mWa5HR",
+            "targetNodeId": "Bx1Atxcf15AEaA1BiSIc6"
+        },
+        {
+            "sourceNodeId": "ixRG0xfEp4BmyvCR0mtoR",
+            "targetNodeId": "COxkmvqe9jFtV9WtGjfbh"
+        },
+        {
+            "sourceNodeId": "ixRG0xfEp4BmyvCR0mtoR",
+            "targetNodeId": "izGdctxP_OvQNvaMwVIrh"
+        },
+        {
+            "sourceNodeId": "izGdctxP_OvQNvaMwVIrh",
+            "targetNodeId": "BXz1utB_2eYzFvzSbFKx0"
+        },
+        {
+            "sourceNodeId": "izGdctxP_OvQNvaMwVIrh",
+            "targetNodeId": "Cm6mqXYp-G4mGfPxuU73_"
+        },
+        {
+            "sourceNodeId": "Cm6mqXYp-G4mGfPxuU73_",
+            "targetNodeId": "822tGnM9jOkYh9aNlosPr"
+        },
+        {
+            "sourceNodeId": "822tGnM9jOkYh9aNlosPr",
+            "targetNodeId": "8xZxTLYq5m5_nkGh2lfUt"
+        },
+        {
+            "sourceNodeId": "822tGnM9jOkYh9aNlosPr",
+            "targetNodeId": "_46COO0FGaFuCYwqaRRWy"
+        },
+        {
+            "sourceNodeId": "Cm6mqXYp-G4mGfPxuU73_",
+            "targetNodeId": "8xZxTLYq5m5_nkGh2lfUt"
+        },
+        {
+            "sourceNodeId": "9AwVtwIv6TfP9F4ulz2F0",
+            "targetNodeId": "NIvjyhtTFC1gomtGQT_2t"
+        },
+        {
+            "sourceNodeId": "9AwVtwIv6TfP9F4ulz2F0",
+            "targetNodeId": "ZLlz0Azfze-8k3z8HnVvE"
+        },
+        {
+            "sourceNodeId": "ZLlz0Azfze-8k3z8HnVvE",
+            "targetNodeId": "l2Rl6OQbL7kYvPlpYCZ0Z"
+        },
+        {
+            "sourceNodeId": "ZLlz0Azfze-8k3z8HnVvE",
+            "targetNodeId": "3RwIO-S8-xOYKNmfwk0pf"
+        },
+        {
+            "sourceNodeId": "3RwIO-S8-xOYKNmfwk0pf",
+            "targetNodeId": "IsNzCdS05tbAK0D1zz0Sf"
+        }
+    ],
+    "resources": [
+        {
+            "nodeId": "0EevuyZiyty3X3Jzpjl4y",
+            "title": "Components Basics",
+            "url": "https://vuejs.org/guide/essentials/component-basics.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "0EevuyZiyty3X3Jzpjl4y",
+            "title": "Components in Depth",
+            "url": "https://vuejs.org/guide/components/registration.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "y9ToYDix-koRbR6FLydFw",
+            "title": "vuejs/create-vue",
+            "url": "https://github.com/vuejs/create-vue",
+            "type": "opensource"
+        },
+        {
+            "nodeId": "y9ToYDix-koRbR6FLydFw",
+            "title": "Quick Start | Vue.js",
+            "url": "https://vuejs.org/guide/quick-start.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "y9ToYDix-koRbR6FLydFw",
+            "title": "Explore top posts about Vue.js",
+            "url": "https://app.daily.dev/tags/vuejs?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "VNBRlJkdH6NOOzGXUrbZK",
+            "title": "Single File Components",
+            "url": "https://vuejs.org/guide/scaling-up/sfc.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "2HhKifjuDcP3eKpanRMEQ",
+            "title": "Component Registration",
+            "url": "https://vuejs.org/guide/components/registration.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "raEfI4GLMW2fOucka07VE",
+            "title": "Props Basics",
+            "url": "https://vuejs.org/guide/essentials/component-basics.html#passing-props",
+            "type": "official"
+        },
+        {
+            "nodeId": "raEfI4GLMW2fOucka07VE",
+            "title": "Props in Depth",
+            "url": "https://vuejs.org/guide/components/props.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "X0J3ogH3W8EQe68tLfcGL",
+            "title": "Listening to Events",
+            "url": "https://vuejs.org/guide/essentials/component-basics.html#listening-to-events",
+            "type": "official"
+        },
+        {
+            "nodeId": "X0J3ogH3W8EQe68tLfcGL",
+            "title": "Events in Detail",
+            "url": "https://vuejs.org/guide/components/events.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "swpyZFUO4UO3mW8Bvf1Te",
+            "title": "Vue.js Guide",
+            "url": "https://vuejs.org/guide/components/v-model.html#component-v-model",
+            "type": "official"
+        },
+        {
+            "nodeId": "4S5fVFsFDMbq05ld7n0sF",
+            "title": "Fallthrough Attributes",
+            "url": "https://vuejs.org/guide/components/attrs.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "VlcYnTHW5d4J_zLYupvu5",
+            "title": "Template Syntax",
+            "url": "https://vuejs.org/guide/essentials/template-syntax.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "CGdw3PqLRb9OqFU5SqmE1",
+            "title": "Directives Documentation",
+            "url": "https://vuejs.org/guide/essentials/template-syntax.html#directives",
+            "type": "official"
+        },
+        {
+            "nodeId": "CGdw3PqLRb9OqFU5SqmE1",
+            "title": "Built-in Directives",
+            "url": "https://vuejs.org/api/built-in-directives.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "OpJ2NMKCGXQezpzURE45R",
+            "title": "The Difference Between the Composition API and Options API in Vue",
+            "url": "https://fjolt.com/article/vue-composition-api-vs-options-api",
+            "type": "article"
+        },
+        {
+            "nodeId": "PPUU3Rb73aCpT4zcyvlJE",
+            "title": "TypeScript with Options API",
+            "url": "https://vuejs.org/guide/typescript/options-api.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "PPUU3Rb73aCpT4zcyvlJE",
+            "title": "Options API Documentation",
+            "url": "https://vuejs.org/api/#options-api",
+            "type": "official"
+        },
+        {
+            "nodeId": "a0qwdQTunxEjQ9A5wpF-q",
+            "title": "TypeScript with Composition API",
+            "url": "https://vuejs.org/guide/typescript/composition-api.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "a0qwdQTunxEjQ9A5wpF-q",
+            "title": "Composition API FAQ",
+            "url": "https://vuejs.org/guide/extras/composition-api-faq.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "a0qwdQTunxEjQ9A5wpF-q",
+            "title": "Composition API",
+            "url": "https://vuejs.org/api/#composition-api",
+            "type": "official"
+        },
+        {
+            "nodeId": "a0qwdQTunxEjQ9A5wpF-q",
+            "title": "Vue 3 Composition API",
+            "url": "https://www.thisdot.co/blog/vue-3-composition-api-ref-and-reactive",
+            "type": "article"
+        },
+        {
+            "nodeId": "a0qwdQTunxEjQ9A5wpF-q",
+            "title": "Explore top posts about Vue.js",
+            "url": "https://app.daily.dev/tags/vuejs?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "qRm08uDZW-D8QDc-9sPX8",
+            "title": "Vue.js Documentation",
+            "url": "https://vuejs.org/api/application.html#app-config",
+            "type": "official"
+        },
+        {
+            "nodeId": "ftqDoGpwqqWQnu4NQSsMk",
+            "title": "Rendering Lists in Vue.js",
+            "url": "https://vuejs.org/guide/essentials/list.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "1oIt_5OK-t2WaCgaYt9A8",
+            "title": "Debugging Documentation",
+            "url": "https://vuejs.org/v2/cookbook/debugging-in-vscode.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "gihxGgt177BK_EYsAfpx9",
+            "title": "Application API - globalProperties",
+            "url": "https://vuejs.org/api/application.html#app-config-globalproperties",
+            "type": "official"
+        },
+        {
+            "nodeId": "gihxGgt177BK_EYsAfpx9",
+            "title": "Vue.js Global Properties",
+            "url": "https://blog.logrocket.com/vue-js-globalproperties/",
+            "type": "article"
+        },
+        {
+            "nodeId": "f7N4pAp_jBlT8_8owAcbG",
+            "title": "How to Optimize Performance in Vue.js Applications: Beginner to Advanced Guide",
+            "url": "https://dev.to/delia_code/how-to-optimize-performance-in-vuejs-applications-beginner-to-advanced-guide-53db",
+            "type": "article"
+        },
+        {
+            "nodeId": "f7N4pAp_jBlT8_8owAcbG",
+            "title": "Vue Directives Basics",
+            "url": "https://vuejs.org/guide/best-practices/performance.html",
+            "type": "article"
+        },
+        {
+            "nodeId": "f7N4pAp_jBlT8_8owAcbG",
+            "title": "Pinia Documentation",
+            "url": "https://pinia.vuejs.org/",
+            "type": "article"
+        },
+        {
+            "nodeId": "f7N4pAp_jBlT8_8owAcbG",
+            "title": "Webpack Documentation",
+            "url": "https://webpack.js.org/",
+            "type": "article"
+        },
+        {
+            "nodeId": "f7N4pAp_jBlT8_8owAcbG",
+            "title": "Vue Virtual Scroller",
+            "url": "https://github.com/Akryum/vue-virtual-scroller",
+            "type": "article"
+        },
+        {
+            "nodeId": "f7N4pAp_jBlT8_8owAcbG",
+            "title": "Vue Devtools Documentation",
+            "url": "https://devtools.vuejs.org/",
+            "type": "article"
+        },
+        {
+            "nodeId": "f7N4pAp_jBlT8_8owAcbG",
+            "title": "Vue Best Practices",
+            "url": "https://vuejs.org/guide/best-practices/overview.html",
+            "type": "article"
+        },
+        {
+            "nodeId": "tU4Umtnfu01t9gLlnlK6b",
+            "title": "Conditional Rendering",
+            "url": "https://vuejs.org/guide/essentials/conditional.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "NCIzs3jbQTv1xXhAaGfZN",
+            "title": "v-text Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-text",
+            "type": "official"
+        },
+        {
+            "nodeId": "bZxtIBeIfeUcR32LZWrPW",
+            "title": "v-html Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-html",
+            "type": "official"
+        },
+        {
+            "nodeId": "_TlbGTKFCMO0wdLbC6xHX",
+            "title": "Vue Conditional Rendering",
+            "url": "https://vuejs.org/guide/essentials/conditional.html#v-show",
+            "type": "official"
+        },
+        {
+            "nodeId": "xHj3W9Ig3MVuVlGyXchaP",
+            "title": "v-if Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-if",
+            "type": "official"
+        },
+        {
+            "nodeId": "0CtAZQcFJexMiJfZ-mofv",
+            "title": "v-else Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-else",
+            "type": "official"
+        },
+        {
+            "nodeId": "a9caVhderJaVo0v14w8WB",
+            "title": "v-else-if Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-else-if",
+            "type": "official"
+        },
+        {
+            "nodeId": "3ftwRjQ9e1-qDT9BV53zr",
+            "title": "v-for Documentation",
+            "url": "https://vuejs.org/guide/essentials/list#v-for",
+            "type": "official"
+        },
+        {
+            "nodeId": "hVuRmhXVP65IPtuHTORjJ",
+            "title": "v-on Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-on",
+            "type": "official"
+        },
+        {
+            "nodeId": "cuM9q9vYy8JpZPGeBffd1",
+            "title": "v-bind Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-bind",
+            "type": "official"
+        },
+        {
+            "nodeId": "cxu2Wbt306SxM4JKQQqnL",
+            "title": "Form Input Bindings",
+            "url": "https://vuejs.org/guide/essentials/forms.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "m9pQ3daR3KiwRATcQysHA",
+            "title": "v-slot documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-slot",
+            "type": "official"
+        },
+        {
+            "nodeId": "5k9CrbzhNy9iiS6ez2UE6",
+            "title": "v-once Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-once",
+            "type": "official"
+        },
+        {
+            "nodeId": "mlsrhioiEkqnRIL6O3hNa",
+            "title": "v-pre Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-pre",
+            "type": "official"
+        },
+        {
+            "nodeId": "RrSekP8Ub01coegMwLP6a",
+            "title": "v-cloak Documentation",
+            "url": "https://vuejs.org/api/built-in-directives.html#v-cloak",
+            "type": "official"
+        },
+        {
+            "nodeId": "RRPhAxIqvAcjZIcLe_N8-",
+            "title": "Optimizing Rendering in Vue",
+            "url": "https://blog.logrocket.com/optimizing-rendering-vue/",
+            "type": "article"
+        },
+        {
+            "nodeId": "dxwKfBxd5KYVkfEPMdHp-",
+            "title": "Debugging Documentation",
+            "url": "https://vuejs.org/v2/cookbook/debugging-in-vscode.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "WiGG9_4G5y-AVA9byw6_g",
+            "title": "Life Cycle Hooks",
+            "url": "https://vuejs.org/guide/essentials/lifecycle.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "WiGG9_4G5y-AVA9byw6_g",
+            "title": "The Lifecycles of Vue.js",
+            "url": "https://dev.to/amolikvivian/the-lifecycles-of-vue-js-lhh",
+            "type": "article"
+        },
+        {
+            "nodeId": "WiGG9_4G5y-AVA9byw6_g",
+            "title": "Explore top posts about React Hooks",
+            "url": "https://app.daily.dev/tags/react-hooks?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "PQu4TyJOfCEaafW5th0e4",
+            "title": "Form Input Bindings",
+            "url": "https://vuejs.org/guide/essentials/forms.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "PQu4TyJOfCEaafW5th0e4",
+            "title": "Vue JS 3 Tutorial - Form Handling",
+            "url": "https://www.youtube.com/watch?v=T-AE-GtSlN4",
+            "type": "video"
+        },
+        {
+            "nodeId": "PQu4TyJOfCEaafW5th0e4",
+            "title": "A complete guide to forms in Vue.js",
+            "url": "https://blog.logrocket.com/an-imperative-guide-to-forms-in-vue-js-2/",
+            "type": "article"
+        },
+        {
+            "nodeId": "NfB3HlZ3uwYK5xszvV50b",
+            "title": "Input Bindings",
+            "url": "https://vuejs.org/guide/essentials/forms",
+            "type": "official"
+        },
+        {
+            "nodeId": "gMFndBcrTC6FtGryqN6dX",
+            "title": "Form Input Bindings",
+            "url": "https://vuejs.org/guide/essentials/forms.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "dSfrFLr8wKkLAOMJwtCTr",
+            "title": "Modifiers",
+            "url": "https://vuejs.org/guide/essentials/forms.html#modifiers",
+            "type": "official"
+        },
+        {
+            "nodeId": "4p6Gh2fMPA8hls_mWa5HR",
+            "title": "Event Handling in Vue.js",
+            "url": "https://vuejs.org/guide/essentials/event-handling.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "b7iXwtUnELg_ShbCyTrNA",
+            "title": "Binding Events",
+            "url": "https://vuejs.org/guide/essentials/event-handling",
+            "type": "official"
+        },
+        {
+            "nodeId": "gVahaZNPktQuqdukFEbQH",
+            "title": "Inline Handlers",
+            "url": "https://vuejs.org/guide/essentials/event-handling#inline-handlers",
+            "type": "official"
+        },
+        {
+            "nodeId": "gVahaZNPktQuqdukFEbQH",
+            "title": "Method Handlers",
+            "url": "https://vuejs.org/guide/essentials/event-handling#method-handlers",
+            "type": "official"
+        },
+        {
+            "nodeId": "Aaf7eA-5sbAD5Cs1MbdTQ",
+            "title": "Event Modifiers",
+            "url": "https://vuejs.org/guide/essentials/event-handling#event-modifiers",
+            "type": "official"
+        },
+        {
+            "nodeId": "Aaf7eA-5sbAD5Cs1MbdTQ",
+            "title": "Event Modifiers in Vue.js",
+            "url": "https://www.freecodecamp.org/news/how-event-handling-works-in-vue-3-guide-for-devs/",
+            "type": "article"
+        },
+        {
+            "nodeId": "BXw36wqhmi3gExXwFCIBd",
+            "title": "Key Modifiers",
+            "url": "https://vuejs.org/guide/essentials/event-handling#key-modifiers",
+            "type": "official"
+        },
+        {
+            "nodeId": "x0wl2Qz2LTP4Q2tThKAt3",
+            "title": "Mouse Button Modifiers",
+            "url": "https://vuejs.org/guide/essentials/event-handling#mouse-button-modifiers",
+            "type": "official"
+        },
+        {
+            "nodeId": "x0wl2Qz2LTP4Q2tThKAt3",
+            "title": "Button Modifiers",
+            "url": "https://medium.com/evolve-you/vue-3-keyboard-and-mouse-a4866d7d0e8",
+            "type": "article"
+        },
+        {
+            "nodeId": "Bx1Atxcf15AEaA1BiSIc6",
+            "title": "Computed Properties",
+            "url": "https://vuejs.org/guide/essentials/computed.html#computed-properties",
+            "type": "official"
+        },
+        {
+            "nodeId": "Re7tv1U0LxYqE5ShFxQSf",
+            "title": "Async Components",
+            "url": "https://vuejs.org/guide/components/async.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "SGsd08ZTu4H76s8cfbCKe",
+            "title": "Teleport Components",
+            "url": "https://vuejs.org/guide/built-ins/teleport.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "xwVbhOpQMPPB4G-lhro0B",
+            "title": "Provide / Inject in Vue.js",
+            "url": "https://vuejs.org/guide/components/provide-inject.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "br1r8KIf5KInY5mk2xhA6",
+            "title": "Custom Directives",
+            "url": "https://vuejs.org/guide/reusability/custom-directives.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "br1r8KIf5KInY5mk2xhA6",
+            "title": "Composables",
+            "url": "https://vuejs.org/guide/reusability/composables.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "br1r8KIf5KInY5mk2xhA6",
+            "title": "Components",
+            "url": "https://vuejs.org/guide/essentials/component-basics.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "_Nc8ivQrdpKuf8MwaV-K7",
+            "title": "Plugins in Vue.js",
+            "url": "https://vuejs.org/guide/reusability/plugins.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "_Nc8ivQrdpKuf8MwaV-K7",
+            "title": "How to Write Your Own Vue.js Plugin",
+            "url": "https://www.linode.com/docs/guides/how-to-write-vue-js-plugins/",
+            "type": "article"
+        },
+        {
+            "nodeId": "kdlXhbw_a81xdZtyK-pVa",
+            "title": "Watchers in Vue.js",
+            "url": "https://vuejs.org/guide/essentials/watchers.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "jkX66izOHVWqtyd6KZ0K6",
+            "title": "Slots in Vue.js",
+            "url": "https://vuejs.org/guide/components/slots.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "SWpWg5J5N9ZfY_DaIigA5",
+            "title": "Transition Component",
+            "url": "https://vuejs.org/guide/built-ins/transition.html#transition",
+            "type": "official"
+        },
+        {
+            "nodeId": "HjzOYjS-7ZEBvElRJ8uN2",
+            "title": "TransitionGroup Component",
+            "url": "https://vuejs.org/guide/built-ins/transition-group.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "Z9szBPFXfqK_KsvzkR-rf",
+            "title": "VueUse",
+            "url": "https://vueuse.org/",
+            "type": "official"
+        },
+        {
+            "nodeId": "ixRG0xfEp4BmyvCR0mtoR",
+            "title": "Routing in Vue.js",
+            "url": "https://vuejs.org/guide/scaling-up/routing.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "ixRG0xfEp4BmyvCR0mtoR",
+            "title": "The Vue Router",
+            "url": "https://router.vuejs.org/",
+            "type": "official"
+        },
+        {
+            "nodeId": "COxkmvqe9jFtV9WtGjfbh",
+            "title": "The Vue Router",
+            "url": "https://router.vuejs.org/",
+            "type": "official"
+        },
+        {
+            "nodeId": "COxkmvqe9jFtV9WtGjfbh",
+            "title": "Explore top posts about Vue.js",
+            "url": "https://app.daily.dev/tags/vuejs?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "COxkmvqe9jFtV9WtGjfbh",
+            "title": "The Vue Router",
+            "url": "https://www.youtube.com/watch?v=juocv4AtrHo",
+            "type": "video"
+        },
+        {
+            "nodeId": "izGdctxP_OvQNvaMwVIrh",
+            "title": "Form Input Bindings",
+            "url": "https://vuejs.org/guide/essentials/forms.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "izGdctxP_OvQNvaMwVIrh",
+            "title": "User Inputs in Vue 3",
+            "url": "https://vueschool.io/lessons/user-inputs-vue-devtools-in-vue-3?friend=vuejs",
+            "type": "article"
+        },
+        {
+            "nodeId": "BXz1utB_2eYzFvzSbFKx0",
+            "title": "Formkit Documentation",
+            "url": "https://formkit.com/",
+            "type": "official"
+        },
+        {
+            "nodeId": "_Fmp8_z4SKWfKUE80_fqb",
+            "title": "logarem/vee-validate",
+            "url": "https://github.com/logaretm/vee-validate",
+            "type": "opensource"
+        },
+        {
+            "nodeId": "_Fmp8_z4SKWfKUE80_fqb",
+            "title": "Vee Website: Vee Validate",
+            "url": "https://vee-validate.logaretm.com/v4/",
+            "type": "official"
+        },
+        {
+            "nodeId": "6U_CAhAY_jyj_4Mzj_HL_",
+            "title": "Vuelidate Website",
+            "url": "https://vuelidate.js.org/",
+            "type": "official"
+        },
+        {
+            "nodeId": "6U_CAhAY_jyj_4Mzj_HL_",
+            "title": "vuelidate/vuelidate",
+            "url": "https://github.com/vuelidate/vuelidate",
+            "type": "opensource"
+        },
+        {
+            "nodeId": "Cm6mqXYp-G4mGfPxuU73_",
+            "title": "What is Server Side Rendering (SSR)?",
+            "url": "https://www.educative.io/answers/what-is-server-side-rendering",
+            "type": "article"
+        },
+        {
+            "nodeId": "Cm6mqXYp-G4mGfPxuU73_",
+            "title": "When should I Server-Side Render?",
+            "url": "https://medium.com/@mbleigh/when-should-i-server-side-render-c2a383ff2d0f",
+            "type": "article"
+        },
+        {
+            "nodeId": "Cm6mqXYp-G4mGfPxuU73_",
+            "title": "Server-Side Rendering (SSR)",
+            "url": "https://vuejs.org/guide/scaling-up/ssr.html",
+            "type": "article"
+        },
+        {
+            "nodeId": "Cm6mqXYp-G4mGfPxuU73_",
+            "title": "What is Server Side Rendering (SSR) for Web Development?",
+            "url": "https://www.youtube.com/watch?v=okvg3MRAPs0",
+            "type": "video"
+        },
+        {
+            "nodeId": "Cm6mqXYp-G4mGfPxuU73_",
+            "title": "Explore top posts about Web Development",
+            "url": "https://app.daily.dev/tags/webdev?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "822tGnM9jOkYh9aNlosPr",
+            "title": "What is a Static Site Generator?",
+            "url": "https://www.cloudflare.com/learning/performance/static-site-generator/",
+            "type": "article"
+        },
+        {
+            "nodeId": "822tGnM9jOkYh9aNlosPr",
+            "title": "Next.js SSG",
+            "url": "https://nextjs.org/docs/advanced-features/static-html-export",
+            "type": "article"
+        },
+        {
+            "nodeId": "822tGnM9jOkYh9aNlosPr",
+            "title": "Gatsby SSG",
+            "url": "https://www.gatsbyjs.com/docs/glossary/static-site-generator/",
+            "type": "article"
+        },
+        {
+            "nodeId": "822tGnM9jOkYh9aNlosPr",
+            "title": "SSG — An 11ty, Vite And JAM Sandwich",
+            "url": "https://www.smashingmagazine.com/2021/10/building-ssg-11ty-vite-jam-sandwich/",
+            "type": "article"
+        },
+        {
+            "nodeId": "822tGnM9jOkYh9aNlosPr",
+            "title": "Explore top posts about Web Development",
+            "url": "https://app.daily.dev/tags/webdev?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "f2udJnT2q5eDmBZ_OKtmi",
+            "title": "Quasar",
+            "url": "https://quasar.dev/",
+            "type": "official"
+        },
+        {
+            "nodeId": "f2udJnT2q5eDmBZ_OKtmi",
+            "title": "Quasar Framework: Vue.js Cross Platform App",
+            "url": "https://www.youtube.com/watch?v=opmng7llVJ0&list=PLAiDzIdBfy8iu_MZrq3IPuSFcRgCQ0iL0",
+            "type": "video"
+        },
+        {
+            "nodeId": "f2udJnT2q5eDmBZ_OKtmi",
+            "title": "How to Build an App using Quasar Framework",
+            "url": "https://www.youtube.com/watch?v=czJIuHyPPXo",
+            "type": "video"
+        },
+        {
+            "nodeId": "8xZxTLYq5m5_nkGh2lfUt",
+            "title": "Nuxt Website",
+            "url": "https://nuxt.com/",
+            "type": "official"
+        },
+        {
+            "nodeId": "8xZxTLYq5m5_nkGh2lfUt",
+            "title": "Nuxt Docs",
+            "url": "https://nuxt.com/docs/getting-started/introduction",
+            "type": "official"
+        },
+        {
+            "nodeId": "8xZxTLYq5m5_nkGh2lfUt",
+            "title": "Nuxt Examples",
+            "url": "https://nuxt.com/docs/examples/essentials/hello-world",
+            "type": "official"
+        },
+        {
+            "nodeId": "8xZxTLYq5m5_nkGh2lfUt",
+            "title": "Get Started with Nuxt",
+            "url": "https://explorers.netlify.com/learn/get-started-with-nuxt",
+            "type": "article"
+        },
+        {
+            "nodeId": "8xZxTLYq5m5_nkGh2lfUt",
+            "title": "Nuxt.js Fundamentals",
+            "url": "https://vueschool.io/courses/nuxtjs-fundamentals",
+            "type": "article"
+        },
+        {
+            "nodeId": "8xZxTLYq5m5_nkGh2lfUt",
+            "title": "Explore top posts about JavaScript",
+            "url": "https://app.daily.dev/tags/javascript?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "_46COO0FGaFuCYwqaRRWy",
+            "title": "Vitepress Website",
+            "url": "https://vitepress.dev/",
+            "type": "official"
+        },
+        {
+            "nodeId": "LjEAviRMtPLwUUlfcof1h",
+            "title": "Vitest Website",
+            "url": "https://vitest.dev/",
+            "type": "official"
+        },
+        {
+            "nodeId": "LjEAviRMtPLwUUlfcof1h",
+            "title": "Testing with Vitest",
+            "url": "https://www.youtube.com/watch?v=cM_AeQHzlGg",
+            "type": "video"
+        },
+        {
+            "nodeId": "p5bUvgr_3H-A55ZnEExk8",
+            "title": "Getting Started with Vue Testing Library",
+            "url": "https://testing-library.com/docs/vue-testing-library/intro/",
+            "type": "official"
+        },
+        {
+            "nodeId": "p5bUvgr_3H-A55ZnEExk8",
+            "title": "Explore top posts about Testing",
+            "url": "https://app.daily.dev/tags/testing?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "JbMKUVDMUygjXXmhndHVs",
+            "title": "Cypress Website",
+            "url": "https://www.cypress.io/",
+            "type": "official"
+        },
+        {
+            "nodeId": "JbMKUVDMUygjXXmhndHVs",
+            "title": "Cypress Documentation",
+            "url": "https://docs.cypress.io/guides/overview/why-cypress#Other",
+            "type": "official"
+        },
+        {
+            "nodeId": "JbMKUVDMUygjXXmhndHVs",
+            "title": "Cypress End-to-End Testing",
+            "url": "https://www.youtube.com/watch?v=7N63cMKosIE",
+            "type": "video"
+        },
+        {
+            "nodeId": "JbMKUVDMUygjXXmhndHVs",
+            "title": "Explore top posts about Cypress",
+            "url": "https://app.daily.dev/tags/cypress?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "zqcE3bTnymdepV-Yc8qBl",
+            "title": "Playwright Website",
+            "url": "https://playwright.dev/",
+            "type": "official"
+        },
+        {
+            "nodeId": "zqcE3bTnymdepV-Yc8qBl",
+            "title": "Playwright Tutorial: Learn Basics and Setup",
+            "url": "https://www.browserstack.com/guide/playwright-tutorial",
+            "type": "article"
+        },
+        {
+            "nodeId": "TkzlmJ85O-e-KfMhTBwry",
+            "title": "Tailwind Website",
+            "url": "https://tailwindcss.com",
+            "type": "official"
+        },
+        {
+            "nodeId": "TkzlmJ85O-e-KfMhTBwry",
+            "title": "Tailwind CSS Full Course for Beginners",
+            "url": "https://www.youtube.com/watch?v=lCxcTsOHrjo",
+            "type": "video"
+        },
+        {
+            "nodeId": "TkzlmJ85O-e-KfMhTBwry",
+            "title": "Tailwind CSS Crash Course",
+            "url": "https://www.youtube.com/watch?v=UBOj6rqRUME",
+            "type": "video"
+        },
+        {
+            "nodeId": "TkzlmJ85O-e-KfMhTBwry",
+            "title": "Should You Use Tailwind CSS?",
+            "url": "https://www.youtube.com/watch?v=hdGsFpZ0J2E",
+            "type": "video"
+        },
+        {
+            "nodeId": "TkzlmJ85O-e-KfMhTBwry",
+            "title": "Official Screencasts",
+            "url": "https://www.youtube.com/c/TailwindLabs/videos",
+            "type": "video"
+        },
+        {
+            "nodeId": "TkzlmJ85O-e-KfMhTBwry",
+            "title": "Explore top posts about CSS",
+            "url": "https://app.daily.dev/tags/css?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "VNclt_QQthWb2u4xWI_uY",
+            "title": "Vuetify Website",
+            "url": "https://vuetifyjs.com/en/",
+            "type": "official"
+        },
+        {
+            "nodeId": "VNclt_QQthWb2u4xWI_uY",
+            "title": "Getting Started with Vuetify",
+            "url": "https://vuetifyjs.com/en/getting-started/installation/",
+            "type": "official"
+        },
+        {
+            "nodeId": "VNclt_QQthWb2u4xWI_uY",
+            "title": "Explore top posts about Vue.js",
+            "url": "https://app.daily.dev/tags/vuejs?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "VNclt_QQthWb2u4xWI_uY",
+            "title": "Vuetify: Create an App with Vue JS - in 30 MINUTES!",
+            "url": "https://www.youtube.com/watch?v=CjXgoYo86yY",
+            "type": "video"
+        },
+        {
+            "nodeId": "NMIh8rqLM5P-Uk65uHATn",
+            "title": "Element UI Website",
+            "url": "https://element-plus.org/en-US/",
+            "type": "official"
+        },
+        {
+            "nodeId": "NMIh8rqLM5P-Uk65uHATn",
+            "title": "Getting Started - Element UI",
+            "url": "https://element-plus.org/en-US/guide/design.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "9AwVtwIv6TfP9F4ulz2F0",
+            "title": "State Management",
+            "url": "https://vuejs.org/guide/scaling-up/state-management.html",
+            "type": "official"
+        },
+        {
+            "nodeId": "9AwVtwIv6TfP9F4ulz2F0",
+            "title": "What is State Management?",
+            "url": "https://www.techtarget.com/searchapparchitecture/definition/state-management",
+            "type": "article"
+        },
+        {
+            "nodeId": "NIvjyhtTFC1gomtGQT_2t",
+            "title": "Pinia Documentation",
+            "url": "https://pinia.vuejs.org/",
+            "type": "official"
+        },
+        {
+            "nodeId": "NIvjyhtTFC1gomtGQT_2t",
+            "title": "Learn Pinia in 30Minutes",
+            "url": "https://www.youtube.com/watch?v=JGC7aAC-3y8",
+            "type": "video"
+        },
+        {
+            "nodeId": "ZLlz0Azfze-8k3z8HnVvE",
+            "title": "How To Make API calls in Vue.JS Applications",
+            "url": "https://medium.com/bb-tutorials-and-thoughts/how-to-make-api-calls-in-vue-js-applications-43e017d4dc86",
+            "type": "article"
+        },
+        {
+            "nodeId": "ZLlz0Azfze-8k3z8HnVvE",
+            "title": "How to Use RapidAPI Client with Vue.js",
+            "url": "https://rapidapi.com/guides/fetch-api-with-vue",
+            "type": "article"
+        },
+        {
+            "nodeId": "l2Rl6OQbL7kYvPlpYCZ0Z",
+            "title": "Apollo Website",
+            "url": "https://www.apollographql.com",
+            "type": "official"
+        },
+        {
+            "nodeId": "l2Rl6OQbL7kYvPlpYCZ0Z",
+            "title": "Apollo Docs",
+            "url": "https://www.apollographql.com/docs/",
+            "type": "official"
+        },
+        {
+            "nodeId": "l2Rl6OQbL7kYvPlpYCZ0Z",
+            "title": "Apollo's YouTube Channel",
+            "url": "https://www.youtube.com/c/ApolloGraphQL/",
+            "type": "video"
+        },
+        {
+            "nodeId": "l2Rl6OQbL7kYvPlpYCZ0Z",
+            "title": "GraphQL With React Tutorial - Apollo Client",
+            "url": "https://www.youtube.com/watch?v=YyUWW04HwKY",
+            "type": "video"
+        },
+        {
+            "nodeId": "l2Rl6OQbL7kYvPlpYCZ0Z",
+            "title": "Explore top posts about Apollo",
+            "url": "https://app.daily.dev/tags/apollo?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "n5IlN-wv4k0r16CvhoSpD",
+            "title": "Getting Started with Axios",
+            "url": "https://axios-http.com/docs/intro",
+            "type": "official"
+        },
+        {
+            "nodeId": "n5IlN-wv4k0r16CvhoSpD",
+            "title": "How to make HTTP requests with Axios",
+            "url": "https://blog.logrocket.com/how-to-make-http-requests-like-a-pro-with-axios/#why",
+            "type": "article"
+        },
+        {
+            "nodeId": "n5IlN-wv4k0r16CvhoSpD",
+            "title": "Explore top posts about Axios",
+            "url": "https://app.daily.dev/tags/axios?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "ufnt87swK61kxShLuVc1-",
+            "title": "Fetch - MDN",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch",
+            "type": "article"
+        },
+        {
+            "nodeId": "ufnt87swK61kxShLuVc1-",
+            "title": "Network Request - Fetch",
+            "url": "https://javascript.info/fetch",
+            "type": "article"
+        },
+        {
+            "nodeId": "WSq_cDKQPZa_qmQlIdGXg",
+            "title": "Tanstack Query Website",
+            "url": "https://tanstack.com/query",
+            "type": "official"
+        },
+        {
+            "nodeId": "3RwIO-S8-xOYKNmfwk0pf",
+            "title": "Comparing Vue.js mobile app development frameworks",
+            "url": "https://blog.logrocket.com/comparing-vue-js-mobile-app-development-frameworks/#whyusevuejstobuildmobileapps",
+            "type": "article"
+        },
+        {
+            "nodeId": "3RwIO-S8-xOYKNmfwk0pf",
+            "title": "Native Script + Vue",
+            "url": "https://nativescript-vue.org/",
+            "type": "article"
+        },
+        {
+            "nodeId": "3RwIO-S8-xOYKNmfwk0pf",
+            "title": "Explore top posts about Mobile Development",
+            "url": "https://app.daily.dev/tags/mobile?ref=roadmapsh",
+            "type": "feed"
+        },
+        {
+            "nodeId": "IsNzCdS05tbAK0D1zz0Sf",
+            "title": "Building Cross-Platform Apps with Capacitor and Vue.js",
+            "url": "https://blog.logrocket.com/building-cross-platform-apps-with-capacitor-and-vue-js/",
+            "type": "article"
+        },
+        {
+            "nodeId": "IsNzCdS05tbAK0D1zz0Sf",
+            "title": "Building Mobile Apps With Capacitor And Vue.js",
+            "url": "https://www.smashingmagazine.com/2018/07/mobile-apps-capacitor-vue-js/",
+            "type": "article"
+        }
+    ]
+}

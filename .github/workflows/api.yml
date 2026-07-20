@@ -89,6 +89,9 @@ jobs:
       - name: Apply migrations
         run: npx prisma migrate deploy
 
+      - name: Seed database
+        run: npm run db:seed
+
       - name: E2E tests
         run: npm run test:e2e
 
@@ -119,6 +122,9 @@ jobs:
 
       - name: Apply pending migrations
         run: npm run db:migration:deploy
+
+      - name: Seed database
+        run: npm run db:seed
 
   deploy-dev:
     name: Deploy Dev
@@ -205,6 +211,9 @@ jobs:
 
       - name: Apply pending migrations
         run: npm run db:migration:deploy
+
+      - name: Seed database
+        run: npm run db:seed
 
   deploy-prod:
     name: Deploy Production
