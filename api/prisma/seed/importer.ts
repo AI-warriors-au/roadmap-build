@@ -67,6 +67,10 @@ export async function importRoadmapBundle(
       },
     });
 
+    await tx.roadmapTag.deleteMany({
+      where: { roadmapId: roadmap.id },
+    });
+
     for (const tagSlug of bundle.tags) {
       const tag = await tx.tag.upsert({
         where: { slug: tagSlug },
@@ -77,18 +81,11 @@ export async function importRoadmapBundle(
         update: {},
       });
 
-      await tx.roadmapTag.upsert({
-        where: {
-          roadmapId_tagId: {
-            roadmapId: roadmap.id,
-            tagId: tag.id,
-          },
-        },
-        create: {
+      await tx.roadmapTag.create({
+        data: {
           roadmapId: roadmap.id,
           tagId: tag.id,
         },
-        update: {},
       });
     }
 
