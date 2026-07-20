@@ -1,7 +1,10 @@
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { roadmapsQueryKey } from '@/hooks/useRoadmaps'
 import { getRoadmaps, type RoadmapCatalogItem } from '@/lib/api'
 import { renderWithProviders } from '@/test/test-utils'
 
@@ -219,6 +222,54 @@ describe('BrowsePage', () => {
     expect(
       await screen.findByText('No roadmaps match your filters'),
     ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('list', { name: 'Roadmap catalog' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('keeps the empty state visible while a cached zero-result query refetches', async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+          staleTime: 0,
+        },
+      },
+    })
+
+    queryClient.setQueryData(roadmapsQueryKey(), {
+      items: [frontend, backend, vue],
+    })
+    queryClient.setQueryData(roadmapsQueryKey({ search: 'zzz-no-match' }), {
+      items: [],
+    })
+
+    // Hang all fetches so a background refetch stays in flight.
+    vi.mocked(getRoadmaps).mockImplementation(() => new Promise(() => {}))
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <BrowsePage />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    )
+
+    await screen.findByRole('list', { name: 'Roadmap catalog' })
+
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search roadmaps' }), {
+      target: { value: 'zzz-no-match' },
+    })
+    await act(async () => {
+      vi.advanceTimersByTime(300)
+    })
+
+    // Cached empty data + background refetch: isSuccess && isFetching.
+    // Must not blank the catalog (empty, loading, and grid all hidden).
+    expect(
+      screen.getByText('No roadmaps match your filters'),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Loading roadmaps…')).not.toBeInTheDocument()
     expect(
       screen.queryByRole('list', { name: 'Roadmap catalog' }),
     ).not.toBeInTheDocument()
