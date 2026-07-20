@@ -83,6 +83,49 @@ export async function postLogout(): Promise<void> {
   await api.post('/auth/logout')
 }
 
+export type RoadmapCatalogTag = {
+  slug: string
+  name: string
+}
+
+export type RoadmapCatalogItem = {
+  id: string
+  slug: string
+  title: string
+  description: string | null
+  tags: RoadmapCatalogTag[]
+  topicCount: number
+  isEnrolled: boolean
+}
+
+export type ListRoadmapsResponse = {
+  items: RoadmapCatalogItem[]
+}
+
+export type GetRoadmapsParams = {
+  search?: string
+  /** Tag slugs; sent as a comma-separated `tags` query param (OR match). */
+  tags?: string[]
+}
+
+export async function getRoadmaps(
+  params: GetRoadmapsParams = {},
+): Promise<ListRoadmapsResponse> {
+  const query: Record<string, string> = {}
+  const search = params.search?.trim()
+  if (search) {
+    query.search = search
+  }
+  if (params.tags && params.tags.length > 0) {
+    query.tags = params.tags.join(',')
+  }
+
+  const { data } = await api.get<ListRoadmapsResponse>('/roadmaps', {
+    params: query,
+  })
+  return data
+}
+
 /** Full-page OAuth start URL (not for axios — browser must follow redirects). */
 export function getGithubAuthUrl(): string {
   const base = (import.meta.env.VITE_API_BASE_URL ?? '/api').replace(/\/$/, '')

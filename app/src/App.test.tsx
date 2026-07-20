@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { createMockUser } from '@/contexts/AuthContext'
 import * as apiModule from '@/lib/api'
-import { getHealth, getMe } from '@/lib/api'
+import { getHealth, getMe, getRoadmaps } from '@/lib/api'
 import { renderWithProviders } from '@/test/test-utils'
 
 import App from './App'
@@ -15,6 +15,7 @@ vi.mock('@/lib/api', async (importOriginal) => {
     ...actual,
     getHealth: vi.fn(),
     getMe: vi.fn(),
+    getRoadmaps: vi.fn(),
     postLogout: vi.fn(),
   }
 })
@@ -36,6 +37,8 @@ describe('App', () => {
       status: 'ok',
       database: 'connected',
     })
+    vi.mocked(getRoadmaps).mockReset()
+    vi.mocked(getRoadmaps).mockResolvedValue({ items: [] })
     vi.mocked(getMe).mockReset()
     vi.mocked(getMe).mockRejectedValue(unauthorizedError())
   })

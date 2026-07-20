@@ -1,6 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { api, getGithubAuthUrl, getHealth, getMe, onboardUser, postLogout } from './api'
+import {
+  api,
+  getGithubAuthUrl,
+  getHealth,
+  getMe,
+  getRoadmaps,
+  onboardUser,
+  postLogout,
+} from './api'
 
 describe('api', () => {
   it('points to /api with credentials enabled', () => {
@@ -93,5 +101,50 @@ describe('api', () => {
 
     await expect(postLogout()).resolves.toBeUndefined()
     expect(post).toHaveBeenCalledWith('/auth/logout')
+  })
+
+  it('fetches roadmaps from /roadmaps with search and tags params', async () => {
+    const response = {
+      items: [
+        {
+          id: 'rm-1',
+          slug: 'frontend-developer',
+          title: 'Frontend Developer',
+          description: 'Learn frontend',
+          tags: [{ slug: 'react', name: 'React' }],
+          topicCount: 10,
+          isEnrolled: false,
+        },
+      ],
+    }
+    const get = vi.spyOn(api, 'get').mockResolvedValue({
+      data: response,
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: { headers: {} },
+    })
+
+    await expect(
+      getRoadmaps({ search: ' front ', tags: ['react', 'frontend'] }),
+    ).resolves.toEqual(response)
+    expect(get).toHaveBeenCalledWith('/roadmaps', {
+      params: { search: 'front', tags: 'react,frontend' },
+    })
+  })
+
+  it('omits empty search and tags from the roadmaps query', async () => {
+    const get = vi.spyOn(api, 'get').mockResolvedValue({
+      data: { items: [] },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: { headers: {} },
+    })
+
+    await expect(getRoadmaps({ search: '   ', tags: [] })).resolves.toEqual({
+      items: [],
+    })
+    expect(get).toHaveBeenCalledWith('/roadmaps', { params: {} })
   })
 })
